@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-image: url('https://img.pikbest.com/backgrounds/20200120/mid-night-galaxy-horizontal-modern-creative-abstract-minimal-drop-sky-background-v_1640413jpg!sw800'); /* Imagen de fondo de muestra */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
+            border-radius: 15px; /* Esquinas redondeadas */
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="#">Inicio</a>
+    <a href="#">Productos</a>
+    <a href="#">Clientes</a>
+    <a href="#">Pedidos</a>
+    <a href="#">Reportes</a>
+    <a href="#">Configuración</a>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
+    <a class="navbar-brand" href="#">ERP</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-user"></i></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+
+<!-- Contenido principal -->
+<div class="container">
+    <h1>Bienvenido al ERP</h1>
+    <p>Un sistema completo para la gestión eficiente de recursos en tu empresa.</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Productos</h3>
+            <p>Administra tu inventario y controla tus productos de manera sencilla.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Clientes</h3>
+            <p>Registra y gestiona la información de tus clientes de forma organizada.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Pedidos</h3>
+            <p>Realiza seguimiento de pedidos y controla el flujo de ventas.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Reportes</h3>
+            <p>Genera informes detallados para tomar decisiones estratégicas.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS y jQuery (opcional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
