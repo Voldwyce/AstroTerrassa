@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container text-center">
+    <div>
+        <h2>Please Register</h2>
+        <br/>
+    </div>
+    <div>
+        <h4><a th:href="@{/oauth2/authorization/google}" class="btn btn-primary">Register with Google</a></h4>
+    </div>
+    <div><p>OR</p></div>
+
+    <form th:action="@{/makeRegistration}" method="post" style="max-width: 400px; margin: 0 auto;">
+        <div class="border border-secondary rounded p-3">
+            <div th:if="${param.error}">
+                <p class="text-danger">User already exists!</p>
+            </div>
+            <div th:if="${param.logout}">
+                <p class="text-warning">You have been logged out.</p>
+            </div>
+            <div>
+                <p><input type="text" name="nombre" required class="form-control" placeholder="nombre" /></p>
+            </div>
+            <div>
+                <p><input type="text" name="apellidos" required class="form-control" placeholder="apellidos" /></p>
+            </div>
+            <div>
+                <p><input type="tel" name="tlf" required class="form-control" placeholder="tlf" /></p>
+            </div>
+            <div>
+                <p><input type="email" name="mail" required class="form-control" placeholder="mail" /></p>
+            </div>
+            <div>
+                <p><input type="text" name="username" required class="form-control" placeholder="username" /></p>
+            </div>
+            <div>
+                <p><input type="password" name="password" required class="form-control" placeholder="password" /></p>
+            </div>
+            <div>
+                <p><input type="text" name="notify" value="1" class="form-control" placeholder="notify" /> </p>
+            </div>
+            <div>
+                <p><input type="submit" value="Register" class="btn btn-primary" /></p>
+            </div>
+        </div>
+    </form>
+    <a th:href="@{/login}">Already registered? Log in</a>
+</div>
+</body>
+</html>
