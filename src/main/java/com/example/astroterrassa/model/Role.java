@@ -1,28 +1,26 @@
 package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements Serializable {
+
+    private static final long serialVersionUID=1L;
+
     @Id
     @Column(name = "role_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long idRol;
 
-    private String name;
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+    @NotEmpty
+    private String nom;
 
-
+    @ManyToOne
+    @JoinColumn(name="id_usuari",nullable=false)
+    private User idUsuari;
 }
