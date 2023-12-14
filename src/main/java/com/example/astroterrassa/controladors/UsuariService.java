@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UsuariService implements UserDetailsService {
     @Autowired
-    private UserRepository usuariDAO;
+    private UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true) //Consulta només de lectura
@@ -37,7 +37,7 @@ public class UsuariService implements UserDetailsService {
          *de Spring Security i, per tant, no hem de desnvolupar cap codi, ja ve donat per Spring Security.
          *Aquest mètode ens retornarà l'usuari a partir de nom d'usuari passat per paràmetre.
          */
-        com.example.astroterrassa.model.User usuari = usuariDAO.findByUsername(username);
+        com.example.astroterrassa.model.User usuari = userRepository.findByUsername(username);
 
         //Comprovem que existeix l'usuari
         if (usuari == null) { //Si no existeix l'usuari...

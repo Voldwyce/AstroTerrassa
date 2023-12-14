@@ -9,6 +9,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
 
-    @Query("SELECT u FROM User u WHERE u.intents = '0'")
+    @Query("SELECT u FROM User u WHERE u.intents = 0")
     List<User> blockedUsers();
 }

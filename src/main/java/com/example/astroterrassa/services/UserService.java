@@ -39,7 +39,7 @@ public class UserService implements UsuariServiceInterface {
 
     @Override
     public List<User> llistarUsers(User usuari) {
-        return (List<User>) userRepository.findAll();
+        return userRepository.findAll();
 
     }
 

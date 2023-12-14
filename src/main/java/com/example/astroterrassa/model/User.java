@@ -65,6 +65,9 @@ public class User implements Serializable {
     @Column(name = "intents")
     private int intents;
 
+    @Column(name = "username")
+    private String username;
+
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(
             name = "users_roles",

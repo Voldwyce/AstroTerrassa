@@ -24,7 +24,7 @@ public class UsersController {
     private UserService UsuariServices;
 
     @Autowired
-    private UserRepository usersDao;
+    private UserRepository userRepository;
 
 
     @GetMapping("/registre")

@@ -25,7 +25,7 @@ public class ConfiguracioAutenticacio {
     private UserDetailsService userDetailsService; //Objecte per recuperar l'usuari
 
     @Autowired
-    private UserRepository userDao;
+    private UserRepository userRepository;
 
     @Autowired
     public void autenticacio(AuthenticationManagerBuilder auth) throws Exception {

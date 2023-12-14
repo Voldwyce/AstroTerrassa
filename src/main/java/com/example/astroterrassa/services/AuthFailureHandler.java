@@ -20,13 +20,13 @@ import org.springframework.stereotype.Component;
 public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Autowired
-    private UserRepository userDao;
+    private UserRepository userRepository;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String username = request.getParameter("username");
         log.info(username);
-        User user = userDao.findByUsername(username);
+        User user = userRepository.findByUsername(username);
 
         if (user == null) { //Si no existeix l'usuari...
 
@@ -40,7 +40,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
                 if (user.getIntents() > 0) {
                     int intents = user.getIntents() - 1;
                     user.setIntents(intents);
-                    userDao.save(user);
+                    userRepository.save(user);
                     exception = new LockedException("La seva contrasenya es incorrecta, ha perdut un intent et queden: " + user.getIntents());
                 }
                 else if(user.getIntents()== 0){

@@ -2,6 +2,8 @@ package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import lombok.Data;
 @Table(name = "roles")
 public class Role implements Serializable {
 
+    @Serial
     private static final long serialVersionUID=1L;
 
     @Id

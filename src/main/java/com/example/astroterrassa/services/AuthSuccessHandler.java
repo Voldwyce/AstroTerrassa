@@ -17,18 +17,18 @@ import org.springframework.stereotype.Component;
 public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler  {
 
     @Autowired
-    private UserRepository userDao;
+    private UserRepository userRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,Authentication authentication) throws IOException, ServletException {
         String username = request.getParameter("username");
         log.info(username);
-        User user = userDao.findByUsername(username);
+        User user = userRepository.findByUsername(username);
 
         if(user.getIntents()>0){
             log.info("S'han restablert els intents per accedir correctament");
             user.setIntents(3);
-            userDao.save(user);
+            userRepository.save(user);
         }
 
         super.onAuthenticationSuccess(request, response, authentication);
