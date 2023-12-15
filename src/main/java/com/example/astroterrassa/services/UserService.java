@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class UserService {
     @Autowired
-    private UserRepository userRepository;
+    private  UserRepository userRepository;
     @Autowired
     private UserRepository repo;
 
@@ -26,7 +26,6 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
-
 
     public void create(User user) {
         // Actualizar el método para guardar todos los campos del formulario
@@ -69,6 +68,7 @@ public class UserService {
             HtmlConverter.convertToPdf(htmlTable, outputStream);
             return outputStream.toByteArray();
         }
+
     }
 
 

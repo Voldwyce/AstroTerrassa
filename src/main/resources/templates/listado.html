@@ -124,18 +124,19 @@
         <td th:text="${user.apellidos}"></td>
         <td th:text="${user.tlf}"></td>
         <td th:text="${user.mail}"></td>
-        <td th:text="${user.notify}"></td>
+        <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
         <td th:text="${user.username}"></td>
         <td>
             <a th:href="@{/editUser/(id=${user.id_user})}" class="btn btn-primary">Editar</a> <!-- Change this line -->
         <td>
-            <a th:href="@{/deleteUser/(id=${user.id_user})}" class="btn btn-primary">Eliminar</a> <!-- Change this line -->
+            <a th:href="@{/deleteUser/(id=${user.id_user})}" class="btn  btn-danger btn b earlier btn btn-primary">Eliminar</a> <!-- Change this line -->
+
         </td>
     </tr>
     </tbody>
 </table>
     <div class="text-center">
-        <a href="/newUser" class="btn btn-primary">Nuevo Usuario</a>
+        <a href="/register" class="btn btn-primary">Nuevo Usuario</a>
         <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
      </div>
 

@@ -2,6 +2,8 @@
 
 package com.example.astroterrassa.Conroller;
 
+import com.example.astroterrassa.DAO.UserRepository;
+import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -9,9 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -20,6 +21,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+
     @RequestMapping("/listado")
     @GetMapping
     public ModelAndView getAllUsers() {
@@ -43,6 +49,23 @@ public class UserController {
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/editPerfil")
+    public String showEditForm(@RequestParam(value = "username", required = false) String username, Model model) {
+        if (username != null) {
+            User user = userRepository.findByUsername(username);
+            model.addAttribute("user", user);
+        }
+        return "editPerfil";
+    }
+
+    @PostMapping("/editPerfil")
+    public String submitEditForm(@ModelAttribute User user) {
+        userRepository.save(user);
+        return "redirect:/index";
+    }
+
+
 
 
 }
