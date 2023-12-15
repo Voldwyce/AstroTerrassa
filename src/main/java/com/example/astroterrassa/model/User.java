@@ -40,7 +40,4 @@ public class User  {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public long getId() {
-        return id_user;
-    }
 }
