@@ -3,6 +3,7 @@ package com.example.astroterrassa.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ public class User  {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_user;
+    private int user_id;
 
     private String nombre;
     private String apellidos;
@@ -24,6 +25,12 @@ public class User  {
     private String password;
     private int notify;
     private boolean enabled;
+    private int genero;
+
+    @Column(name = "register_dt")
+    private LocalDate register_dt;
+
+    private String last_dt;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
