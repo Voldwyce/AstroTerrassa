@@ -27,9 +27,10 @@ public class UsersController {
     private UserRepository userRepository;
 
 
-    @GetMapping("/registre")
-    public String registre(){
-        return "registre";
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        // your code here
+        return "register";
     }
 
     @GetMapping("/login")
@@ -38,7 +39,7 @@ public class UsersController {
     }
 
 
-    @PostMapping("/registre")
+    @PostMapping("/register")
     public String registre2(User user,Role rol,@RequestParam(name = "seleccioRol")String rolSeleccio){
         UsuariServices.registrarPersona(user, rol, rolSeleccio);
         return "redirect:/login";

@@ -30,14 +30,10 @@ public class AppController {
                                    @RequestParam("password") String password,
                                    @RequestParam("notify") int notify) {
         User u = new User();
-        u.setName(nombre);
-        u.setSurname(apellidos);
-        u.setTlf(tlf);
-        u.setMail(mail);
+        u.setUsername(nombre);
         u.setPassword(passwordEncoder.encode(password));
-        u.setNotify(notify);
         userRepository.save(u);
-        System.out.println("Created user " + u.getName() + " with password " + u.getPassword());
+        System.out.println("Created user " + u.getUsername() + " with password " + u.getPassword());
         return "redirect:/login";
     }
 
@@ -47,7 +43,7 @@ public class AppController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("name") String username,
+    public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password) {
         User user = userRepository.findByUsername(username);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {

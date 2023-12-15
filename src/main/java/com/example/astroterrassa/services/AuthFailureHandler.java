@@ -28,13 +28,10 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         log.info(username);
         User user = userRepository.findByUsername(username);
 
-        if (user == null) { //Si no existeix l'usuari...
-
-            //Llancem una excepció de tipus UsernameNotFoundException
-            throw new UsernameNotFoundException(username);
-
-        }else{
-            if (user.getName().equals("admin")) {
+        if (user == null) {
+            throw new UsernameNotFoundException("No user found with username: " + username);
+        } else {
+            if (user.getUsername().equals("admin")) {
                 log.info("El administrador no pot perdre intents");
             } else {
                 if (user.getIntents() > 0) {

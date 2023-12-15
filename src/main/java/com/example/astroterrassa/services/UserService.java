@@ -73,7 +73,7 @@ public class UserService implements UsuariServiceInterface {
         user = getUserById(id);
         user.setIntents(3);
         userRepository.save(user);
-        System.out.println("S'ha desbloquejat el usuari");
+        System.out.println("S'ha desbloquejat l'usuari");
     }
 
     public User save(User user) {

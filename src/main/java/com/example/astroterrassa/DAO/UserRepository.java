@@ -1,6 +1,7 @@
 package com.example.astroterrassa.DAO;
 
 import com.example.astroterrassa.model.User;
+import jakarta.persistence.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
