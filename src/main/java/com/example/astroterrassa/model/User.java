@@ -1,15 +1,9 @@
 package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import lombok.Data;
 
 
@@ -49,5 +43,9 @@ public class User implements Serializable {
 
     @Column(name = "intentos")
     private int intents;
+
+    //Recuperamos de la tabla users_roles el rol que tiene el usuario
+    @OneToOne(mappedBy = "user")
+    private UsersRoles usersRoles;
 
 }

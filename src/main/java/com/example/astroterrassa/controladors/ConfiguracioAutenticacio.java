@@ -37,7 +37,7 @@ public class ConfiguracioAutenticacio {
 
         return http.authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers("/llistaUsuaris", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
+                        .requestMatchers("/llistaUsuaris", "stats", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
                 )
 
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem

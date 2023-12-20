@@ -1,9 +1,7 @@
 package com.example.astroterrassa.services;
 
-import com.example.astroterrassa.DAO.RoleRepository;
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.DAO.UsersRolesRepository;
-import com.example.astroterrassa.model.Role;
 import com.example.astroterrassa.model.User;
 import java.util.List;
 
@@ -24,9 +22,6 @@ public class UserService implements UsuariServiceInterface {
     @Autowired
     private UsersRolesRepository usersRolesRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
     @Override
     @Transactional
     public void guardarUser(User usuari) {
@@ -40,8 +35,8 @@ public class UserService implements UsuariServiceInterface {
     // Método para guardar el rol del usuario
     @Override
     public void guardarRol(User usuari, UsersRoles rol) {
-        rol.setUser_id(usuari.getUser_id());
-        rol.setRole_id(rol.getRole_id());
+        rol.setUserId(usuari.getUser_id());
+        rol.setRoleId(rol.getRoleId());
         rol.setRolNombre(rol.getRolNombre());
         usersRolesRepository.save(rol);
         System.out.println("Rol guardado");
@@ -71,19 +66,18 @@ public class UserService implements UsuariServiceInterface {
     }
 
     @Override
-    public void registrarPersona(User user, UsersRoles rol, String seleccioRol) {
-        // Guarda el usuario
-        guardarUser(user);
+    public void registrarPersona(User user, UsersRoles usersRoles) {
+        // Crea y guarda el usuario
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setIntents(3);
+        User savedUser = userRepository.save(user); // Guarda el usuario en la base de datos
 
-        // Crea y guarda el rol
-        Role role = new Role();
-        role.setRolNombre(seleccioRol);
-        Role savedRole = save(role);
-
-        // Asigna el usuario y el rol a UsersRoles y lo guarda
-        rol.setUser_id(user.getUser_id());
-        rol.setRole_id(savedRole.getRole_id());
-        guardarRol(user, rol);
+        // Asigna el User_id y el Role_id a UsersRoles y lo guarda
+        usersRoles.setUserId(savedUser.getUser_id());
+        usersRoles.setRoleId(0);
+        usersRoles.setRolNombre("usuario");
+        usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
 
         System.out.println("User guardado");
     }
@@ -100,8 +94,8 @@ public class UserService implements UsuariServiceInterface {
         return userRepository.save(user);
     }
 
-    public Role save(Role role) {
-        return roleRepository.save(role);
+    public UsersRoles save(UsersRoles usersRoles) {
+        return usersRolesRepository.save(usersRoles);
     }
 
 }

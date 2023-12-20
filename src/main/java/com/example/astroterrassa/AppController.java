@@ -25,9 +25,6 @@ public class AppController {
         return "register";
     }
 
-    @Autowired
-    private RoleRepository roleRepository;
-
     @PostMapping("/makeRegistration")
     public String makeRegistration(@RequestParam("nombre") String nombre,
                                    @RequestParam("apellidos") String apellidos,
@@ -47,14 +44,11 @@ public class AppController {
         u.setIntents(3);
         userRepository.save(u); // Guarda el usuario primero
 
-        Role r = new Role();
-        r.setRolNombre("usuario");
-        roleRepository.save(r); // Guarda el rol primero
-
-        UsersRoles ur = new UsersRoles();
-        ur.setUser_id(u.getUser_id()); // Ahora el usuario tiene un ID
-        ur.setRole_id(r.getRole_id()); // Ahora el rol tiene un ID
-        usersRolesRepository.save(ur); // Ahora puedes guardar UsersRoles
+        UsersRoles usersRoles = new UsersRoles();
+        usersRoles.setUserId(u.getUser_id());
+        usersRoles.setRoleId(0);
+        usersRoles.setRolNombre("usuario");
+        usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
 
         System.out.println("Created user " + u.getUsername() + " with password " + u.getPassword());
         return "redirect:/login";
