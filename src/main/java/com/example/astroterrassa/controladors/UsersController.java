@@ -3,6 +3,7 @@ package com.example.astroterrassa.controladors;
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.model.Role;
 import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.model.UsersRoles;
 import com.example.astroterrassa.services.UserService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,13 @@ public class UsersController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        // your code here
         return "register";
+    }
+
+    @PostMapping("/register")
+    public String registre2(User user, UsersRoles rol, @RequestParam(name = "seleccioRol")String rolSeleccio){
+        UsuariServices.registrarPersona(user, rol, rolSeleccio);
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
@@ -38,17 +44,10 @@ public class UsersController {
         return "login";
     }
 
-
-    @PostMapping("/register")
-    public String registre2(User user,Role rol,@RequestParam(name = "seleccioRol")String rolSeleccio){
-        UsuariServices.registrarPersona(user, rol, rolSeleccio);
-        return "redirect:/login";
-    }
-
     @GetMapping("/llistaUsuaris")
     public String llistaUsuaris(User user,Model model){
         List<User> listaUsers = UsuariServices.llistarUsers(user);
-        model.addAttribute("usuaris",listaUsers);
+        model.addAttribute("users",listaUsers);
         return "llistaUsuaris";
     }
     @GetMapping("/bloquejats")

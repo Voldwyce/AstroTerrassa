@@ -42,11 +42,9 @@ public class UsuariService implements UserDetailsService {
             throw new RuntimeException("Tu usuario se ha quedado sin intentos, contacte con un administrador para poder acceder");
         }
 
-        var rols = new ArrayList<GrantedAuthority>();
+        var roles = new ArrayList<GrantedAuthority>();
 
-        for (Role rol : usuari.getRols()) {
-            rols.add(new SimpleGrantedAuthority(rol.getNom()));
-        }
+
 
         log.info(usuari.getUsername());
         log.info(usuari.getPassword());

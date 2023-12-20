@@ -36,11 +36,8 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.authorizeHttpRequests((requests) -> requests
-                        //En el nostre cas el mètode hasAnyAuthority fa el mateix que HasAnyRoles, o hasAuthority el mateix que hasRol, però en aquesta nova versió per autoritzar els usuaris, els mètodes
-                        //dels rols, normalment donen problemes, els Authority, no.
-                        .requestMatchers("/iniciGossos/**", "/enviar/**", "/eliminar", "guardarGos/**")
-                        .hasAnyAuthority("veterinari", "pacient","admin").requestMatchers("/registre/**").permitAll().requestMatchers("/llistaUsuaris/**").hasAnyAuthority("admin") //URL iniciGossos on pot accedir el rol de veterinari o pacient
-                        .requestMatchers("/login/**").permitAll().anyRequest().authenticated() //Qualsevol altre sol.licitud que no coincideixi amb les regles anteriors cal autenticació
+                        .requestMatchers("/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers("/llistaUsuaris", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
                 )
 
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
