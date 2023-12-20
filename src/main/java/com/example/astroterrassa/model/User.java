@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 import lombok.Data;
 
 
@@ -48,4 +51,16 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user")
     private UsersRoles usersRoles;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_type")
+    private AuthenticationType authType;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @Column(name = "register_dt")
+    private Date registerDt;
+
+    @Column(name = "last_dt")
+    private Date lastDt;
 }
