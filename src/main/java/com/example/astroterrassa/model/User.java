@@ -2,15 +2,16 @@ package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import lombok.Data;
+
 
 @Data
 @Entity
@@ -21,8 +22,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_user;
 
     @Column(name = "username")
@@ -37,14 +38,6 @@ public class User implements Serializable {
 
     @Column(name = "intentos")
     private int intents;
-    private int notify;
-    private boolean enabled;
-    private int genero;
-
-    @Column(name = "register_dt")
-    private LocalDate register_dt;
-
-    private String last_dt;
 
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(
@@ -53,5 +46,4 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
 }
