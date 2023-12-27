@@ -22,8 +22,12 @@ public class User  {
     private String mail;
     private String username;
     private String password;
+    private int permisos;
     private int notify;
     private boolean enabled;
+
+    @Transient
+    private Role role;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -35,5 +39,9 @@ public class User  {
 
     public long getId() {
         return id_user;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

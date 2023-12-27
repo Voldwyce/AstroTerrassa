@@ -1,6 +1,9 @@
 package com.example.astroterrassa.services;
 
 import com.example.astroterrassa.DAO.UserRepository;
+import com.example.astroterrassa.DAO.RoleRepository;
+
+import com.example.astroterrassa.model.Role;
 import com.example.astroterrassa.model.User;
 import jakarta.transaction.Transactional;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -18,8 +22,17 @@ public class UserService {
     @Autowired
     private UserRepository repo;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    @Autowired
+    private RoleRepository roleRepository;
+
+
+    public List<User> getAllUsers()  {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            Optional<Role> role = roleRepository.findById(user.getPermisos());
+            role.ifPresent(user::setRole);
+        }
+        return users;
     }
 
 

@@ -53,12 +53,16 @@
             margin-left: 50px;
         }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 50px;
-        }
+    .container {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 50px;
+        display: flex; /* Add this line */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 
         th {
             background-color: #4287f5;
@@ -113,6 +117,7 @@
         <th>Apellidos</th>
         <th>Telefono</th>
         <th>Email</th>
+        <th>Permisos</th>
         <th>Notificaciones</th>
         <th>Username</th>
     </tr>
@@ -124,6 +129,7 @@
         <td th:text="${user.apellidos}"></td>
         <td th:text="${user.tlf}"></td>
         <td th:text="${user.mail}"></td>
+        <td th:text="${user.role.name}"></td>
         <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
         <td th:text="${user.username}"></td>
         <td>
