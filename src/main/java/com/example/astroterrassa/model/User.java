@@ -47,6 +47,9 @@ public class User implements Serializable {
     @Column(name = "intentos")
     private int intents;
 
+    @Column(name = "permisos")
+    private Integer permisos;
+
     //Recuperamos de la tabla users_roles el rol que tiene el usuario
     @OneToOne(mappedBy = "user")
     private UsersRoles usersRoles;

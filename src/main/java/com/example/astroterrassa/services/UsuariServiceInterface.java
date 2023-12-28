@@ -7,9 +7,13 @@ import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 import java.util.List;
 
 public interface UsuariServiceInterface {
+
     void guardarUser(User user);
+
     void guardarRol(User user, UsersRoles rol);
-    List<User> llistarUsers(User user);
+
+    List<User> getAllUsers();
+
     User getUserById(Long id);
 
     void processOAuthPostLogin(CustomOAuth2User oAuth2User);
@@ -23,4 +27,5 @@ public interface UsuariServiceInterface {
     void registrarPersona(User user, UsersRoles usersRoles);
 
     void desbloquejarUsuari(Long id,User user);
+
 }

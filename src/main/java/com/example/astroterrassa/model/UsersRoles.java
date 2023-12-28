@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name = "users_roles")
 public class UsersRoles {
 
-    // Definición de las columnas de clave primaria compuesta
     @Id
     @Column(name = "usrol_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +19,6 @@ public class UsersRoles {
     @Column(name = "role_id")
     private int roleId;
 
-    // Definición de la columna 'rol_nombre'
     @Column(name = "rol_nombre")
     private String rolNombre;
 

@@ -4,13 +4,14 @@ import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.DAO.UsersRolesRepository;
 import com.example.astroterrassa.model.AuthenticationType;
 import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.model.UsersRoles;
+import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
-import com.example.astroterrassa.model.UsersRoles;
-import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,10 +54,13 @@ public class UserService implements UsuariServiceInterface {
         System.out.println("Rol guardado");
     }
 
-    @Override
-    public List<User> llistarUsers(User usuari) {
-        return userRepository.findAll();
-
+    public List<User> getAllUsers()  {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            Optional<UsersRoles> role = usersRolesRepository.findById(user.getPermisos());
+            role.ifPresent(user::setUsersRoles);
+        }
+        return users;
     }
 
     @Transactional(readOnly = true)

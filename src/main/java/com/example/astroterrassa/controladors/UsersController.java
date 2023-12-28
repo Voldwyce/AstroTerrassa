@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Slf4j
@@ -25,6 +27,14 @@ public class UsersController {
 
     @Autowired
     private UsersRolesRepository UsersRolesRepository;
+
+    @RequestMapping("/listado")
+    @GetMapping
+    public ModelAndView getAllUsers() {
+        ModelAndView mav = new ModelAndView("listado");
+        mav.addObject("users", UsuariServices.getAllUsers());
+        return mav;
+    }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -42,12 +52,6 @@ public class UsersController {
         return "login";
     }
 
-    @GetMapping("/llistaUsuaris")
-    public String llistaUsuaris(User user,Model model){
-        List<User> listaUsers = UsuariServices.llistarUsers(user);
-        model.addAttribute("users",listaUsers);
-        return "llistaUsuaris";
-    }
     @GetMapping("/bloquejats")
     public String llistaUsuarisBloquejats(User user,Model model){
         List<User> listaUsers = UsuariServices.getBlockedUsers();
