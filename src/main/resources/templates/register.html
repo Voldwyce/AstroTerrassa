@@ -43,10 +43,19 @@
                 <p><input type="password" name="password" required class="form-control" placeholder="password" /></p>
             </div>
             <div>
-                <p><input type="text" name="fecha_nt" required class="form-control" placeholder="fecha_nt" /> </p>
+                <p><input type="date" name="fecha_nt" required class="form-control" placeholder="fecha_nt" /> </p>
             </div>
             <div>
-                <p><input type="text" name="notify" value="1" class="form-control" placeholder="notify" /> </p>
+                <p>
+                    <select required class="form-control" placeholder="genero">
+                        <option value="0">Hombre</option>
+                        <option value="1">Mujer</option>
+                        <option value="2">Otro</option>
+                    </select>
+                </p>
+            </div>
+            <div>
+                <p><input type="checkbox" name="notify" value="1" class="form-control" placeholder="notify" /> </p>
             </div>
             <div>
                 <p><input type="submit" value="Register" class="btn btn-primary" /></p>

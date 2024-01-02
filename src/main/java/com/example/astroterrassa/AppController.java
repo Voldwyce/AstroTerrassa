@@ -94,4 +94,9 @@ public class AppController {
     public String showIndex() {
         return "index";
     }
+
+    @GetMapping("/stats")
+    public String showStats() {
+        return "stats";
+    }
 }

@@ -40,10 +40,10 @@ public class ChartService {
 
         // Filtrar los usuarios basándonos en el año y el mes proporcionados
         for (User user : users) {
-            if (Objects.isNull(user.getRegister_dt())) {
+            if (Objects.isNull(user.getRegisterDt())) {
                 continue;
             }
-            LocalDate registerDate = user.getRegister_dt();
+            LocalDate registerDate = user.getRegisterDt();
             if (year.equals("all") && (month.equals("all") || month.isEmpty())) {
                 // Si se selecciona "all" para el año y el mes, se agrupa por año
                 userCountsByDate.put(String.valueOf(registerDate.getYear()), userCountsByDate.getOrDefault(String.valueOf(registerDate.getYear()), 0L) + 1);
@@ -111,9 +111,9 @@ public class ChartService {
 
         return users.stream()
                 .filter(Objects::nonNull)
-                .filter(user -> user.getFecha_nacimiento() != null)
+                .filter(user -> user.getFecha_nt() != null)
                 .collect(Collectors.groupingBy(user -> {
-                    int age = Period.between(user.getFecha_nacimiento(), LocalDate.now()).getYears();
+                    int age = Period.between(user.getFecha_nt(), LocalDate.now()).getYears();
                     if (age < 18) {
                         return "Menos de 18";
                     } else if (age < 25) {

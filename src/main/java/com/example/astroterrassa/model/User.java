@@ -8,20 +8,17 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
 import lombok.Data;
-import org.apache.tomcat.websocket.AuthenticationType;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
-@Data
 @Entity
 @Table(name = "users")
+@Data
 public class User implements Serializable {
 
     @Serial
@@ -69,11 +66,12 @@ public class User implements Serializable {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @Column(name = "genero")
     private int genero;
-    private LocalDate fecha_nacimiento;
 
     @Column(name = "register_dt")
-    private Date registerDt;
+    private LocalDate registerDt;
 
     @Column(name = "last_dt")
     private Date lastDt;
