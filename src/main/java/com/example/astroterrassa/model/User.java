@@ -64,10 +64,18 @@ public class User implements Serializable {
     @Column(name = "register_dt")
     private Date registerDt;
 
+    @Column(name = "genero")
+    private int genero;
+
     @Column(name = "last_dt")
     private Date lastDt;
+
+    @Column(name = "fecha_nt")
+    private Date fecha_nt;
 
     public long getId() {
         return user_id;
     }
+
+
 }

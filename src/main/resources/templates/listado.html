@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/arnau/src/main/resources/templates/fondo.png');
+            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png');
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -131,7 +131,7 @@
             <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
             <td th:text="${user.username}"></td>
             <td>
-                <a th:href="@{/editUser/(id=${user.user_id})}" class="btn btn-primary">Editar</a> <!-- Change this line -->
+                <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a> <!-- Change this line -->
             <td>
                 <a th:href="@{'/deleteUser/'+${user.user_id}}" class="btn btn-danger btn b earlier btn btn-primary" onclick="return confirm('Seguro que quiere Eliminar?');">Eliminar</a>
             <td>

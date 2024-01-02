@@ -197,4 +197,10 @@ public class UserService implements UsuariServiceInterface {
         HtmlConverter.convertToPdf(htmlTable, outputStream);
         return outputStream.toByteArray();
     }
+
+
+    public void updateUserDetails(String nombre, String apellidos, String mail, String tlf, int notify, int genero, Date fecha_nt, String username) {
+        userRepository.updateUserDetails(nombre, apellidos, mail, tlf, notify, genero, fecha_nt, username);
+    }
+
 }
