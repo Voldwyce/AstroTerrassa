@@ -1,6 +1,7 @@
 package com.example.astroterrassa;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
+
+import java.time.LocalDate;
 
 @Controller
 public class AppController {
@@ -32,6 +35,7 @@ public class AppController {
                                    @RequestParam("mail") String mail,
                                    @RequestParam("username") String username,
                                    @RequestParam("password") String password,
+                                   @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_nt,
                                    @RequestParam("notify") int notify) {
         User u = new User();
         u.setNombre(nombre);
@@ -40,6 +44,8 @@ public class AppController {
         u.setTlf(tlf);
         u.setMail(mail);
         u.setUsername(username);
+        u.setFecha_nt(fecha_nt);
+        u.setPermisos(1);
         u.setNotify(notify);
         u.setIntents(3);
         userRepository.save(u); // Guarda el usuario primero
@@ -51,7 +57,7 @@ public class AppController {
         usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
 
         System.out.println("Created user " + u.getUsername() + " with password " + u.getPassword());
-        return "redirect:/login";
+        return "redirect:/index";
     }
 
     @RequestMapping("/login")

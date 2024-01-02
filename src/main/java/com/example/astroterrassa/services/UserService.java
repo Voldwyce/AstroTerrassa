@@ -131,12 +131,13 @@ public class UserService implements UsuariServiceInterface {
         // Crea y guarda el usuario
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPermisos(1);
         user.setIntents(3);
         User savedUser = userRepository.save(user); // Guarda el usuario en la base de datos
 
         // Asigna el User_id y el Role_id a UsersRoles y lo guarda
         usersRoles.setUserId(savedUser.getUser_id());
-        usersRoles.setRoleId(0);
+        usersRoles.setRoleId(1);
         usersRoles.setRolNombre("usuario");
         usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
 

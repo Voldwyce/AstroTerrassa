@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Data
@@ -66,4 +67,9 @@ public class User implements Serializable {
 
     @Column(name = "last_dt")
     private Date lastDt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_nt")
+    private LocalDate fecha_nt;
+
 }
