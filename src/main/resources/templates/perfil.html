@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Perfil - ERP</title>
+    <title>Listado de Usuarios</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -54,11 +53,31 @@
             margin-left: 50px;
         }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 15px;
+    .container {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 50px;
+        display: flex; /* Add this line */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+        th {
+            background-color: #4287f5;
+            color: white;
+        }
+
+        th,
+        td {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+            border-width: thin;
             padding: 20px;
-            margin-top: 50px;
+            border-radius: 10px;
         }
 
         /* Agregar estilos específicos para editPerfil.html si es necesario */
@@ -81,7 +100,6 @@
     <a class="navbar-brand" href="/index">ERP</a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <!-- Puedes agregar más elementos de navegación si es necesario -->
         </ul>
     </div>
 </nav>
@@ -90,34 +108,26 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1 class="text-center">Editar Perfil</h1>
-    <form action="/guardarCambios" method="post" class="col-6 mx-auto">
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" required>
+    <h1>Perfil de Usuario</h1>
+    <hr>
+    <table>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Perfil de Usuario</h5>
+                <p class="card-text">Nombre: <span th:text="${user.nombre}"></span></p>
+                <p class="card-text">Apellidos: <span th:text="${user.apellidos}"></span></p>
+                <p class="card-text">Email: <span th:text="${user.mail}"></span></p>
+                <p class="card-text">Teléfono: <span th:text="${user.tlf}"></span></p>
+                <p class="card-text">Nombre de usuario: <span th:text="${user.username}"></span></p>
+                <p class="card-text">Notificaciones: <span th:text="${user.notify}"></span></p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" class="form-control" id="apellidos" name="apellidos" required>
-        </div>
-        <div class="form-group">
-            <label for="telefono">Teléfono:</label>
-            <input type="text" class="form-control" id="telefono" name="telefono">
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="recibirEmails" name="recibirEmails">
-            <label class="form-check-label" for="recibirEmails">Recibir emails</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    </form>
+
+    </table>
+    <div class="text-center">
+        <a href="/update_profile" class="btn btn-primary">Modificar Datos</a>
+    </div>
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->

@@ -1,6 +1,7 @@
-package com.example.astroterrassa.Conroller;
+package com.example.astroterrassa;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,10 @@ public class AppController {
     @Autowired
     private UserRepository userRepository;
 
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private UsersRolesRepository usersRolesRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @RequestMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -31,15 +35,23 @@ public class AppController {
                                    @RequestParam("notify") int notify) {
         User u = new User();
         u.setNombre(nombre);
+        u.setPassword(passwordEncoder.encode(password));
         u.setApellidos(apellidos);
         u.setTlf(tlf);
-        u.setUsername(username);
         u.setMail(mail);
-        u.setPassword(passwordEncoder.encode(password));
+        u.setUsername(username);
         u.setNotify(notify);
-        userRepository.save(u);
+        u.setIntents(3);
+        userRepository.save(u); // Guarda el usuario primero
+
+        UsersRoles usersRoles = new UsersRoles();
+        usersRoles.setUserId(u.getUser_id());
+        usersRoles.setRoleId(0);
+        usersRoles.setRolNombre("usuario");
+        usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
+
         System.out.println("Created user " + u.getUsername() + " with password " + u.getPassword());
-        return "redirect:/login";
+        return "redirect:/index";
     }
 
     @RequestMapping("/login")
@@ -56,6 +68,19 @@ public class AppController {
         } else {
             return "redirect:/login";
         }
+    }
+
+    // Método para asignar roles solo uno a cada usuario, accesible solo para administradores
+    @PreAuthorize("hasRole('admin')")
+    @PostMapping("/asignarRol")
+    public String asignarRol(@RequestParam("username") String username,
+                             @RequestParam("rol") String rol) {
+        User user = userRepository.findByUsername(username);
+        UsersRoles usersRoles = new UsersRoles();
+        usersRoles.setRolNombre(rol);
+        usersRolesRepository.save(usersRoles);
+        userRepository.save(user);
+        return "redirect:/index";
     }
 
     @RequestMapping("/index")
