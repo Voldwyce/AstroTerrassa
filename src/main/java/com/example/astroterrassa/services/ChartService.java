@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ public class ChartService {
                 return getUsersRegisteredData(year, month);
             case "Genero":
                 return getUsersByGenderData();
+            case "Edad":
+                return getUsersByAgeData();
             // Agrega aquí más casos según los tipos de datos que quieras soportar
             default:
                 throw new IllegalArgumentException("Tipo de datos no soportado: " + dataType);
@@ -37,6 +40,9 @@ public class ChartService {
 
         // Filtrar los usuarios basándonos en el año y el mes proporcionados
         for (User user : users) {
+            if (Objects.isNull(user.getRegister_dt())) {
+                continue;
+            }
             LocalDate registerDate = user.getRegister_dt();
             if (year.equals("all") && (month.equals("all") || month.isEmpty())) {
                 // Si se selecciona "all" para el año y el mes, se agrupa por año
@@ -85,6 +91,7 @@ public class ChartService {
 
         // Agrupar los usuarios por género y contar cuántos usuarios hay de cada género
         return users.stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(user -> {
                     switch (user.getGenero()) {
                         case 0:
@@ -95,6 +102,32 @@ public class ChartService {
                             return "Mujer";
                         default:
                             return "Desconocido";
+                    }
+                }, Collectors.counting()));
+    }
+
+    public Map<String, Long> getUsersByAgeData() {
+        List<User> users = userRepository.findAll();
+
+        return users.stream()
+                .filter(Objects::nonNull)
+                .filter(user -> user.getFecha_nacimiento() != null)
+                .collect(Collectors.groupingBy(user -> {
+                    int age = Period.between(user.getFecha_nacimiento(), LocalDate.now()).getYears();
+                    if (age < 18) {
+                        return "Menos de 18";
+                    } else if (age < 25) {
+                        return "18-24";
+                    } else if (age < 35) {
+                        return "25-34";
+                    } else if (age < 45) {
+                        return "35-44";
+                    } else if (age < 55) {
+                        return "45-54";
+                    } else if (age < 65) {
+                        return "55-64";
+                    } else {
+                        return "65 o más";
                     }
                 }, Collectors.counting()));
     }

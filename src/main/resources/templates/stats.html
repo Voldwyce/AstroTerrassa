@@ -101,6 +101,7 @@
         <option value="0">Seleccione un tipo de gráfico</option>
         <option value="Usuarios registrados">Usuarios registrados</option>
         <option value="Genero">Género de los usuarios</option>
+        <option value="Edad">Edad de los usuarios</option>
         <!-- Agrega más opciones según los tipos de datos que quieras soportar -->
     </select>
     <!-- Aquí es donde se mostrará el gráfico -->
@@ -144,10 +145,8 @@ document.getElementById('dataType').addEventListener('change', function() {
     var chartTypes = {
         'Usuarios registrados': 'bar',
         'Genero': 'doughnut',
-        // Agrega más tipos de gráficos aquí según tus necesidades
+        'Edad': 'doughnut'
     };
-
-
 
     // Verifica si el tipo de gráfico seleccionado está definido
     if (selectedType in chartTypes) {
@@ -160,21 +159,26 @@ document.getElementById('dataType').addEventListener('change', function() {
     }
 
     // Oculta los desplegables de año y mes si se selecciona "Género de los usuarios"
-    if (selectedType === 'Genero') {
+    if (selectedType === 'Genero' || selectedType === 'Edad') {
         yearSelect.style.display = 'none';
         monthSelect.style.display = 'none';
-        chartCanvas.style.height = '50px'; // Ajusta el tamaño del gráfico de género
+        acceptButton.style.display = 'none';
     } else if (selectedType === 'Usuarios registrados') {
         yearSelect.style.display = 'inline-block';
         monthSelect.style.display = 'inline-block';
         acceptButton.style.display = 'inline-block';
-        chartCanvas.style.height = '400px'; // Restaura el tamaño original del gráfico
     } else {
         yearSelect.style.display = 'none';
         monthSelect.style.display = 'none';
         acceptButton.style.display = 'none';
-        chartCanvas.style.height = '400px'; // Restaura el tamaño original del gráfico
     }
+
+        // Ajusta el aspectRatio para los gráficos
+        var aspectRatio = 2;
+        if (chartType === 'doughnut') {
+            aspectRatio = 1;
+        }
+
 
     // Dispara el evento click del botón "Aceptar" para cargar el gráfico
     acceptButton.click();
@@ -189,6 +193,8 @@ document.getElementById('dataType').addEventListener('change', function() {
                 }]
             },
             options: {
+             responsive: true,
+             aspectRatio: 1000,
                 scales: {
                     xAxes: [{
                         type: 'time',
@@ -228,9 +234,6 @@ document.getElementById('year').addEventListener('change', function() {
         monthSelect.style.display = 'none';
     }
 });
-
-// Llama a esta función para inicializar el estado del desplegable del mes cuando se carga la página
-document.getElementById('year').dispatchEvent(new Event('change'));
 
 // Llama a esta función para inicializar el estado del desplegable del mes cuando se carga la página
 document.getElementById('year').dispatchEvent(new Event('change'));
@@ -289,10 +292,15 @@ document.getElementById('acceptButton').addEventListener('click', function() {
 
             // Determina el tipo de gráfico basado en dataType
             var chartType = 'bar';
+            var aspectRatio = 2;
             if (dataType === 'Usuarios registrados') {
                 chartType = 'bar';
             } else if (dataType === 'Genero') {
                 chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'Edad') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
             }
 
             // Actualiza el gráfico con los datos recibidos
@@ -306,6 +314,8 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                     }]
                 },
                 options: {
+                    responsive: true,
+                    aspectRatio: aspectRatio,
                     scales: {
                         xAxes: [{
                             type: 'time',

@@ -16,7 +16,6 @@ public class User  {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
-
     private String nombre;
     private String apellidos;
     private String tlf;
@@ -26,6 +25,7 @@ public class User  {
     private int notify;
     private boolean enabled;
     private int genero;
+    private LocalDate fecha_nacimiento;
 
     @Column(name = "register_dt")
     private LocalDate register_dt;
