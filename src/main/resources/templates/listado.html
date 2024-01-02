@@ -66,7 +66,7 @@
 
         th {
             background-color: #4287f5;
-            color: white;
+            color: Black;
         }
 
         th,
@@ -78,6 +78,7 @@
             border-width: thin;
             padding: 20px;
             border-radius: 10px;
+            );
         }
 
         /* Agregar estilos específicos para editPerfil.html si es necesario */
@@ -113,23 +114,27 @@
     <table>
         <thead>
         <tr>
+            <th>Username</th>
             <th>Nombre</th>
             <th>Apellidos</th>
             <th>Telefono</th>
             <th>Email</th>
             <th>Notificaciones</th>
-            <th>Username</th>
+            <th>Genero</th>
+            <th>Fecha Nacimiento</th>
         </tr>
         </thead>
         <tbody>
         <!-- Cada fila representa un usuario -->
         <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
             <td th:text="${user.nombre}"></td>
             <td th:text="${user.apellidos}"></td>
             <td th:text="${user.tlf}"></td>
             <td th:text="${user.mail}"></td>
             <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
-            <td th:text="${user.username}"></td>
+            <td th:text="${user.genero == 1 ? 'Hombre' : 'Mujer'}"></td>
+            <td th:text="${#dates.format(user.fecha_nt, 'dd-MM-yyyy')}"></td> <!-- Nueva celda -->
             <td>
                 <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a> <!-- Change this line -->
             <td>
