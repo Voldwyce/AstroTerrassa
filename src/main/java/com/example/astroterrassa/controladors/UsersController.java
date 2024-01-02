@@ -10,6 +10,10 @@ import java.security.Principal;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class UsersController {
     @Autowired
     private UserService UsuariServices;
+
+
 
     @Autowired
     private UserRepository userRepository;
@@ -95,6 +101,22 @@ public class UsersController {
     public String deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return "redirect:/listado";
+    }
+
+    @GetMapping("/persons/pdf")
+    public ResponseEntity<byte[]> getPersonsPdf() {
+        // Aquí debes generar tu tabla HTML como una cadena
+        String htmlTable = UsuariServices.generateHtmlTable();
+
+        // Luego, llama a la función createPdfFromHtmlTable para convertir la tabla HTML a PDF
+        byte[] pdfBytes = UsuariServices.createPdfFromHtmlTable(htmlTable);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("person-list.pdf", "person-list.pdf");
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
 

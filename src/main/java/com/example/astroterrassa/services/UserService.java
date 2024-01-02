@@ -7,6 +7,7 @@ import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.UsersRoles;
 import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 
+import java.io.ByteArrayOutputStream;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.itextpdf.html2pdf.HtmlConverter;
 
 @Service
 @Transactional
@@ -165,5 +168,33 @@ public class UserService implements UsuariServiceInterface {
 
     public void create(User user) {
         repo.createUser(user.getUsername(), user.getPassword(), user.getAuthType());
+    }
+
+    public String generateHtmlTable() {
+        List<User> users = getAllUsers();
+        StringBuilder htmlTable = new StringBuilder("<table><tr><th>Nombre</th><th>Apellidos</th><th>Telefono</th><th>Email</th><th>Notificaciones</th><th>Username</th></tr>");
+        for (User user : users) {
+            htmlTable.append("<tr><td>")
+                    .append(user.getNombre())
+                    .append("</td><td>")
+                    .append(user.getApellidos())
+                    .append("</td><td>")
+                    .append(user.getTlf())
+                    .append("</td><td>")
+                    .append(user.getMail())
+                    .append("</td><td>")
+                    .append(user.getNotify())
+                    .append("</td><td>")
+                    .append(user.getUsername())
+                    .append("</td></tr>");
+        }
+        htmlTable.append("</table>");
+        return htmlTable.toString();
+    }
+
+    public byte[] createPdfFromHtmlTable(String htmlTable) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        HtmlConverter.convertToPdf(htmlTable, outputStream);
+        return outputStream.toByteArray();
     }
 }
