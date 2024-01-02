@@ -49,6 +49,8 @@ public class ConfiguracioAutenticacio {
                 (requests) -> requests
                         .requestMatchers( "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
                         .requestMatchers( "/listado", "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
+                        .requestMatchers( "/deleteUser","/perfil","/listado","/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers(  "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
                         .requestMatchers("/assignRol").hasRole("admin")
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )

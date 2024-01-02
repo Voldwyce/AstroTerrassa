@@ -90,7 +90,7 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="/">Inicio</a>
     <a href="#">Productos</a>
-    <a href="#">Clientes</a>
+    <a href="/listado">Clientes</a>
     <a href="#">Pedidos</a>
     <a href="#">Reportes</a>
     <a href="#">Configuración</a>
@@ -108,44 +108,26 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Listado de Usuarios</h1>
+    <h1>Perfil de Usuario</h1>
     <hr>
     <table>
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>Telefono</th>
-            <th>Email</th>
-            <th>Notificaciones</th>
-            <th>Username</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Cada fila representa un usuario -->
-        <tr th:each="user : ${users}">
-            <td th:text="${user.nombre}"></td>
-            <td th:text="${user.apellidos}"></td>
-            <td th:text="${user.tlf}"></td>
-            <td th:text="${user.mail}"></td>
-            <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
-            <td th:text="${user.username}"></td>
-            <td>
-                <a th:href="@{/editUser/(id=${user.user_id})}" class="btn btn-primary">Editar</a> <!-- Change this line -->
-            <td>
-                <a th:href="@{'/deleteUser/'+${user.user_id}}" class="btn btn-danger btn b earlier btn btn-primary" onclick="return confirm('Seguro que quiere Eliminar?');">Eliminar</a>
-            <td>
-                <a th:href="@{/assignRole/(id=${user.user_id})}" class="btn btn-primary">Editar roles</a> <!-- Change this line -->
-            </td>
-        </tr>
-        </tbody>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Perfil de Usuario</h5>
+                <p class="card-text">Nombre: <span th:text="${user.nombre}"></span></p>
+                <p class="card-text">Apellidos: <span th:text="${user.apellidos}"></span></p>
+                <p class="card-text">Email: <span th:text="${user.mail}"></span></p>
+                <p class="card-text">Teléfono: <span th:text="${user.tlf}"></span></p>
+                <p class="card-text">Nombre de usuario: <span th:text="${user.username}"></span></p>
+                <p class="card-text">Notificaciones: <span th:text="${user.notify}"></span></p>
+            </div>
+        </div>
+
     </table>
     <div class="text-center">
-        <a href="/register" class="btn btn-primary">Nuevo Usuario</a>
-        <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
+        <a href="/update_profile" class="btn btn-primary">Modificar Datos</a>
     </div>
-
-    <button onclick="window.location.href='/persons/pdf'">Descargar como PDF</button>
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->
