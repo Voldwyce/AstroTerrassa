@@ -47,8 +47,10 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers("/listado", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers( "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
+                        .requestMatchers( "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers( "/listado", "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
+                        .requestMatchers("/assignRol").hasRole("admin")
+                        .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
                         .loginPage("/login")//Pàgina on es troba el formulari per fer login personalitzat
