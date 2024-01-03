@@ -8,6 +8,7 @@ import com.example.astroterrassa.model.UsersRoles;
 import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 
 import java.time.LocalDate;
+import java.io.ByteArrayOutputStream;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.itextpdf.html2pdf.HtmlConverter;
 
 @Service
 @Transactional
@@ -178,4 +181,42 @@ public class UserService implements UsuariServiceInterface {
         userRepository.save(user);
         System.out.println("S'ha bloquejat l'usuari");
     }
+
+    public String generateHtmlTable() {
+        List<User> users = getAllUsers();
+        StringBuilder htmlTable = new StringBuilder("<table><tr><th>Nombre</th><th>Apellidos</th><th>Telefono</th><th>Email</th><th>Notificaciones</th><th>Username</th></tr>");
+        for (User user : users) {
+            htmlTable.append("<tr><td>")
+                    .append(user.getNombre())
+                    .append("</td><td>")
+                    .append(user.getApellidos())
+                    .append("</td><td>")
+                    .append(user.getTlf())
+                    .append("</td><td>")
+                    .append(user.getMail())
+                    .append("</td><td>")
+                    .append(user.getNotify())
+                    .append("</td><td>")
+                    .append(user.getUsername())
+                    .append("</td></tr>");
+        }
+        htmlTable.append("</table>");
+        return htmlTable.toString();
+    }
+
+    public byte[] createPdfFromHtmlTable(String htmlTable) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        HtmlConverter.convertToPdf(htmlTable, outputStream);
+        return outputStream.toByteArray();
+    }
+
+
+    public void updateUserDetails(String nombre, String apellidos, String mail, String tlf, int notify, int genero, Date fecha_nt, String username) {
+        userRepository.updateUserDetails(nombre, apellidos, mail, tlf, notify, genero, fecha_nt, username);
+    }
+
+    public void cambiarPermiso(String username, int permisos) {
+        userRepository.cambiarPermiso(username, permisos);
+    }
+
 }

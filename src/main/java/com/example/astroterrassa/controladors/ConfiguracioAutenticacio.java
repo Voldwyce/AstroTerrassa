@@ -44,7 +44,10 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers(  "/fragments", "/perfil", "/register", "/makeRegistration", "/stats", "/logout", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers( "/fragments", "/pago","/cambiarPermiso", "/userDetails/", "/editar", "/deleteUser","/perfil","/listado","/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers(  "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
+                        .requestMatchers("/assignRol").hasRole("admin")
+                        .requestMatchers(   "/perfil", "/register", "/makeRegistration", "/stats", "/logout", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
                         .requestMatchers(  "/deleteUser", "/editUser", "/listado", "/assignRole", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )

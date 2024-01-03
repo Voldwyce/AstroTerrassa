@@ -79,8 +79,6 @@
             padding: 20px;
             border-radius: 10px;
         }
-
-        /* Agregar estilos específicos para editPerfil.html si es necesario */
     </style>
 </head>
 
@@ -93,7 +91,7 @@
     <a href="/listado">Clientes</a>
     <a href="#">Pedidos</a>
     <a href="#">Reportes</a>
-    <a href="/perfil">Configuración</a>
+    <a href="#">Configuración</a>
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
@@ -108,26 +106,31 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Perfil de Usuario</h1>
-    <hr>
-    <table>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Perfil de Usuario</h5>
-                <p class="card-text">Nombre: <span th:text="${user.nombre}"></span></p>
-                <p class="card-text">Apellidos: <span th:text="${user.apellidos}"></span></p>
-                <p class="card-text">Email: <span th:text="${user.mail}"></span></p>
-                <p class="card-text">Teléfono: <span th:text="${user.tlf}"></span></p>
-                <p class="card-text">Nombre de usuario: <span th:text="${user.username}"></span></p>
-                <p class="card-text">Notificaciones: <span th:text="${user.notify == 1 ? 'Si' : 'No'}"></span></p>
-            </div>
+    <h1>Cambiar Permiso</h1>
+    <form action="#" th:action="@{/cambiarPermiso/{username}(username=${user.username})}" th:object="${user}" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" readonly />
         </div>
-
-    </table>
-    <div class="text-center">
-        <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a>
-    </div>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" readonly />
+        </div>
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" th:field="*{apellidos}" readonly />
+        </div>
+        <div>
+            <label for="permisos">Permiso:</label>
+            <select id="permisos" th:field="*{permisos}">
+                <option value="1">Usuario</option>
+                <option value="2">Administrador</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Cambiar Permiso</button>
+        </div>
+    </form>
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->
