@@ -36,4 +36,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.nombre = ?1, u.apellidos = ?2, u.mail = ?3, u.tlf = ?4, u.notify = ?5, u.genero = ?6, u.fecha_nt = ?7 WHERE u.username = ?8")
     void updateUserDetails(String nombre, String apellidos, String mail, String tlf, int notify, int genero, Date fecha_nt, String username);
+
+    @Modifying
+    @Query("UPDATE User u SET u.permisos = ?2 WHERE u.username = ?1")
+    void cambiarPermiso(String username, int permisos);
+
 }

@@ -203,4 +203,8 @@ public class UserService implements UsuariServiceInterface {
         userRepository.updateUserDetails(nombre, apellidos, mail, tlf, notify, genero, fecha_nt, username);
     }
 
+    public void cambiarPermiso(String username, int permisos) {
+        userRepository.cambiarPermiso(username, permisos);
+    }
+
 }

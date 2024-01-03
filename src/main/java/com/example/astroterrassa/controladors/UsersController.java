@@ -23,8 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 
 
@@ -40,11 +41,33 @@ public class UsersController {
     @Autowired
     private UsersRolesRepository UsersRolesRepository;
 
+   /* @RequestMapping("/listado")
+    @GetMapping
+    public ModelAndView getAllUsers() {
+        ModelAndView mav = new ModelAndView("listado");
+        mav.addObject("users", UsuariServices.getAllUsers());
+        return mav;
+    }*/
+
     @RequestMapping("/listado")
     @GetMapping
     public ModelAndView getAllUsers() {
         ModelAndView mav = new ModelAndView("listado");
         mav.addObject("users", UsuariServices.getAllUsers());
+
+        // Obtén el usuario actual
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        User currentUser = UsuariServices.getUserByUsername(username);
+
+        // Añade el usuario actual al modelo
+        mav.addObject("currentUser", currentUser);
+
         return mav;
     }
 
@@ -123,6 +146,19 @@ public class UsersController {
         Date sqlDate = new Date(fecha_nt.getTime());
         UsuariServices.updateUserDetails(nombre, apellidos, mail, tlf, notifyInt, genero, sqlDate, username);
         return "redirect:/userDetails/" + username;
+    }
+
+    @GetMapping("/cambiarPermiso/{username}")
+    public String cambiarPermiso(@PathVariable String username, Model model) {
+        User user = UsuariServices.getUserByUsername(username);
+        model.addAttribute("user", user);
+        return "cambiarPermiso";
+    }
+
+    @PostMapping("/cambiarPermiso/{username}")
+    public String cambiarPermiso(@PathVariable String username, @RequestParam int permisos, Model model) {
+        UsuariServices.cambiarPermiso(username, permisos);
+        return "redirect:/listado";
     }
 
 }
