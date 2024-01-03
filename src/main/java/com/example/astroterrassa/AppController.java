@@ -40,8 +40,11 @@ public class AppController {
                                    @RequestParam("username") String username,
                                    @RequestParam("password") String password,
                                    @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_nt,
-                                   @RequestParam("notify") int notify,
+                                   @RequestParam(value = "notify_check", required = false) Boolean notify_check,
                                    @RequestParam("genero") int genero) {
+        int notify = (notify_check != null && notify_check) ? 1 : 0;
+
+
         User u = new User();
         u.setNombre(nombre);
         u.setPassword(passwordEncoder.encode(password));
