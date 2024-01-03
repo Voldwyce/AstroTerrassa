@@ -93,7 +93,7 @@
     <a href="/listado">Clientes</a>
     <a href="#">Pedidos</a>
     <a href="#">Reportes</a>
-    <a href="#">Configuración</a>
+    <a href="/perfil">Configuración</a>
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
@@ -120,7 +120,7 @@
                 <p class="card-text">Email: <span th:text="${user.mail}"></span></p>
                 <p class="card-text">Teléfono: <span th:text="${user.tlf}"></span></p>
                 <p class="card-text">Nombre de usuario: <span th:text="${user.username}"></span></p>
-                <p class="card-text">Notificaciones: <span th:text="${user.notify}"></span></p>
+                <p class="card-text">Notificaciones: <span th:text="${user.notify == 1 ? 'Si' : 'No'}"></span></p>
             </div>
         </div>
 

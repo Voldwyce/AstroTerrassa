@@ -73,6 +73,9 @@ public class User implements Serializable {
     @Column(name = "fecha_nt")
     private Date fecha_nt;
 
+    @Column(name = "dni")
+    private String dni;
+
     public long getId() {
         return user_id;
     }

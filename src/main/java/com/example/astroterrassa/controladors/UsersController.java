@@ -41,14 +41,6 @@ public class UsersController {
     @Autowired
     private UsersRolesRepository UsersRolesRepository;
 
-   /* @RequestMapping("/listado")
-    @GetMapping
-    public ModelAndView getAllUsers() {
-        ModelAndView mav = new ModelAndView("listado");
-        mav.addObject("users", UsuariServices.getAllUsers());
-        return mav;
-    }*/
-
     @RequestMapping("/listado")
     @GetMapping
     public ModelAndView getAllUsers() {
