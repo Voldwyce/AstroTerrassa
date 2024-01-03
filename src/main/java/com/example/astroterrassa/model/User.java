@@ -1,12 +1,12 @@
 package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
-
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,10 +16,9 @@ import java.util.Date;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
-@Data
 @Entity
 @Table(name = "users")
+@Data
 public class User implements Serializable {
 
     @Serial
@@ -27,7 +26,7 @@ public class User implements Serializable {
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
 
     @Column(name = "nombre")
@@ -68,8 +67,11 @@ public class User implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "genero")
+    private int genero;
+
     @Column(name = "register_dt")
-    private Date registerDt;
+    private LocalDate registerDt;
 
     @Column(name = "last_dt")
     private Date lastDt;
