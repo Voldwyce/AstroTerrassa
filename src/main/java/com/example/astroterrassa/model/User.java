@@ -78,7 +78,7 @@ public class User implements Serializable {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fecha_nt")
-    private LocalDate fecha_nt;
+    private Date fecha_nt;
 
     @Column(name = "dni")
     private String dni;

@@ -3,7 +3,6 @@ package com.example.astroterrassa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
 import com.example.astroterrassa.services.EmailService;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -41,7 +39,7 @@ public class AppController {
                                    @RequestParam("mail") String mail,
                                    @RequestParam("username") String username,
                                    @RequestParam("password") String password,
-                                   @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_nt,
+                                   @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_nt,
                                    @RequestParam("notify") int notify,
                                    @RequestParam("genero") int genero) {
         User u = new User();
