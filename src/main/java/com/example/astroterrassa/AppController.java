@@ -10,8 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
+import com.example.astroterrassa.services.EmailService;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Controller
 public class AppController {
@@ -24,6 +27,8 @@ public class AppController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Autowired
+    private EmailService emailService;
     @RequestMapping("/register")
     public String showRegistrationForm(Model model) {
         return "register";
@@ -37,7 +42,8 @@ public class AppController {
                                    @RequestParam("username") String username,
                                    @RequestParam("password") String password,
                                    @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_nt,
-                                   @RequestParam("notify") int notify) {
+                                   @RequestParam("notify") int notify,
+                                   @RequestParam("genero") int genero) {
         User u = new User();
         u.setNombre(nombre);
         u.setPassword(passwordEncoder.encode(password));
@@ -46,10 +52,17 @@ public class AppController {
         u.setMail(mail);
         u.setUsername(username);
         u.setFecha_nt(fecha_nt);
+        u.setGenero(genero);
         u.setPermisos(1);
+        if (notify != 1) {
+            notify = 0;
+        }
         u.setNotify(notify);
         u.setIntents(3);
+        u.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
+        emailService.sendWelcomeEmail(u);
+
 
         UsersRoles usersRoles = new UsersRoles();
         usersRoles.setUserId(u.getUser_id());
@@ -69,7 +82,9 @@ public class AppController {
     @PostMapping("/login")
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password) {
+
         User user = userRepository.findByUsername(username);
+        user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return "index";
         } else {
