@@ -44,11 +44,8 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers( "/fragments", "/pago","/cambiarPermiso", "/userDetails/", "/editar", "/deleteUser","/perfil","/listado","/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers(  "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
-                        .requestMatchers("/assignRol").hasRole("admin")
-                        .requestMatchers(   "/perfil", "/register", "/makeRegistration", "/stats", "/logout", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers(  "/deleteUser", "/editUser", "/listado", "/assignRole", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
+                        .requestMatchers("/fragments", "/pago", "/cambiarPermiso", "/userDetails/", "/editar", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permitir acceso a todos
+                        .requestMatchers("/stats", "/bloquejats", "/desbloqueja/{id}", "/deleteUser", "/editUser", "/listado", "/assignRole").hasRole("ADMIN") //Permitir acceso solo a ADMIN
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem

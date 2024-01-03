@@ -125,8 +125,9 @@
             <input type="checkbox" id="notify" name="notify" th:checked="${user.notify == 1}">
             <label for="genero">Genero:</label>
             <select id="genero" name="genero">
-                <option value="1" th:selected="${user.genero == 1}">Masculino</option>
-                <option value="2" th:selected="${user.genero == 2}">Femenino</option>
+                <option value="0" th:selected="${user.genero == 0}">Hombre</option>
+                <option value="1" th:selected="${user.genero == 1}">Mujer</option>
+                <option value="2" th:selected="${user.genero == 2}">Otro</option>
             </select>
             <label for="fecha_nt">Fecha de Nacimiento:</label>
             <input type="date" id="fecha_nt" name="fecha_nt" th:value="${#dates.format(user.fecha_nt, 'yyyy-MM-dd')}">

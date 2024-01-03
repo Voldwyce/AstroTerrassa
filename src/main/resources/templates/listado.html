@@ -133,7 +133,7 @@
             <td th:text="${user.tlf}"></td>
             <td th:text="${user.mail}"></td>
             <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
-            <td th:text="${user.genero == 1 ? 'Hombre' : 'Mujer'}"></td>
+            <td th:text="${user.genero == 0 ? 'Hombre' : (user.genero == 1 ? 'Mujer' : 'Otro')}"></td>
             <td th:text="${#dates.format(user.fecha_nt, 'dd-MM-yyyy')}"></td> <!-- Nueva celda -->
             <td th:if="${currentUser.permisos == 2}">
                 <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a>

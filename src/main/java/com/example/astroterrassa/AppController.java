@@ -54,14 +54,14 @@ public class AppController {
         u.setFecha_nt(fecha_nt);
         u.setGenero(genero);
         u.setPermisos(1);
-        if (notify != 1) {
-            notify = 0;
-        }
         u.setNotify(notify);
         u.setIntents(3);
         u.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
+
+        if (notify == 1) {
         emailService.sendWelcomeEmail(u);
+        }
 
 
         UsersRoles usersRoles = new UsersRoles();
