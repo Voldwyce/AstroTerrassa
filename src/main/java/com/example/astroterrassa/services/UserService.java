@@ -171,4 +171,11 @@ public class UserService implements UsuariServiceInterface {
     public void create(User user) {
         repo.createUser(user.getUsername(), user.getPassword(), user.getAuthType());
     }
+
+    public void bloquejarUsuari(Long id, User user) {
+        user = getUserById(id);
+        user.setIntents(0);
+        userRepository.save(user);
+        System.out.println("S'ha bloquejat l'usuari");
+    }
 }

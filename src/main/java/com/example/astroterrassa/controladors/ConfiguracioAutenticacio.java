@@ -44,10 +44,8 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers( "/deleteUser", "/perfil", "/stats", "/listado", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers(  "/assignRol", "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
-                        .requestMatchers(  "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers(  "/deleteUser", "/listado", "/assignRol", "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
+                        .requestMatchers(  "/fragments", "/perfil", "/register", "/makeRegistration", "/stats", "/logout", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers(  "/deleteUser", "/editUser", "/listado", "/assignRole", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
@@ -57,15 +55,15 @@ public class ConfiguracioAutenticacio {
                         .permitAll() //Permet acceddir a tothom
                 )
                 .logout((logout) -> logout //Objecte que representa el formulari de logout personalitzat que utilitzarem
-                        .logoutUrl("/logout") //URL on es troba el formulari per fer logout personalitzat
-                        .logoutSuccessUrl("/") //URL on es redirigeix després de fer logout
-                        .permitAll() //Permet accedir a tothom
+                    .logoutUrl("/logout") //URL on es troba el formulari per fer logout
+                    .logoutSuccessUrl("/logout.html") //Pàgina on es redirigeix després de fer logout
+                    .permitAll() //Permet accedir a tothom
                 )
-                .oauth2Login(
-                        oauth2 -> {
-                            oauth2.loginPage("/login");
-                            oauth2.userInfoEndpoint(
-                                    userInfo -> userInfo.userService(oauth2UserService)
+                .oauth2Login( //Objecte que representa el formulari de login amb Google que utilitzarem
+                        oauth2 -> { //Configuració del formulari de login amb Google
+                            oauth2.loginPage("/login"); //Pàgina on es troba el formulari per fer login amb Google
+                            oauth2.userInfoEndpoint( //Objecte que representa el formulari de login amb Google que utilitzarem
+                                    userInfo -> userInfo.userService(oauth2UserService) //Configuració del formulari de login amb Google
                             );
                         }
                 )
