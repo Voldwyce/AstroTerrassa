@@ -2,14 +2,11 @@ package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.security.DatabaseLoginSuccessHandler;
-import com.example.astroterrassa.security.UserDetailsServiceImpl;
-import com.example.astroterrassa.security.oauth.OAuthLoginSuccessHandler;
 import com.example.astroterrassa.services.AuthFailureHandler;
 import com.example.astroterrassa.services.AuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,8 +44,8 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers( "/deleteUser", "/perfil", "/listado", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers(  "/assignRol", "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
+                        .requestMatchers( "/deleteUser", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
+                        .requestMatchers(  "/listado", "/assignRol", "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("admin") //Permet accedir a l'administrador
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
@@ -71,7 +68,7 @@ public class ConfiguracioAutenticacio {
                         }
                 )
                 .exceptionHandling((exception) -> exception //Quan es produeix una excepcció 403, accés denegat, mostrem el nostre missatge
-                        .accessDeniedPage("/errors/error403"))
+                        .accessDeniedPage("/error403"))
                 .build();
     }
 

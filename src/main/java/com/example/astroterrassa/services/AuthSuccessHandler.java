@@ -23,6 +23,15 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler  {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,Authentication authentication) throws IOException, ServletException {
         String username = request.getParameter("username");
         log.info(username);
+        authentication.getAuthorities().forEach(authority -> {
+            if(authority.getAuthority().equals("admin")){
+                log.info("L'usuari " + username + " ha iniciat sessió com a administrador");
+            } else if (authority.getAuthority().equals("user")){
+                log.info("L'usuari " + username + " ha iniciat sessió com a usuari");
+            } else if (authority.getAuthority().equals("visitant")){
+                log.info("L'usuari " + username + " ha iniciat sessió com a visitant");
+            }
+        });
         User user = userRepository.findByUsername(username);
 
         if(user.getIntents()>0){
