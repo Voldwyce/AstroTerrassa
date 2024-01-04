@@ -1,13 +1,17 @@
 package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.UserRepository;
+import com.example.astroterrassa.DAO.UsersRolesRepository;
 import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.model.UsersRoles;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,26 +28,32 @@ public class UsuariService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    @Autowired
+    private UsersRolesRepository usersRolesRepository;
+
+    public boolean userHasRole(String username, String role) {
+        User user = userRepository.findByUsername(username);
+        UsersRoles usersRoles = usersRolesRepository.findByUser(user);
+        return usersRoles.getRolNombre().equals(role);
+    }
+
     @Override
-    @Transactional(readOnly = true) //Consulta només de lectura
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User usuari = userRepository.findByUsername(username);
 
-        //Comprovem que existeix l'usuari
         if (usuari == null) {
             throw new UsernameNotFoundException("User not found");
         }
 
-        if(usuari.getIntents()==0){
-            log.info("El usuario ha excedido los intentos");
-            throw new RuntimeException("Tu usuario se ha quedado sin intentos, contacte con un administrador para poder acceder");
-        }
+        UsersRoles usersRoles = usersRolesRepository.findByUser(usuari);
 
-        var roles = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority("ROLE_" + usersRoles.getRolNombre()));
 
         log.info(usuari.getUsername());
         log.info(usuari.getPassword());
 
-        return new org.springframework.security.core.userdetails.User(usuari.getUsername(), usuari.getPassword(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(usuari.getUsername(), usuari.getPassword(), roles);
     }
 }

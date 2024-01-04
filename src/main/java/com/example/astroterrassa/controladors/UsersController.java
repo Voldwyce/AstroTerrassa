@@ -79,18 +79,55 @@ public class UsersController {
         return "login";
     }
 
+    @GetMapping("/logout")
+    public String logout(){
+        return "logout";
+    }
+
+    @GetMapping("/assignRole/{id}")
+    public String showAssignRoleForm(@PathVariable("id") Long id, Model model) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        model.addAttribute("user", user);
+        return "assignRole";
+    }
+
+    @PostMapping("/assignRole")
+    public String submitAssignRoleForm(@ModelAttribute User user, UsersRoles usersRoles) {
+        UsuariServices.guardarRol(user, usersRoles);
+        return "redirect:/listado";
+    }
+
+    @GetMapping("/bloquejar/{id}")
+    public String bloquejarUsuari(@PathVariable Long id,User user){
+        UsuariServices.bloquejarUsuari(id, user);
+        return "redirect:/listado";
+    }
+
     @GetMapping("/bloquejats")
     public String llistaUsuarisBloquejats(User user,Model model){
         List<User> listaUsers = UsuariServices.getBlockedUsers();
         model.addAttribute("usuaris",listaUsers);
-        return "llistaUsuaris";
+        return "listado";
     }
 
     @GetMapping("/desbloqueja/{id}")
     public String desbloquejarUsuari(@PathVariable Long id,User user){
         UsuariServices.desbloquejarUsuari(id, user);
-        return "redirect:/llistaUsuaris";
+        return "redirect:/listado";
 
+    }
+
+    @GetMapping("/editUser/{id}")
+    public String showEditUserForm(@PathVariable("id") Long id, Model model) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        model.addAttribute("user", user);
+        return "editUser";
+    }
+
+    @PostMapping("/editUser")
+    public String submitEditUserForm(@ModelAttribute User user) {
+        userRepository.save(user);
+        return "redirect:/listado";
     }
 
     @GetMapping("/perfil")

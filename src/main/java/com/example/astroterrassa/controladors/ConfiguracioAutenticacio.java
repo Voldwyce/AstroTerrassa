@@ -2,14 +2,11 @@ package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.security.DatabaseLoginSuccessHandler;
-import com.example.astroterrassa.security.UserDetailsServiceImpl;
-import com.example.astroterrassa.security.oauth.OAuthLoginSuccessHandler;
 import com.example.astroterrassa.services.AuthFailureHandler;
 import com.example.astroterrassa.services.AuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,9 +44,8 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers( "/pago","/cambiarPermiso", "/userDetails/", "/editar", "/deleteUser","/perfil","/listado","/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permet accedir a tothom
-                        .requestMatchers(  "/stats", "/bloquejats", "/desbloqueja/{id}").hasRole("ADMIN") //Permet accedir a l'administrador
-                        .requestMatchers("/assignRol").hasRole("admin")
+                        .requestMatchers("/listado","/stats","fragments", "/pago", "/cambiarPermiso", "/userDetails/", "/editar", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permitir acceso a todos
+                        .requestMatchers("/stats", "/bloquejats", "/desbloqueja/{id}", "/deleteUser", "/editUser", "/assignRole").hasRole("ADMIN") //Permitir acceso solo a ADMIN
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
@@ -59,20 +55,20 @@ public class ConfiguracioAutenticacio {
                         .permitAll() //Permet acceddir a tothom
                 )
                 .logout((logout) -> logout //Objecte que representa el formulari de logout personalitzat que utilitzarem
-                        .logoutUrl("/logout") //URL on es troba el formulari per fer logout personalitzat
-                        .logoutSuccessUrl("/") //URL on es redirigeix després de fer logout
-                        .permitAll() //Permet accedir a tothom
+                    .logoutUrl("/logout") //URL on es troba el formulari per fer logout
+                    .logoutSuccessUrl("/logout.html") //Pàgina on es redirigeix després de fer logout
+                    .permitAll() //Permet accedir a tothom
                 )
-                .oauth2Login(
-                        oauth2 -> {
-                            oauth2.loginPage("/login");
-                            oauth2.userInfoEndpoint(
-                                    userInfo -> userInfo.userService(oauth2UserService)
+                .oauth2Login( //Objecte que representa el formulari de login amb Google que utilitzarem
+                        oauth2 -> { //Configuració del formulari de login amb Google
+                            oauth2.loginPage("/login"); //Pàgina on es troba el formulari per fer login amb Google
+                            oauth2.userInfoEndpoint( //Objecte que representa el formulari de login amb Google que utilitzarem
+                                    userInfo -> userInfo.userService(oauth2UserService) //Configuració del formulari de login amb Google
                             );
                         }
                 )
                 .exceptionHandling((exception) -> exception //Quan es produeix una excepcció 403, accés denegat, mostrem el nostre missatge
-                        .accessDeniedPage("/errors/error403"))
+                        .accessDeniedPage("/error403"))
                 .build();
     }
 

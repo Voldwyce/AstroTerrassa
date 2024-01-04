@@ -7,6 +7,7 @@ import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.UsersRoles;
 import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 
+import java.time.LocalDate;
 import java.io.ByteArrayOutputStream;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -86,10 +87,11 @@ public class UserService implements UsuariServiceInterface {
         if (user == null) {
             // Si el usuario no existe en la base de datos, lo guardamos
             saveUserAfterOAuthLoginSuccess(oAuth2User);
+            user.setRegisterDt(LocalDate.from(ZonedDateTime.now().toInstant()));
         } else {
             // Si el usuario ya existe en la base de datos, puedes proceder como desees
             // Por ejemplo, puedes actualizar la última fecha de inicio de sesión del usuario
-            user.setRegisterDt(Date.from(ZonedDateTime.now().toInstant()));
+            user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
             userRepository.save(user);
         }
     }
@@ -100,11 +102,12 @@ public class UserService implements UsuariServiceInterface {
         User user = new User();
         user.setNombre(oAuth2User.getName());
         user.setMail(oAuth2User.getEmail());
-        user.setRegisterDt(Date.from(ZonedDateTime.now().toInstant()));
+        user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         user.setIntents(3);
         user.setUsername(oAuth2User.getEmail()); // or any other field you want to use for username
         user.setAuthType(AuthenticationType.GOOGLE);
         user.setEnabled(true);
+        user.setNotify(1);
         userRepository.save(user); // Guarda el usuario en la base de datos
 
         UsersRoles usersRoles = new UsersRoles();
@@ -134,12 +137,14 @@ public class UserService implements UsuariServiceInterface {
         // Crea y guarda el usuario
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPermisos(1);
         user.setIntents(3);
+        user.setRegisterDt(LocalDate.from(ZonedDateTime.now().toInstant()));
         User savedUser = userRepository.save(user); // Guarda el usuario en la base de datos
 
         // Asigna el User_id y el Role_id a UsersRoles y lo guarda
         usersRoles.setUserId(savedUser.getUser_id());
-        usersRoles.setRoleId(0);
+        usersRoles.setRoleId(1);
         usersRoles.setRolNombre("usuario");
         usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
 
@@ -168,6 +173,13 @@ public class UserService implements UsuariServiceInterface {
 
     public void create(User user) {
         repo.createUser(user.getUsername(), user.getPassword(), user.getAuthType());
+    }
+
+    public void bloquejarUsuari(Long id, User user) {
+        user = getUserById(id);
+        user.setIntents(0);
+        userRepository.save(user);
+        System.out.println("S'ha bloquejat l'usuari");
     }
 
     public String generateHtmlTable() {
