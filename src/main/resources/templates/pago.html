@@ -79,6 +79,8 @@
             padding: 20px;
             border-radius: 10px;
         }
+
+        /* Agregar estilos específicos para editPerfil.html si es necesario */
     </style>
 </head>
 
@@ -89,9 +91,9 @@
     <a href="/">Inicio</a>
     <a href="#">Productos</a>
     <a href="/listado">Clientes</a>
-    <a href="#">Pedidos</a>
+    <a href="/pago">Pedidos</a>
     <a href="#">Reportes</a>
-    <a href="#">Configuración</a>
+    <a href="/perfil">Configuración</a>
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
@@ -106,31 +108,33 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Cambiar Permiso</h1>
-    <form action="#" th:action="@{/cambiarPermiso/{username}(username=${user.username})}" th:object="${user}" method="post">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" th:field="*{username}" readonly />
-        </div>
-        <div>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" th:field="*{nombre}" readonly />
-        </div>
-        <div>
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" th:field="*{apellidos}" readonly />
-        </div>
-        <div>
-            <label for="permisos">Permiso:</label>
-            <select id="permisos" th:field="*{permisos}">
-                <option value="1">Usuario</option>
-                <option value="2">Administrador</option>
-            </select>
-        </div>
-        <div>
-            <button type="submit" onclick="window.location.href='listado.html'">Cambiar Permiso</button>
-        </div>
+    <head>
+        <title>Pago</title>
+    </head>
+    <body>
+    <h1>Para realizar el pago, es necesario el DNI.</h1>
+    <form action="#" th:action="@{/guardarDni}" method="post">
+        <label for="dni">DNI:</label><br>
+        <input type="text" id="dni" name="dni"><br>
+        <input type="submit" value="Guardar">
     </form>
+    <h1>
+    </h1>
+    <h1>Pago de cuota </h1>
+    <h1 style="font-size: smaller;">Cuota Joven para MENORES de 25 años precio 20€ </h1>
+    <h1 style="font-size: smaller;" >Cuota Normal precio 40€ </h1>
+    <form action="#" th:action="@{/pago}" th:object="${pago}" method="post">
+        <input type="hidden" name="userId" value="1" />
+        <label for="producto">Cuota:</label><br>
+        <select id="producto" th:field="*{producto}">
+            <option value="Joven">Joven</option>
+            <option value="Normal">Normal</option>
+        </select><br>
+        <label for="cuenta">Numero de Cuenta:</label><br>
+        <input type="text" id="cuenta" th:field="*{cuenta}"><br>
+        <input type="submit" value="Submit">
+    </form>
+    </body>
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->

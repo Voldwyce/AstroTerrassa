@@ -190,4 +190,21 @@ public class UsersController {
         return "redirect:/listado";
     }
 
+    @PostMapping("/guardarDni")
+    public String submitDniForm(@RequestParam String dni) {
+        // Get the current user
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        User currentUser = UsuariServices.getUserByUsername(username);
+
+        // Save the dni
+        UsuariServices.guardarDni(currentUser, dni);
+
+        return "redirect:/pago";
+    }
 }

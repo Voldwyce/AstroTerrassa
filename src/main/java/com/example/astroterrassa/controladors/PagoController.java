@@ -20,12 +20,21 @@ public class PagoController {
     @GetMapping("/pago")
     public String getPagoForm(Model model) {
         model.addAttribute("pago", new Pago());
-        return "pagos";
+        return "pago";
     }
 
     @PostMapping("/pago")
     public String submitPagoForm(@ModelAttribute Pago pago, @RequestParam Long userId) {
+        if (pago.getProducto().equals("Joven")) {
+            pago.setPrecio(20);
+        } else if (pago.getProducto().equals("Normal")) {
+            pago.setPrecio(40);
+        }
         pagoService.savePago(pago, userId);
         return "redirect:/index";
     }
+
+
+
+
 }

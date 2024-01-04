@@ -219,4 +219,9 @@ public class UserService implements UsuariServiceInterface {
         userRepository.cambiarPermiso(username, permisos);
     }
 
+
+    public User guardarDni(User user, String dni) {
+        user.setDni(dni);
+        return userRepository.save(user);
+    }
 }
