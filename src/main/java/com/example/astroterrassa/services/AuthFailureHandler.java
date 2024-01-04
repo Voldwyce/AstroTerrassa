@@ -45,7 +45,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
                 }
             }
 
-        }super.setDefaultFailureUrl("/login?error");
+        }super.setDefaultFailureUrl("/error403");
         super.onAuthenticationFailure(request, response, exception);
     }
 }
