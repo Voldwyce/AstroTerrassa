@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +114,8 @@ public class ChartService {
                 .filter(Objects::nonNull)
                 .filter(user -> user.getFecha_nt() != null)
                 .collect(Collectors.groupingBy(user -> {
-                    int age = Period.between(user.getFecha_nt(), LocalDate.now()).getYears();
+                    LocalDate birthDate = user.getFecha_nt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    int age = Period.between(birthDate, LocalDate.now()).getYears();
                     if (age < 18) {
                         return "Menos de 18";
                     } else if (age < 25) {

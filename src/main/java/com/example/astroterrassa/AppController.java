@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
 import com.example.astroterrassa.services.EmailService;
+import com.example.astroterrassa.services.EmailService;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
