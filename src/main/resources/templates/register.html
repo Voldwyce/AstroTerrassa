@@ -47,7 +47,7 @@
             </div>
             <div>
                 <p>
-                    <select required class="form-control" placeholder="genero">
+                    <select required name="genero" class="form-control" placeholder="genero">
                         <option value="0">Hombre</option>
                         <option value="1">Mujer</option>
                         <option value="2">Otro</option>
@@ -55,7 +55,10 @@
                 </p>
             </div>
             <div>
-                <p><input type="checkbox" name="notify" value="1" class="form-control" placeholder="notify" /> </p>
+                <div>
+                <label>Notify</label>
+                    <p><input type="checkbox" id="notify_check" name="notify_check" th:checked="${user != null && user.notify_check == 1}"> </p>
+                </div>
             </div>
             <div>
                 <p><input type="submit" value="Register" class="btn btn-primary" /></p>

@@ -3,6 +3,7 @@ package com.example.astroterrassa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
+import com.example.astroterrassa.services.EmailService;
+
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 import java.time.LocalDate;
 
@@ -24,6 +29,9 @@ public class AppController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Autowired
+    private EmailService emailService;
+
     @RequestMapping("/register")
     public String showRegistrationForm(Model model) {
         return "register";
@@ -36,8 +44,12 @@ public class AppController {
                                    @RequestParam("mail") String mail,
                                    @RequestParam("username") String username,
                                    @RequestParam("password") String password,
-                                   @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_nt,
-                                   @RequestParam("notify") int notify) {
+                                   @RequestParam("fecha_nt") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_nt,
+                                   @RequestParam(value = "notify_check", required = false) Boolean notify_check,
+                                   @RequestParam("genero") int genero) {
+        int notify = (notify_check != null && notify_check) ? 1 : 0;
+
+
         User u = new User();
         u.setNombre(nombre);
         u.setPassword(passwordEncoder.encode(password));
@@ -46,10 +58,17 @@ public class AppController {
         u.setMail(mail);
         u.setUsername(username);
         u.setFecha_nt(fecha_nt);
+        u.setGenero(genero);
         u.setPermisos(1);
         u.setNotify(notify);
         u.setIntents(3);
+        u.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
+
+        if (notify == 1) {
+        emailService.sendWelcomeEmail(u);
+        }
+
 
         UsersRoles usersRoles = new UsersRoles();
         usersRoles.setUserId(u.getUser_id());
@@ -69,7 +88,9 @@ public class AppController {
     @PostMapping("/login")
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password) {
+
         User user = userRepository.findByUsername(username);
+        user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return "index";
         } else {

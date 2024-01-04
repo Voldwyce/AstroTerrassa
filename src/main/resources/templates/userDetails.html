@@ -66,7 +66,7 @@
 
         th {
             background-color: #4287f5;
-            color: Black;
+            color: white;
         }
 
         th,
@@ -78,7 +78,6 @@
             border-width: thin;
             padding: 20px;
             border-radius: 10px;
-            );
         }
 
         /* Agregar estilos específicos para editPerfil.html si es necesario */
@@ -91,7 +90,7 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="/">Inicio</a>
     <a href="#">Productos</a>
-    <a href="#">Clientes</a>
+    <a href="/listado">Clientes</a>
     <a href="#">Pedidos</a>
     <a href="#">Reportes</a>
     <a href="/perfil">Configuración</a>
@@ -109,52 +108,33 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Listado de Usuarios</h1>
+    <h1>Editat Perfil de Usuario</h1>
     <hr>
     <table>
-        <thead>
-        <tr>
-            <th>Username</th>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>Telefono</th>
-            <th>Email</th>
-            <th>Notificaciones</th>
-            <th>Genero</th>
-            <th>Fecha Nacimiento</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Cada fila representa un usuario -->
-        <tr th:each="user : ${users}">
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.nombre}"></td>
-            <td th:text="${user.apellidos}"></td>
-            <td th:text="${user.tlf}"></td>
-            <td th:text="${user.mail}"></td>
-            <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
-            <td th:text="${user.genero == 0 ? 'Hombre' : (user.genero == 1 ? 'Mujer' : 'Otro')}"></td>
-            <td th:text="${#dates.format(user.fecha_nt, 'dd-MM-yyyy')}"></td> <!-- Nueva celda -->
-            <td th:if="${currentUser.permisos == 2}">
-                <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a>
-            </td>
-            <td th:if="${currentUser.permisos == 2}">
-                <a th:href="@{'/cambiarPermiso/'+${user.username}}" class="btn btn-primary">Editar roles</a>
-            </td>
-            <td th:if="${currentUser.permisos == 2}">
-                <a th:href="@{'/deleteUser/'+${user.user_id}}" class="btn btn-danger btn b earlier btn btn-primary" onclick="return confirm('Seguro que quiere Eliminar?');">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="text-center">
-        <div th:if="${currentUser.permisos == 2}" class="text-center">
-            <a href="/register" class="btn btn-primary">Nuevo Usuario</a>
-        </div>
-        <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
-    </div>
 
-    <button onclick="window.location.href='/persons/pdf'">Descargar como PDF</button>
+        <form th:action="@{/userDetails/{username}(username=${user.username})}" th:method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" th:value="${user.nombre}">
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos" th:value="${user.apellidos}">
+            <label for="mail">Mail:</label>
+            <input type="text" id="mail" name="mail" th:value="${user.mail}">
+            <label for="tlf">Telefono:</label>
+            <input type="text" id="tlf" name="tlf" th:value="${user.tlf}">
+            <label for="notify">Notificaciones:</label>
+            <input type="checkbox" id="notify" name="notify" th:checked="${user.notify == 1}">
+            <label for="genero">Genero:</label>
+            <select id="genero" name="genero">
+                <option value="0" th:selected="${user.genero == 0}">Hombre</option>
+                <option value="1" th:selected="${user.genero == 1}">Mujer</option>
+                <option value="2" th:selected="${user.genero == 2}">Otro</option>
+            </select>
+            <label for="fecha_nt">Fecha de Nacimiento:</label>
+            <input type="date" id="fecha_nt" name="fecha_nt" th:value="${#dates.format(user.fecha_nt, 'yyyy-MM-dd')}">
+            <input class="btn btn-primary" type="submit" value="Editar">
+        </form>
+
+    </table>
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->
