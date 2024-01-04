@@ -174,7 +174,22 @@ public class UsersController {
         int notifyInt = "on".equals(notify) ? 1 : 2;
         Date sqlDate = new Date(fecha_nt.getTime());
         UsuariServices.updateUserDetails(nombre, apellidos, mail, tlf, notifyInt, genero, sqlDate, username);
-        return "redirect:/userDetails/" + username;
+        return "redirect:/listado";
+    }
+
+    @GetMapping("/editarPerfil/{username}")
+    public String showEditProfileForm(@PathVariable String username, Model model) {
+        User user = UsuariServices.getUserByUsername(username);
+        model.addAttribute("user", user);
+        return "editarPerfil";
+    }
+
+    @PostMapping("/editarPerfil/{username}")
+    public String submitEditProfileForm(@PathVariable String username, @RequestParam String nombre, @RequestParam String apellidos, @RequestParam String mail, @RequestParam String tlf, @RequestParam(required = false) String notify, @RequestParam int genero, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_nt, Model model) {
+        int notifyInt = "on".equals(notify) ? 1 : 2;
+        Date sqlDate = new Date(fecha_nt.getTime());
+        UsuariServices.updateUserDetails(nombre, apellidos, mail, tlf, notifyInt, genero, sqlDate, username);
+        return "redirect:/perfil";
     }
 
     @GetMapping("/cambiarPermiso/{username}")
@@ -190,4 +205,21 @@ public class UsersController {
         return "redirect:/listado";
     }
 
+    @PostMapping("/guardarDni")
+    public String submitDniForm(@RequestParam String dni) {
+        // Get the current user
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        User currentUser = UsuariServices.getUserByUsername(username);
+
+        // Save the dni
+        UsuariServices.guardarDni(currentUser, dni);
+
+        return "redirect:/pago";
+    }
 }

@@ -132,7 +132,6 @@
             <label for="fecha_nt">Fecha de Nacimiento:</label>
             <input type="date" id="fecha_nt" name="fecha_nt" th:value="${#dates.format(user.fecha_nt, 'yyyy-MM-dd')}">
             <input class="btn btn-primary" type="submit" value="Editar">
-            <a th:href="@{'/cambiarPermiso/'+${user.username}}" class="btn btn-primary">Editar roles</a> <!-- Change this line -->
         </form>
 
     </table>

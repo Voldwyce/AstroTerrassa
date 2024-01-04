@@ -66,7 +66,7 @@
 
         th {
             background-color: #4287f5;
-            color: Black;
+            color: white;
         }
 
         th,
@@ -78,7 +78,6 @@
             border-width: thin;
             padding: 20px;
             border-radius: 10px;
-            );
         }
 
         /* Agregar estilos específicos para editPerfil.html si es necesario */
@@ -91,8 +90,8 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="/">Inicio</a>
     <a href="#">Productos</a>
-    <a href="#">Clientes</a>
-    <a href="#">Pedidos</a>
+    <a href="/listado">Clientes</a>
+    <a href="/pago">Pedidos</a>
     <a href="#">Reportes</a>
     <a href="/perfil">Configuración</a>
 </div>
@@ -109,59 +108,48 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Listado de Usuarios</h1>
-    <hr>
-    <table>
-        <thead>
-        <tr>
-            <th>Username</th>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>Telefono</th>
-            <th>Email</th>
-            <th>Notificaciones</th>
-            <th>Genero</th>
-            <th>Fecha Nacimiento</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Cada fila representa un usuario -->
-        <tr th:each="user : ${users}">
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.nombre}"></td>
-            <td th:text="${user.apellidos}"></td>
-            <td th:text="${user.tlf}"></td>
-            <td th:text="${user.mail}"></td>
-            <td th:text="${user.notify == 1 ? 'Si' : 'No'}"></td>
-            <td th:text="${user.genero == 0 ? 'Hombre' : (user.genero == 1 ? 'Mujer' : 'Otro')}"></td>
-            <td th:text="${#dates.format(user.fecha_nt, 'dd-MM-yyyy')}"></td> <!-- Nueva celda -->
-            <td th:if="${currentUser.permisos == 2}">
-                <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a>
-            </td>
-            <td th:if="${currentUser.permisos == 2}">
-                <a th:href="@{'/cambiarPermiso/'+${user.username}}" class="btn btn-primary">Editar roles</a>
-            </td>
-            <td th:if="${currentUser.permisos == 2}">
-                <a th:href="@{'/deleteUser/'+${user.user_id}}" class="btn btn-danger btn b earlier btn btn-primary" onclick="return confirm('Seguro que quiere Eliminar?');">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="text-center">
-        <div th:if="${currentUser.permisos == 2}" class="text-center">
-            <a href="/register" class="btn btn-primary">Nuevo Usuario</a>
-        </div>
-        <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
-    </div>
-
-    <button onclick="window.location.href='/persons/pdf'">Descargar como PDF</button>
+    <head>
+        <title>Pago</title>
+    </head>
+    <body>
+    <h1>Para realizar el pago, es necesario el DNI.</h1>
+    <form action="#" th:action="@{/guardarDni}" method="post">
+        <label for="dni">DNI:</label><br>
+        <input type="text" id="dni" name="dni"><br>
+        <input type="submit" value="Guardar">
+    </form>
+    <h1>
+    </h1>
+    <h1>Pago de cuota </h1>
+    <h1 style="font-size: smaller;">Cuota Joven para MENORES de 25 años precio 20€ </h1>
+    <h1 style="font-size: smaller;" >Cuota Normal precio 40€ </h1>
+    <form action="#" th:action="@{/pago}" th:object="${pago}" method="post" onsubmit="return confirmSubmit()">
+        <input type="hidden" name="userId" value="1" />
+        <label for="producto">Cuota:</label><br>
+        <select id="producto" th:field="*{producto}">
+            <option value="Joven">Joven</option>
+            <option value="Normal">Normal</option>
+        </select><br>
+        <label for="cuenta">Numero de Cuenta:</label><br>
+        <input type="text" id="cuenta" th:field="*{cuenta}"><br>
+        <input type="submit" value="Enviar">
+    </form>
+    </body>
 </div>
-
+<script>
+    function confirmSubmit() {
+        var r = confirm("El formulario será enviado al Administrador. Una vez realizado el pago, será miembro Simpatizante.");
+        if (r == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
 <!-- Bootstrap JS y jQuery (opcional) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 <script>
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";

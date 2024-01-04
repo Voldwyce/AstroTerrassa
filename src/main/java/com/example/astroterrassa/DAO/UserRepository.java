@@ -15,6 +15,7 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+    User findByDni(String dni);
 
     @Query("SELECT u FROM User u WHERE u.username = :username")
     User getUserByUsername(@Param("username") String username);
