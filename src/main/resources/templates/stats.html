@@ -102,6 +102,7 @@
         <option value="Usuarios registrados">Usuarios registrados</option>
         <option value="Genero">Género de los usuarios</option>
         <option value="Edad">Edad de los usuarios</option>
+        <option value="Simpatizantes">Simpatizantes</option>
         <!-- Agrega más opciones según los tipos de datos que quieras soportar -->
     </select>
     <!-- Aquí es donde se mostrará el gráfico -->
@@ -145,7 +146,8 @@ document.getElementById('dataType').addEventListener('change', function() {
     var chartTypes = {
         'Usuarios registrados': 'bar',
         'Genero': 'doughnut',
-        'Edad': 'doughnut'
+        'Edad': 'doughnut',
+        'Simpatizantes': 'line'
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -163,7 +165,7 @@ document.getElementById('dataType').addEventListener('change', function() {
         yearSelect.style.display = 'none';
         monthSelect.style.display = 'none';
         acceptButton.style.display = 'none';
-    } else if (selectedType === 'Usuarios registrados') {
+    } else if (selectedType === 'Usuarios registrados' || selectedType === 'Simpatizantes') {
         yearSelect.style.display = 'inline-block';
         monthSelect.style.display = 'inline-block';
         acceptButton.style.display = 'inline-block';
@@ -286,7 +288,7 @@ document.getElementById('acceptButton').addEventListener('click', function() {
             var labels = Object.keys(data);
             var values = Object.values(data);
 
-            if (dataType === "Usuarios registrados" && month === "") {
+            if (dataType === "Usuarios registrados" && month === "" || dataType === "Simpatizantes" && month === "") {
                 labels = getMonths();
             }
 
@@ -300,6 +302,9 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 aspectRatio = 2;
             } else if (dataType === 'Edad') {
                 chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'Simpatizantes') {
+                chartType = 'line';
                 aspectRatio = 2;
             }
 

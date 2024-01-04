@@ -35,7 +35,7 @@ public class EmailService {
             User user = userOptional.get();
 
             SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(user.getMail());
+            mail.setTo("sarahtree6@gmail.com");
             mail.setSubject("Detalles del Pago");
             mail.setText ( "Detalles del Pago:\n" +
                     "Nombre: " + user.getNombre() + "\n" +

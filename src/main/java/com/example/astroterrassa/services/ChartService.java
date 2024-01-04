@@ -4,6 +4,8 @@ import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.DAO.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.astroterrassa.model.Pago;
+import com.example.astroterrassa.DAO.PagoRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -21,6 +23,9 @@ public class ChartService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PagoRepository PagoRepository;
+
     public Map<String, Long> getChartData(String dataType, String year, String month) {
         switch (dataType) {
             case "Usuarios registrados":
@@ -29,7 +34,8 @@ public class ChartService {
                 return getUsersByGenderData();
             case "Edad":
                 return getUsersByAgeData();
-            // Agrega aquí más casos según los tipos de datos que quieras soportar
+            case "Simpatizantes":
+                return getUsersBySimpatizantesData(year, month);
             default:
                 throw new IllegalArgumentException("Tipo de datos no soportado: " + dataType);
         }
@@ -85,6 +91,58 @@ public class ChartService {
         }
 
         return userCountsByDate;
+    }
+
+    public Map<String, Long> getUsersBySimpatizantesData(String year, String month) {
+        List<Pago> pagos = PagoRepository.findAll();
+        Map<String, Long> pagoCountsByDate = new HashMap<>();
+
+        // Filtrar los pagos basándonos en el año y el mes proporcionados
+        for (Pago pago : pagos) {
+            if (Objects.isNull(pago.getFechaPago())) {
+                continue;
+            }
+            LocalDate fechaPago = LocalDate.from(pago.getFechaPago());
+            if (year.equals("all") && (month.equals("all") || month.isEmpty())) {
+                // Si se selecciona "all" para el año y el mes, se agrupa por año
+                pagoCountsByDate.put(String.valueOf(fechaPago.getYear()), pagoCountsByDate.getOrDefault(String.valueOf(fechaPago.getYear()), 0L) + 1);
+            } else if (!year.isEmpty() && month.equals("all")) {
+                // Si solo se selecciona un año, se agrupa por mes
+                if (String.valueOf(fechaPago.getYear()).equals(year)) {
+                    pagoCountsByDate.put(String.valueOf(fechaPago.getMonthValue()), pagoCountsByDate.getOrDefault(String.valueOf(fechaPago.getMonthValue()), 0L) + 1);
+                }
+            } else if (!year.isEmpty() && !month.isEmpty()) {
+                // Si se selecciona un mes y un año, se agrupa por día
+                if (String.valueOf(fechaPago.getYear()).equals(year) && String.valueOf(fechaPago.getMonthValue()).equals(month)) {
+                    pagoCountsByDate.put(String.valueOf(fechaPago.getDayOfMonth()), pagoCountsByDate.getOrDefault(String.valueOf(fechaPago.getDayOfMonth()), 0L) + 1);
+                }
+            }
+        }
+
+        if (year.equals("all") && (month.equals("all") || month.isEmpty())) {
+            // Si se selecciona "all" para el año y el mes, no se necesita completar nada
+        } else if (!year.isEmpty() && month.equals("all")) {
+            // Si se selecciona un año, se completan todos los meses con valor 0
+            for (int i = 1; i <= 12; i++) {
+                if (!pagoCountsByDate.containsKey(String.valueOf(i))) {
+                    pagoCountsByDate.put(String.valueOf(i), 0L);
+                }
+            }
+        } else if (!year.isEmpty() && !month.isEmpty()) {
+            // Si se selecciona un mes, se completan todos los días del mes con valor 0
+            int yearValue = Integer.parseInt(year);
+            int monthValue = Integer.parseInt(month);
+            YearMonth yearMonthObject = YearMonth.of(yearValue, monthValue);
+            int daysInMonth = yearMonthObject.lengthOfMonth();
+
+            for (int i = 1; i <= daysInMonth; i++) {
+                if (!pagoCountsByDate.containsKey(String.valueOf(i))) {
+                    pagoCountsByDate.put(String.valueOf(i), 0L);
+                }
+            }
+        }
+
+        return pagoCountsByDate;
     }
 
     public Map<String, Long> getUsersByGenderData() {

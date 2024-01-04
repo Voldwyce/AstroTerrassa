@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
-import com.example.astroterrassa.services.EmailService;
+
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -25,8 +25,6 @@ public class AppController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    private EmailService emailService;
     @RequestMapping("/register")
     public String showRegistrationForm(Model model) {
         return "register";
@@ -60,9 +58,6 @@ public class AppController {
         u.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
 
-        if (notify == 1) {
-        emailService.sendWelcomeEmail(u);
-        }
 
 
         UsersRoles usersRoles = new UsersRoles();

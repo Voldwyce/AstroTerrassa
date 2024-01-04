@@ -1,5 +1,6 @@
 package com.example.astroterrassa.controladors;
 
+import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.model.Pago;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.services.EmailService;
@@ -11,10 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 public class PagoController {
 
     private final PagoService pagoService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public PagoController(PagoService pagoService) {
@@ -31,24 +37,18 @@ public class PagoController {
     }
 
     @PostMapping("/pago")
-    public String submitPagoForm(@ModelAttribute Pago pago, @RequestParam Long userId) {
+    public String submitPagoForm(@ModelAttribute Pago pago, @RequestParam Long userId, Principal principal) {
         if (pago.getProducto().equals("Joven")) {
             pago.setPrecio(20);
         } else if (pago.getProducto().equals("Normal")) {
             pago.setPrecio(40);
         }
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        User currentUser = UsuariServices.getUserByUsername(username);
-
-        pagoService.savePago(pago, userId);
-        Pago savedPago = pagoService.savePago(pago, userId);
-        emailService.sendPaymentDetailsEmail(savedPago, userId);
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+        Long userId_pago = user.getId();
+        pagoService.savePago(pago, userId_pago);
+        Pago savedPago = pagoService.savePago(pago, userId_pago);
+        emailService.sendPaymentDetailsEmail(savedPago, userId_pago);
 
         return "redirect:/index";
     }
