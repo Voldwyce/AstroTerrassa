@@ -91,7 +91,7 @@
     <a href="/">Inicio</a>
     <a href="#">Productos</a>
     <a href="/listado">Clientes</a>
-    <a href="/pago">Pedidos</a>
+    <a href="#">Pedidos</a>
     <a href="#">Reportes</a>
     <a href="/perfil">Configuración</a>
 </div>
@@ -108,48 +108,39 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <head>
-        <title>Pago</title>
-    </head>
-    <body>
-    <h1>Para realizar el pago, es necesario el DNI.</h1>
-    <form action="#" th:action="@{/guardarDni}" method="post">
-        <label for="dni">DNI:</label><br>
-        <input type="text" id="dni" name="dni"><br>
-        <input type="submit" value="Guardar">
-    </form>
-    <h1>
-    </h1>
-    <h1>Pago de cuota </h1>
-    <h1 style="font-size: smaller;">Cuota Joven para MENORES de 25 años precio 20€ </h1>
-    <h1 style="font-size: smaller;" >Cuota Normal precio 40€ </h1>
-    <form action="#" th:action="@{/pago}" th:object="${pago}" method="post" onsubmit="return confirmSubmit()">
-        <input type="hidden" name="userId" value="1" />
-        <label for="producto">Cuota:</label><br>
-        <select id="producto" th:field="*{producto}">
-            <option value="Joven">Joven</option>
-            <option value="Normal">Normal</option>
-        </select><br>
-        <label for="cuenta">Numero de Cuenta:</label><br>
-        <input type="text" id="cuenta" th:field="*{cuenta}"><br>
-        <input type="submit" value="Enviar">
-    </form>
-    </body>
+    <h1>Editat Perfil de Usuario</h1>
+    <hr>
+    <table>
+        <form th:action="@{/editarPerfil/{username}(username=${user.username})}" th:method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" th:value="${user.nombre}">
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos" th:value="${user.apellidos}">
+            <label for="mail">Mail:</label>
+            <input type="text" id="mail" name="mail" th:value="${user.mail}">
+            <label for="tlf">Telefono:</label>
+            <input type="text" id="tlf" name="tlf" th:value="${user.tlf}">
+            <label for="notify">Notificaciones:</label>
+            <input type="checkbox" id="notify" name="notify" th:checked="${user.notify == 1}">
+            <label for="genero">Genero:</label>
+            <select id="genero" name="genero">
+                <option value="0" th:selected="${user.genero == 0}">Hombre</option>
+                <option value="1" th:selected="${user.genero == 1}">Mujer</option>
+                <option value="2" th:selected="${user.genero == 2}">Otro</option>
+            </select>
+            <label for="fecha_nt">Fecha de Nacimiento:</label>
+            <input type="date" id="fecha_nt" name="fecha_nt" th:value="${#dates.format(user.fecha_nt, 'yyyy-MM-dd')}">
+            <input class="btn btn-primary" type="submit" value="Editar">
+        </form>
+
+    </table>
 </div>
-<script>
-    function confirmSubmit() {
-        var r = confirm("El formulario será enviado al Administrador. Una vez realizado el pago, será miembro Simpatizante.");
-        if (r == true) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
+
 <!-- Bootstrap JS y jQuery (opcional) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";

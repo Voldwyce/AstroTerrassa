@@ -121,12 +121,18 @@
                 <p class="card-text">Teléfono: <span th:text="${user.tlf}"></span></p>
                 <p class="card-text">Nombre de usuario: <span th:text="${user.username}"></span></p>
                 <p class="card-text">Notificaciones: <span th:text="${user.notify == 1 ? 'Si' : 'No'}"></span></p>
+                <p class="card-text">Género:
+                    <span th:if="${user.genero == 0}">Hombre</span>
+                    <span th:if="${user.genero == 1}">Mujer</span>
+                    <span th:if="${user.genero != 0 and user.genero != 1}">Otros</span>
+                </p>
+                <p class="card-text">Fecha de Nacimiento: <span th:text="${#dates.format(user.fecha_nt, 'dd-MM-yyyy')}"></span></p>
             </div>
         </div>
 
     </table>
     <div class="text-center">
-        <a th:href="@{'/userDetails/'+${user.username}}" class="btn btn-primary">Editar</a>
+        <a th:href="@{'/editarPerfil/'+${user.username}}" class="btn btn-primary">Editar</a>
     </div>
 </div>
 
