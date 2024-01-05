@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,10 @@ public class UserService implements UsuariServiceInterface {
 
     @Autowired
     private UsersRolesRepository usersRolesRepository;
+
+    @Setter
+    @Getter
+    private User currentUser;
 
     public void updateAuthenticationType(String username, String oauth2ClientName) {
         AuthenticationType authType = AuthenticationType.valueOf(oauth2ClientName.toUpperCase());
@@ -219,9 +225,13 @@ public class UserService implements UsuariServiceInterface {
         userRepository.cambiarPermiso(username, permisos);
     }
 
+    public User getCurrentUser(String username) {
+        return userRepository.findByUsername(username);
+    }
 
     public User guardarDni(User user, String dni) {
         user.setDni(dni);
         return userRepository.save(user);
     }
+
 }

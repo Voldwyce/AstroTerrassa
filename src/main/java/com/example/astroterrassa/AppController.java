@@ -3,16 +3,22 @@ package com.example.astroterrassa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.DAO.*;
+import com.example.astroterrassa.services.EmailService;
+import com.example.astroterrassa.services.EmailService;
 
 
 import java.time.ZonedDateTime;
 import java.util.Date;
+
+import java.time.LocalDate;
 
 @Controller
 public class AppController {
@@ -24,6 +30,9 @@ public class AppController {
     private UsersRolesRepository usersRolesRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    private EmailService emailService;
 
     @RequestMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -58,6 +67,9 @@ public class AppController {
         u.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
 
+        if (notify == 1) {
+        emailService.sendWelcomeEmail(u);
+        }
 
 
         UsersRoles usersRoles = new UsersRoles();
