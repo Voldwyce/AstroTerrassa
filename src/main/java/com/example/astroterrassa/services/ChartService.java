@@ -1,18 +1,14 @@
 package com.example.astroterrassa.services;
 
+import com.example.astroterrassa.DAO.EventoRepository;
+import com.example.astroterrassa.model.Evento;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.DAO.UserRepository;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
 import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.astroterrassa.model.Pago;
 import com.example.astroterrassa.DAO.PagoRepository;
-import com.itextpdf.text.pdf.PdfWriter;
-import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -37,6 +33,9 @@ public class ChartService {
     @Autowired
     private PagoRepository PagoRepository;
 
+    @Autowired
+    private EventoRepository eventoRepository;
+
     public Map<String, Long> getChartData(String dataType, String year, String month) {
         switch (dataType) {
             case "Usuarios registrados":
@@ -47,10 +46,13 @@ public class ChartService {
                 return getUsersByAgeData();
             case "Simpatizantes":
                 return getUsersBySimpatizantesData(year, month);
+            case "Eventos":
+                return getEventosDate(year, month);
             default:
                 throw new IllegalArgumentException("Tipo de datos no soportado: " + dataType);
         }
     }
+
 
     public Map<String, Long> getUsersRegisteredData(String year, String month) {
         List<User> users = userRepository.findAll();
@@ -203,6 +205,58 @@ public class ChartService {
                 }, Collectors.counting()));
     }
 
+    private Map<String, Long> getEventosDate(String year, String month) {
+        List<Evento> eventos = eventoRepository.findAll();
+        Map<String, Long> eventoCountsByDate = new HashMap<>();
+
+        // Filtrar los eventos basándonos en el año y el mes proporcionados
+        for (Evento evento : eventos) {
+            if (Objects.isNull(evento.getFecha_taller_evento())) {
+                continue;
+            }
+            LocalDate fechaEvento = evento.getFecha_taller_evento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (year.equals("all") && (month.equals("all") || month.isEmpty())) {
+                // Si se selecciona "all" para el año y el mes, se agrupa por año
+                eventoCountsByDate.put(String.valueOf(fechaEvento.getYear()), eventoCountsByDate.getOrDefault(String.valueOf(fechaEvento.getYear()), 0L) + 1);
+            } else if (!year.isEmpty() && month.equals("all")) {
+                // Si solo se selecciona un año, se agrupa por mes
+                if (String.valueOf(fechaEvento.getYear()).equals(year)) {
+                    eventoCountsByDate.put(String.valueOf(fechaEvento.getMonthValue()), eventoCountsByDate.getOrDefault(String.valueOf(fechaEvento.getMonthValue()), 0L) + 1);
+                }
+            } else if (!year.isEmpty() && !month.isEmpty()) {
+                // Si se selecciona un mes y un año, se agrupa por día
+                if (String.valueOf(fechaEvento.getYear()).equals(year) && String.valueOf(fechaEvento.getMonthValue()).equals(month)) {
+                    eventoCountsByDate.put(String.valueOf(fechaEvento.getDayOfMonth()), eventoCountsByDate.getOrDefault(String.valueOf(fechaEvento.getDayOfMonth()), 0L) + 1);
+                }
+            }
+        }
+
+        if (year.equals("all") && (month.equals("all") || month.isEmpty())) {
+            // Si se selecciona "all" para el año y el mes, no se necesita completar nada
+        } else if (!year.isEmpty() && month.equals("all")) {
+            // Si se selecciona un año, se completan todos los meses con valor 0
+            for (int i = 1; i <= 12; i++) {
+                if (!eventoCountsByDate.containsKey(String.valueOf(i))) {
+                    eventoCountsByDate.put(String.valueOf(i), 0L);
+                }
+            }
+        } else if (!year.isEmpty() && !month.isEmpty()) {
+            // Si se selecciona un mes, se completan todos los días del mes con valor 0
+            int yearValue = Integer.parseInt(year);
+            int monthValue = Integer.parseInt(month);
+            YearMonth yearMonthObject = YearMonth.of(yearValue, monthValue);
+            int daysInMonth = yearMonthObject.lengthOfMonth();
+
+            for (int i = 1; i <= daysInMonth; i++) {
+                if (!eventoCountsByDate.containsKey(String.valueOf(i))) {
+                    eventoCountsByDate.put(String.valueOf(i), 0L);
+                }
+            }
+        }
+
+        return eventoCountsByDate;
+
+    }
 
     public byte[] generarCsv(String data) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

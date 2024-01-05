@@ -11,7 +11,7 @@ import java.util.Date;
 public class Evento {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id_te")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -31,7 +31,7 @@ public class Evento {
     private int tipo;
 
     @ManyToOne
-    @JoinColumn(name = "id_te")
+    @JoinColumn(name = "id_te_fk")
     private TipoEvento tipoEvento;
 
 }
