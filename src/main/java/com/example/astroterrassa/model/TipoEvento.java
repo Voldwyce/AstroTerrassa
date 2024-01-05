@@ -9,9 +9,9 @@ import lombok.Data;
 public class TipoEvento {
 
     @Id
-    @Column(name = "id_tipo_te")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_tipo_te;
+    private int id;
 
     @Column(name = "id_te")
     private int id_te;
@@ -19,6 +19,7 @@ public class TipoEvento {
     @Column(name = "titulo")
     private String titulo;
 
-
+    @OneToMany(mappedBy = "tipo_te")
+    private TipoEvento tipo;
 
 }

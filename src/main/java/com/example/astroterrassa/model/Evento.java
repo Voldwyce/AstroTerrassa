@@ -11,9 +11,9 @@ import java.util.Date;
 public class Evento {
 
     @Id
-    @Column(name = "id_te")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_te;
+    private int id;
 
     @Column(name = "titulo")
     private String titulo;
@@ -29,5 +29,9 @@ public class Evento {
 
     @Column(name = "tipo_te")
     private int tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_te")
+    private TipoEvento tipoEvento;
 
 }

@@ -109,7 +109,7 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <!--<h1 th:text="'Evento de ' + ${tipoEvento}"></h1>-->
+    <h1 th:text="'Evento de ' + ${tipoEvento}"></h1>
     <h1>Eventos</h1>
     <hr>
     <table>
@@ -121,22 +121,22 @@
             <th>Activa</th>
         </tr>
         </thead>
-<!--        <tbody>-->
-<!--        &lt;!&ndash; Cada fila representa un Evento &ndash;&gt;-->
-<!--        <tr th:each="titulo : ${taller.evento}">-->
-<!--            <td th:text="${titulo.titulo}"></td>-->
-<!--            <td th:text="${titulo.descripcion}"></td>-->
-<!--            <td th:text="${titulo.fecha_taller_evento}"></td>-->
-<!--            <td th:text="${titulo.status}"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
+        <tbody>
+        <!-- Cada fila representa un Evento -->
+        <tr th:each="titulo : ${taller.evento}">
+            <td th:text="${titulo.titulo}"></td>
+            <td th:text="${titulo.descripcion}"></td>
+            <td th:text="${titulo.fecha_taller_evento}"></td>
+            <td th:text="${titulo.status}"></td>
+        </tr>
+        </tbody>
     </table>
-<!--    <div class="text-center">-->
-<!--        <div th:if="${currentUser.permisos == 1 or currentUser.permisos == 2}" class="text-center">-->
-<!--            <a href="/nuevoEvento" class="btn btn-primary">Nuevo Evento</a>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> &ndash;&gt;-->
-<!--    </div>-->
+    <div class="text-center">
+        <div th:if="${currentUser.permisos == 1 or currentUser.permisos == 2}" class="text-center">
+            <a href="/nuevoEvento" class="btn btn-primary">Nuevo Evento</a>
+        </div>
+        <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
+    </div>
 
     <button onclick="window.location.href=''">Descargar como PDF</button>
 </div>
