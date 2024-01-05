@@ -23,17 +23,8 @@ public class EventoController {
     private UserService userService;
 
     @GetMapping("/eventos")
-    public String showEventos() {
-        return "eventos";
-    }
+    public String showEventos(Model model) {
 
-    @RequestMapping("/eventos")
-    public String eventos(Model model, @PathVariable int tipoEvento) {
-        List<Evento> eventos = eventService.getEventosPorTipo(tipoEvento);
-        model.addAttribute("eventos", eventos);
-        model.addAttribute("tipoEvento", tipoEvento);
-
-        // Get the current user
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if (principal instanceof UserDetails) {
@@ -43,7 +34,27 @@ public class EventoController {
         }
         User currentUser = userService.getCurrentUser(username);
 
-        // Add the current user to the model
+        model.addAttribute("currentUser", currentUser);
+
+        return "eventos";
+    }
+
+    @RequestMapping("/eventos")
+    public String eventos(Model model, @PathVariable int tipoEvento) {
+        List<Evento> eventos = eventService.getEventosPorTipo(tipoEvento);
+        model.addAttribute("eventos", eventos);
+        model.addAttribute("tipoEvento", tipoEvento);
+
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        User currentUser = userService.getCurrentUser(username);
+
         model.addAttribute("currentUser", currentUser);
 
         return "eventos";
