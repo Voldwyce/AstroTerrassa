@@ -1,161 +1,157 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Eventos</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <style>
+            body {
+                background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: 50% 70%;
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
 
-<head>
-    <meta charset="UTF-8">
-    <title>Eventos</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: 50% 70%;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+            .sidenav {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #111;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+            }
 
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
+            .sidenav a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
 
-        .sidenav a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
+            .sidenav a:hover {
+                color: #f1f1f1;
+            }
 
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
+            .sidenav .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
 
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-    .container {
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 15px;
-        padding: 20px;
-        margin-top: 50px;
-        display: flex; /* Add this line */
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-        th {
-            background-color: #4287f5;
-            color: Black;
-        }
-
-        th,
-        td {
-            width: 20%;
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #ccc;
-            border-width: thin;
+        .container {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
             padding: 20px;
-            border-radius: 10px;
-            );
+            margin-top: 50px;
+            display: flex; /* Add this line */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
-        /* Agregar estilos específicos para editPerfil.html si es necesario */
-    </style>
-</head>
+            th {
+                background-color: #4287f5;
+                color: Black;
+            }
 
-<body>
+            th,
+            td {
+                width: 20%;
+                text-align: center;
+                vertical-align: middle;
+                border: 1px solid #ccc;
+                border-width: thin;
+                padding: 20px;
+                border-radius: 10px;
+                );
+            }
 
-<div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="/index">Inicio</a>
-    <a href="#">Eventos</a>
-    <a href="/listado">Clientes</a>
-    <a href="#">Pedidos</a>
-    <a href="/stats">Reportes y Estadisticas</a>
-    <a href="/perfil">Configuración</a>
-</div>
+            /* Agregar estilos específicos para editPerfil.html si es necesario */
+        </style>
+    </head>
 
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
-    <a class="navbar-brand" href="/index">ERP</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-        </ul>
-    </div>
-</nav>
-
-<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-
-<!-- Contenido principal -->
-<div class="container">
-    <h1 th:text="'Evento de ' + ${tipoEvento}"></h1>
-    <h1>Eventos</h1>
-    <hr>
-    <table>
-        <thead>
-        <tr>
-            <th>Evento</th>
-            <th>Descripcion</th>
-            <th>Dia del evento</th>
-            <th>Activa</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Cada fila representa un Evento -->
-        <tr th:each="titulo : ${taller.evento}">
-            <td th:text="${titulo.titulo}"></td>
-            <td th:text="${titulo.descripcion}"></td>
-            <td th:text="${titulo.fecha_taller_evento}"></td>
-            <td th:text="${titulo.status}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="text-center">
-        <div th:if="${currentUser.permisos == 1 or currentUser.permisos == 2}" class="text-center">
-            <a href="/nuevoEvento" class="btn btn-primary">Nuevo Evento</a>
+    <body>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="/index">Inicio</a>
+            <a href="#">Eventos</a>
+            <a href="/listado">Clientes</a>
+            <a href="#">Pedidos</a>
+            <a href="/stats">Reportes y Estadisticas</a>
+            <a href="/perfil">Configuración</a>
         </div>
-        <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
-    </div>
 
-    <button onclick="window.location.href=''">Descargar como PDF</button>
-</div>
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
+            <a class="navbar-brand" href="/index">ERP</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                </ul>
+            </div>
+        </nav>
 
-<!-- Bootstrap JS y jQuery (opcional) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 
-<script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-    }
+        <!-- Contenido principal -->
+        <div class="container">
+            <h1 th:text="'Evento de ' + ${tipoEvento}"></h1>
+            <h1>Eventos</h1>
+            <hr>
+            <table>
+                <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Descripcion</th>
+                    <th>Dia del evento</th>
+                    <th>Activa</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <!-- Each row represents an Event -->
+                    <tr th:each="evento : ${eventos}">
+                        <td th:text="${evento.titulo}"></td>
+                        <td th:text="${evento.descripcion}"></td>
+                        <td th:text="${evento.fecha_taller_evento}"></td>
+                        <td th:text="${evento.status}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <div th:if="${currentUser.permisos == 1 or currentUser.permisos == 2}" class="text-center">
+                    <a href="/nuevoEvento" class="btn btn-primary">Nuevo Evento</a>
+                </div>
+            </div>
+            <button onclick="window.location.href=''">Descargar como PDF</button>
+        </div>
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
-</script>
+        <!-- Bootstrap JS y jQuery (opcional) -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-</body>
+        <script>
 
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+            }
+
+        </script>
+    </body>
 </html>

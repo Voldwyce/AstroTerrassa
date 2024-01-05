@@ -90,10 +90,9 @@
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="/">Inicio</a>
-    <a href="#">Productos</a>
-    <a href="#">Clientes</a>
-    <a href="#">Pedidos</a>
-    <a href="#">Reportes</a>
+    <a href="/eventos">Eventos</a>
+    <a href="/listado">Clientes</a>
+    <a href="/stats">Estadisticas</a>
     <a href="/perfil">Configuración</a>
 </div>
 
@@ -151,7 +150,6 @@
         <div th:if="${currentUser.permisos == 2}" class="text-center">
             <a href="/register" class="btn btn-primary">Nuevo Usuario</a>
         </div>
-        <!-- <a th:href="@{/person}" class="btn btn-success btn-lg">Add Person</a> -->
     </div>
 
     <button onclick="window.location.href='/persons/pdf'">Descargar como PDF</button>

@@ -16,4 +16,9 @@ public class EventoService {
     public List<Evento> getEventosPorTipo(int tipo) {
         return eventoRepository.findByTipo(tipo);
     }
+
+    public void saveEvento(Evento evento) {
+        eventoRepository.save(evento);
+    }
+
 }

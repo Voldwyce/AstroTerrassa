@@ -3,6 +3,8 @@ package com.example.astroterrassa.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Table(name = "te_tipos")
 @Data
@@ -19,7 +21,7 @@ public class TipoEvento {
     @Column(name = "titulo")
     private String titulo;
 
-    @OneToMany(mappedBy = "tipo_te")
-    private TipoEvento tipo;
+    @OneToMany(mappedBy = "tipo")
+    private List<Evento> eventos;
 
 }
