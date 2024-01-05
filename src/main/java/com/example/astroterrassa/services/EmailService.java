@@ -1,12 +1,17 @@
 package com.example.astroterrassa.services;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.Pago;
 import com.example.astroterrassa.DAO.UserRepository;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 
 @Service
@@ -48,5 +53,23 @@ public class EmailService {
             emailSender.send(mail);
         }
     }
+
+    public void sendChartEmail(String email, byte[] csvBytes) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(email);
+            helper.setSubject("Grafico de datos");
+            helper.setText("Aqui tienes el csv con los datos del grafico seleccionado!!:");
+            helper.addAttachment("chart.csv", new ByteArrayResource(csvBytes));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        emailSender.send(message);
+    }
+
 
 }

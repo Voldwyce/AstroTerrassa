@@ -2,11 +2,22 @@ package com.example.astroterrassa.services;
 
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.DAO.UserRepository;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.astroterrassa.model.Pago;
 import com.example.astroterrassa.DAO.PagoRepository;
+import com.itextpdf.text.pdf.PdfWriter;
+import javax.xml.bind.DatatypeConverter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
+
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
@@ -192,4 +203,19 @@ public class ChartService {
                 }, Collectors.counting()));
     }
 
+
+    public byte[] generarCsv(String data) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintWriter pw = new PrintWriter(baos);
+
+        Map<String, Object> chartData = new Gson().fromJson(data, Map.class);
+        for (Map.Entry<String, Object> entry : chartData.entrySet()) {
+            pw.println(entry.getKey() + "," + entry.getValue());
+        }
+
+        pw.flush();
+        pw.close();
+
+        return baos.toByteArray();
+    }
 }
