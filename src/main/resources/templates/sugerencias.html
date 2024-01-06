@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -74,12 +75,13 @@
     <a href="/pago">Pago</a>
     <a href="/stats">Reportes</a>
     <a href="/perfil">Configuración</a>
-    <a href="/sugerencias">Sugerencias</a>
     <a href="/logout">Cerrar sesión</a>
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1); color: #fff;">
-    <a class="navbar-brand" href="/index">ERP</a>
+    <a class="navbar-brand" href="/index">
+        <img src="logo.jpeg" width="30" height="30" class="d-inline-block align-top" alt="">
+    </a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
@@ -93,26 +95,38 @@
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Bienvenido al ERP @AstroTerrassa</h1>
-    <p>Un sistema completo para la gestión eficiente de recursos en tu empresa.</p>
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-6">
-            <a href="/eventos"><h3>Eventos</h3></a>
-            <p>Administra tus eventos de manera sencilla.</p>
-        </div>
-        <div class="col-md-6">
-            <a href="/listado"><h3>Clientes</h3></a>
-            <p>Registra y gestiona la información de tus clientes de forma organizada.</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <a href="/pago"><h3>Pagos</h3></a>
-            <p>Realiza seguimiento de pedidos y controla el flujo de ventas.</p>
-        </div>
-        <div class="col-md-6">
-            <a href="/stats"><h3>Reportes</h3></a>
-            <p>Genera informes detallados para tomar decisiones estratégicas.</p>
+            <div>
+                <div>
+                    <h1>Sugerencias</h1>
+                </div>
+                <div>
+                    <p>Haz tus sugerencias de manera anonima para ayudarnos a mejorar el sitio web.</p>
+                    <form action="#" th:action="@{/sugerencias}" th:object="${sugerencia}" method="post">
+                        <div class="form-group">
+                            <label for="titulo">Titulo</label>
+                            <input type="text" id="titulo" th:field="*{titulo}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipoSugerencia">Tipo de sugerencia:</label>
+                            <select id="tipoSugerencia" th:field="*{tipoSugerencia}" class="form-control">
+                                <option value="Sugerencia">Sugerencia</option>
+                                <option value="Queja">Queja</option>
+                                <option value="Reclamación">Reclamación</option>
+                                <option value="Error">Error</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sugerencia_txt">Sugerencia:</label>
+                            <textarea id="sugerencia_txt" th:field="*{sugerencia_txt}" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Enviar" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -133,4 +147,5 @@
     function closeNav() {
         document.getElementById("mySidenav").style.width = "0";
     }
+
 </script>

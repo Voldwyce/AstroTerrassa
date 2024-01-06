@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -63,19 +64,21 @@ public class EventoController {
     }
 
     @GetMapping("/nuevoEvento")
-    public String showForm(Model model) {
-        Evento evento = new Evento();
-        model.addAttribute("evento", evento);
+    public String nuevoEvento(Model model) {
+        model.addAttribute("evento", new Evento());
         return "nuevoEvento";
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@RequestParam("fecha_taller_evento") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_taller_evento,
-                             @RequestParam("status") String status,
-                             @ModelAttribute("evento") Evento evento) {
-        evento.setFecha_taller_evento(fecha_taller_evento);
-        evento.setStatus("on".equals(status) ? 1 : 0);
+    public String saveEvento(@ModelAttribute Evento evento, String fecha_taller_evento, String status) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = formatter.parse(fecha_taller_evento);
+        evento.setFecha_taller_evento(date);
+
+        int statusInt = "on".equals(status) ? 1 : 0;
+        evento.setStatus(statusInt);
+
         eventService.saveEvento(evento);
-        return "redirect:/eventos";
+        return "redirect:/";
     }
 }

@@ -93,19 +93,18 @@
 <div class="container">
     <h1>Estadisticas y graficos</h1>
     <p>Un sistema completo para la gestión eficiente de recursos en tu empresa.</p>
-    <button id="sendEmailButton">Enviar por correo</button>
-    <button id="downloadPdfButton">Descargar PDF</button>
+    <button id="sendEmailButton" class="btn btn-primary">Enviar por correo</button>
+    <button id="downloadPdfButton" class="btn btn-primary">Descargar PDF</button>
     <!-- Aquí están los desplegables para seleccionar el tipo de gráfico y el rango de fechas -->
-    <select id="dataType">
+    <select id="dataType" class="custom-select">
         <option value="0">Seleccione un tipo de gráfico</option>
         <option value="Usuarios registrados">Usuarios registrados</option>
         <option value="Genero">Género de los usuarios</option>
         <option value="Edad">Edad de los usuarios</option>
         <option value="Simpatizantes">Simpatizantes</option>
         <option value="Eventos">Eventos por mes y año</option>
-        <!-- Agrega más opciones según los tipos de datos que quieras soportar -->
+        <option value="SimpatizantesVsNo">Simpatizantes vs No Simpatizantes</option>
     </select>
-    <!-- Aquí es donde se mostrará el gráfico -->
     <canvas id="myChart"></canvas>
     <div id="chartData" style="display: none"></div>
     <select id="year" style="display: none;"></select>
@@ -149,7 +148,9 @@ document.getElementById('dataType').addEventListener('change', function() {
         'Genero': 'doughnut',
         'Edad': 'doughnut',
         'Simpatizantes': 'line',
-        'Eventos': 'bar'
+        'Eventos': 'bar',
+        'SimpatizantesVsNo': 'doughnut'
+
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -313,6 +314,9 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 aspectRatio = 2;
             } else if (dataType === 'Eventos') {
                 chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'SimpatizantesVsNo') {
+                chartType = 'doughnut';
                 aspectRatio = 2;
             }
 

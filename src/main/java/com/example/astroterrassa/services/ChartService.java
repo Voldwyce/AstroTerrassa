@@ -1,18 +1,17 @@
 package com.example.astroterrassa.services;
 
 import com.example.astroterrassa.DAO.EventoRepository;
-import com.example.astroterrassa.model.Evento;
-import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.DAO.PagoRepository;
 import com.example.astroterrassa.DAO.UserRepository;
+import com.example.astroterrassa.model.Evento;
+import com.example.astroterrassa.model.Pago;
+import com.example.astroterrassa.model.User;
 import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.astroterrassa.model.Pago;
-import com.example.astroterrassa.DAO.PagoRepository;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.Period;
@@ -48,9 +47,29 @@ public class ChartService {
                 return getUsersBySimpatizantesData(year, month);
             case "Eventos":
                 return getEventosDate(year, month);
+            case "SimpatizantesVsNo":
+                return getSimpatizantesVsNo();
             default:
                 throw new IllegalArgumentException("Tipo de datos no soportado: " + dataType);
         }
+    }
+
+    private Map<String, Long> getSimpatizantesVsNo() {
+        List<User> users = userRepository.findAll();
+        Map<String, Long> usersRole = new HashMap<>();
+
+        for (User user : users) {
+            if (Objects.isNull(user.getPermisos())) {
+                continue;
+            }
+            if (user.getPermisos() == 0) {
+                usersRole.put("Miembros: ", usersRole.getOrDefault("Miembros: ", 0L) + 1);
+            } else if (user.getPermisos() == 3) {
+                usersRole.put("Simpatizantes: ", usersRole.getOrDefault("Simpatizantes: ", 0L) + 1);
+            }
+        }
+
+        return usersRole;
     }
 
 
@@ -162,47 +181,42 @@ public class ChartService {
         List<User> users = userRepository.findAll();
 
         // Agrupar los usuarios por género y contar cuántos usuarios hay de cada género
-        return users.stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(user -> {
-                    switch (user.getGenero()) {
-                        case 0:
-                            return "Otros";
-                        case 1:
-                            return "Hombre";
-                        case 2:
-                            return "Mujer";
-                        default:
-                            return "Desconocido";
-                    }
-                }, Collectors.counting()));
+        return users.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(user -> {
+            switch (user.getGenero()) {
+                case 0:
+                    return "Otros";
+                case 1:
+                    return "Hombre";
+                case 2:
+                    return "Mujer";
+                default:
+                    return "Desconocido";
+            }
+        }, Collectors.counting()));
     }
 
     public Map<String, Long> getUsersByAgeData() {
         List<User> users = userRepository.findAll();
 
-        return users.stream()
-                .filter(Objects::nonNull)
-                .filter(user -> user.getFecha_nt() != null)
-                .collect(Collectors.groupingBy(user -> {
-                    LocalDate birthDate = user.getFecha_nt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    int age = Period.between(birthDate, LocalDate.now()).getYears();
-                    if (age < 18) {
-                        return "Menos de 18";
-                    } else if (age < 25) {
-                        return "18-24";
-                    } else if (age < 35) {
-                        return "25-34";
-                    } else if (age < 45) {
-                        return "35-44";
-                    } else if (age < 55) {
-                        return "45-54";
-                    } else if (age < 65) {
-                        return "55-64";
-                    } else {
-                        return "65 o más";
-                    }
-                }, Collectors.counting()));
+        return users.stream().filter(Objects::nonNull).filter(user -> user.getFecha_nt() != null).collect(Collectors.groupingBy(user -> {
+            LocalDate birthDate = user.getFecha_nt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int age = Period.between(birthDate, LocalDate.now()).getYears();
+            if (age < 18) {
+                return "Menos de 18";
+            } else if (age < 25) {
+                return "18-24";
+            } else if (age < 35) {
+                return "25-34";
+            } else if (age < 45) {
+                return "35-44";
+            } else if (age < 55) {
+                return "45-54";
+            } else if (age < 65) {
+                return "55-64";
+            } else {
+                return "65 o más";
+            }
+        }, Collectors.counting()));
     }
 
     private Map<String, Long> getEventosDate(String year, String month) {
@@ -257,6 +271,7 @@ public class ChartService {
         return eventoCountsByDate;
 
     }
+
 
     public byte[] generarCsv(String data) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -4,6 +4,7 @@ import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.DAO.UsersRolesRepository;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.UsersRoles;
+import com.example.astroterrassa.services.EmailService;
 import com.example.astroterrassa.services.UserService;
 
 import java.security.Principal;
@@ -40,6 +41,9 @@ public class UsersController {
 
     @Autowired
     private UsersRolesRepository UsersRolesRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @RequestMapping("/listado")
     @GetMapping
@@ -222,4 +226,12 @@ public class UsersController {
 
         return "redirect:/pago";
     }
+
+    @GetMapping("/sendUserList")
+    public String sendUserList() {
+        List<User> users = UsuariServices.getAllUsers();
+        emailService.sendUserList(users);
+        return "redirect:/listado";
+    }
+
 }

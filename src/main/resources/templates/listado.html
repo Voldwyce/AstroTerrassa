@@ -8,80 +8,116 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
-            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: 50% 70%;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
 
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
-
-        .sidenav a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
-
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
+        /* Estilos para resoluciones de pantalla de 1440p y superiores */
+@media (min-width: 1440px) {
     .container {
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 15px;
-        padding: 20px;
-        margin-top: 50px;
-        display: flex; /* Add this line */
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+        max-width: 50%;
     }
 
-        th {
-            background-color: #4287f5;
-            color: Black;
-        }
+    th, td {
+        width: 15%;
+    }
+}
 
-        th,
-        td {
-            width: 20%;
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #ccc;
-            border-width: thin;
-            padding: 20px;
-            border-radius: 10px;
-            );
-        }
+/* Estilos para resoluciones de pantalla de 1080p y inferiores */
+@media (max-width: 1080px) {
+    .container {
+        max-width: 100%;
+        overflow-x: auto;
+    }
 
-        /* Agregar estilos específicos para editPerfil.html si es necesario */
+    th, td {
+        width: 20%;
+    }
+
+    table {
+        font-size: 0.8rem;
+        width: 10%;
+    }
+}
+    body {
+        background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: 50% 70%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+        th, td {
+    width: 20%;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-width: thin;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+    .container {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+        color: #f1f1f1;
+    }
+
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    th {
+        background-color: #4287f5;
+        color: Black;
+    }
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-width: thin;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
     </style>
 </head>
 
@@ -110,7 +146,7 @@
 <div class="container">
     <h1>Listado de Usuarios</h1>
     <hr>
-    <table>
+    <table class="table table-bordered m-3">
         <thead>
         <tr>
             <th>Username</th>
@@ -152,7 +188,11 @@
         </div>
     </div>
 
-    <button onclick="window.location.href='/persons/pdf'">Descargar como PDF</button>
+    <div class="btn-group" role="group" aria-label="Botones de acción">
+        <button onclick="window.location.href='/persons/pdf'" class="btn btn-primary">Descargar como PDF</button>
+        <button onclick="sendUserList()" class="btn btn-primary">Enviar por correo</button>
+    </div>
+
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->
@@ -167,6 +207,10 @@
 
     function closeNav() {
         document.getElementById("mySidenav").style.width = "0";
+    }
+
+    function sendUserList() {
+        fetch('/sendUserList', { method: 'GET' });
     }
 </script>
 
