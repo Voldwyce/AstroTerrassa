@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http:/www.thymeleaf.org" lang="">
 
 <head>
     <meta charset="UTF-8">
@@ -99,11 +99,16 @@
     <select id="dataType" class="custom-select">
         <option value="0">Seleccione un tipo de gráfico</option>
         <option value="Usuarios registrados">Usuarios registrados</option>
+        <option value="Usuarios conectados">Usuarios Conectados</option>
         <option value="Genero">Género de los usuarios</option>
         <option value="Edad">Edad de los usuarios</option>
         <option value="Simpatizantes">Simpatizantes</option>
+        <option value="SimpatizantesVsNo">Simpatizantes vs Miembros</option>
         <option value="Eventos">Eventos por mes y año</option>
-        <option value="SimpatizantesVsNo">Simpatizantes vs No Simpatizantes</option>
+        <option value="EventosActivos">Eventos activos</option>
+        <option value="Tipos de sugerencias">Tipos de sugerencias</option>
+        <option value="SugerenciasDate">Sugerencias</option>
+        <option value="Balance">Balance empresa</option>
     </select>
     <canvas id="myChart"></canvas>
     <div id="chartData" style="display: none"></div>
@@ -116,275 +121,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script th:src="@{/js/chart.js}"></script>
 </body>
-
 </html>
 
-<script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
-
-function populateDataType() {
-    var dataTypeSelect = document.getElementById('dataType');
-}
-
-populateDataType();
-
-document.getElementById('dataType').addEventListener('change', function() {
-    var selectedType = document.getElementById('dataType').value;
-    var yearSelect = document.getElementById('year');
-    var monthSelect = document.getElementById('month');
-    var acceptButton = document.getElementById('acceptButton');
-    var chartCanvas = document.getElementById('myChart');
-
-    // Define los tipos de gráficos posibles
-    var chartTypes = {
-        'Usuarios registrados': 'bar',
-        'Genero': 'doughnut',
-        'Edad': 'doughnut',
-        'Simpatizantes': 'line',
-        'Eventos': 'bar',
-        'SimpatizantesVsNo': 'doughnut'
-
-    };
-
-    // Verifica si el tipo de gráfico seleccionado está definido
-    if (selectedType in chartTypes) {
-        var chartType = chartTypes[selectedType];
-
-        // Actualiza el tipo de gráfico
-        chart.config.type = chartType;
-        chart.destroy(); // Destruye el gráfico existente
-        chart = new Chart(ctx, chart.config); // Crea un nuevo gráfico con el tipo actualizado
-    }
-
-    // Oculta los desplegables de año y mes si se selecciona "Género de los usuarios"
-    if (selectedType === 'Genero' || selectedType === 'Edad') {
-        yearSelect.style.display = 'none';
-        monthSelect.style.display = 'none';
-        acceptButton.style.display = 'none';
-    } else if (selectedType === 'Usuarios registrados' || selectedType === 'Simpatizantes' || selectedType === 'Eventos') {
-        yearSelect.style.display = 'inline-block';
-        monthSelect.style.display = 'inline-block';
-        acceptButton.style.display = 'inline-block';
-    } else {
-        yearSelect.style.display = 'none';
-        monthSelect.style.display = 'none';
-        acceptButton.style.display = 'none';
-    }
-
-        // Ajusta el aspectRatio para los gráficos
-        var aspectRatio = 2;
-        if (chartType === 'doughnut') {
-            aspectRatio = 1;
-        }
-
-
-    // Dispara el evento click del botón "Aceptar" para cargar el gráfico
-    acceptButton.click();
-});
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [{
-                    data: []
-                }]
-            },
-            options: {
-             responsive: true,
-             aspectRatio: 1000,
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            unit: 'month'
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
-document.getElementById('year').addEventListener('change', function() {
-    var year = document.getElementById('year').value;
-    var monthSelect = document.getElementById('month');
-
-    // Limpia las opciones existentes
-    monthSelect.options.length = 0;
-
-    if (year === "all") {
-        // Si el año es "Todos", solo permite seleccionar "Todos" para el mes
-        monthSelect.options.add(new Option("Todos", "all"));
-        monthSelect.style.display = 'inline-block';
-    } else if (year && year !== "") {
-        // Si se selecciona un año específico, permite seleccionar cualquier mes
-        monthSelect.options.add(new Option("Todos", "all"));
-        var months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        for (var i = 0; i < months.length; i++) {
-            monthSelect.options.add(new Option(months[i], i + 1));
-        }
-        monthSelect.style.display = 'inline-block';
-    } else {
-        monthSelect.style.display = 'none';
-    }
-});
-
-// Llama a esta función para inicializar el estado del desplegable del mes cuando se carga la página
-document.getElementById('year').dispatchEvent(new Event('change'));
-
-function populateYearAndMonth() {
-    var yearSelect = document.getElementById('year');
-    var monthSelect = document.getElementById('month');
-
-    // Opción para mostrar todos los años
-    yearSelect.options.add(new Option("Todos", "all"));
-
-    var currentYear = new Date().getFullYear();
-
-    for (var year = currentYear; year >= 1900; year--) {
-        yearSelect.options.add(new Option(year, year));
-    }
-
-    // Opción all para el mes
-    monthSelect.options.add(new Option("Todos", "all"));
-
-    var months = [];
-    for (var i = 0; i < months.length; i++) {
-        monthSelect.options.add(new Option(months[i], i + 1));
-    }
-}
-
-populateYearAndMonth();
-
-function getMonths() {
-    return ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-}
-
-function getDaysInMonth(month, year) {
-    var date = new Date(year, month + 1, 0);
-    var days = [];
-    for (var i = 1; i <= date.getDate(); i++) {
-        days.push(i);
-    }
-    return days;
-}
-
-document.getElementById('acceptButton').addEventListener('click', function() {
-    var dataType = document.getElementById('dataType').value;
-    var year = document.getElementById('year').value;
-    var month = document.getElementById('month').value || ""; // Asegura que solo los meses puedan estar vacíos
-
-    fetch('/chartData?dataType=' + dataType + '&year=' + year + '&month=' + month)
-        .then(response => response.json())
-        .then(data => {
-            var labels = Object.keys(data);
-            var values = Object.values(data);
-
-            var chartDataElement = document.getElementById('chartData');
-            chartDataElement.innerHTML = JSON.stringify(data, null, 2);
-
-            if (dataType === "Usuarios registrados" && month === "" || dataType === "Simpatizantes" && month === "") {
-                labels = getMonths();
-            }
-
-            // Determina el tipo de gráfico basado en dataType
-            var chartType = 'bar';
-            var aspectRatio = 2;
-            if (dataType === 'Usuarios registrados') {
-                chartType = 'bar';
-            } else if (dataType === 'Genero') {
-                chartType = 'doughnut';
-                aspectRatio = 2;
-            } else if (dataType === 'Edad') {
-                chartType = 'doughnut';
-                aspectRatio = 2;
-            } else if (dataType === 'Simpatizantes') {
-                chartType = 'line';
-                aspectRatio = 2;
-            } else if (dataType === 'Eventos') {
-                chartType = 'bar';
-                aspectRatio = 2;
-            } else if (dataType === 'SimpatizantesVsNo') {
-                chartType = 'doughnut';
-                aspectRatio = 2;
-            }
-
-            // Actualiza el gráfico con los datos recibidos
-            chart.destroy(); // Destruye el gráfico anterior
-            chart = new Chart(ctx, {
-                type: chartType,
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    aspectRatio: aspectRatio,
-                    scales: {
-                        xAxes: [{
-                            type: 'time',
-                            time: {
-                                unit: 'month'
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-            chart.update();
-        });
-});
-
-document.getElementById('downloadPdfButton').addEventListener('click', function() {
-    var chartCanvas = document.getElementById('myChart');
-    var chartImage = chartCanvas.toDataURL("image/jpeg", 1.0);
-    var doc = new jsPDF('landscape');
-
-    doc.addImage(chartImage, 'JPEG', 10, 10, 280, 150 );
-
-    // Obtén los datos del gráfico
-    var chartDataElement = document.getElementById('chartData');
-    var chartDataText = chartDataElement.innerHTML;
-
-    // Agrega los datos del gráfico al PDF
-    doc.text(chartDataText, 10, 170);
-
-    doc.save('chart.pdf');
-});
-
-document.getElementById('sendEmailButton').addEventListener('click', function() {
-    var chartDataElement = document.getElementById('chartData');
-    var chartDataText = chartDataElement.innerHTML;
-
-    // Solicita una dirección de correo electrónico
-    var email = prompt("Direccion de correo:");
-
-    // Envía una solicitud GET al endpoint /sendChart con la dirección de correo electrónico y los datos del gráfico como parámetros de consulta
-    fetch('/sendChart?email=' + encodeURIComponent(email) + '&data=' + encodeURIComponent(chartDataText))
-    .then(response => {
-        if (response.ok) {
-            alert('Email enviado!!');
-        } else {
-            alert('Ups, ha habido un error!!');
-        }
-    });
-});
-
-</script>

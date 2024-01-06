@@ -2,6 +2,9 @@ package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "sugerencias")
@@ -21,5 +24,9 @@ public class Sugerencia {
 
     @Column(name = "sugerencia")
     private String sugerencia_txt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_sugerencia")
+    private Date fecha_sugerencia;
 
 }

@@ -26,7 +26,7 @@ public class PagoService {
         if (user != null) {
             pago.setUser(user);
         }
-        pago.setFechaPago(LocalDateTime.now()); // Set the current date and time
+        pago.setFechaPago(LocalDateTime.now());
         return pagoRepository.save(pago);
     }
 

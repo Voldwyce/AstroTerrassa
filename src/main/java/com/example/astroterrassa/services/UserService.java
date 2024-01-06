@@ -9,6 +9,7 @@ import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 
 import java.time.LocalDate;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -93,11 +94,9 @@ public class UserService implements UsuariServiceInterface {
         if (user == null) {
             // Si el usuario no existe en la base de datos, lo guardamos
             saveUserAfterOAuthLoginSuccess(oAuth2User);
-            user.setRegisterDt(LocalDate.from(ZonedDateTime.now().toInstant()));
+            user.setRegisterDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
         } else {
-            // Si el usuario ya existe en la base de datos, puedes proceder como desees
-            // Por ejemplo, puedes actualizar la última fecha de inicio de sesión del usuario
-            user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
+            user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
             userRepository.save(user);
         }
     }
@@ -108,7 +107,7 @@ public class UserService implements UsuariServiceInterface {
         User user = new User();
         user.setNombre(oAuth2User.getName());
         user.setMail(oAuth2User.getEmail());
-        user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
+        user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
         user.setIntents(3);
         user.setUsername(oAuth2User.getEmail()); // or any other field you want to use for username
         user.setAuthType(AuthenticationType.GOOGLE);
@@ -128,7 +127,7 @@ public class UserService implements UsuariServiceInterface {
     public void logoutUser(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            user.setLastDt(new Date());
+            user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
             userRepository.save(user);
         }
     }
@@ -145,7 +144,8 @@ public class UserService implements UsuariServiceInterface {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPermisos(1);
         user.setIntents(3);
-        user.setRegisterDt(LocalDate.from(ZonedDateTime.now().toInstant()));
+        user.setRegisterDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
+        user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
         User savedUser = userRepository.save(user); // Guarda el usuario en la base de datos
 
         // Asigna el User_id y el Role_id a UsersRoles y lo guarda

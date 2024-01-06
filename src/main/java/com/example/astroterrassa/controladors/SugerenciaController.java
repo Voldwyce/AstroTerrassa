@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Date;
+
 @Controller
 public class SugerenciaController {
 
@@ -31,6 +33,7 @@ public class SugerenciaController {
 
     @PostMapping("/sugerencias")
     public String saveSugerencia(@ModelAttribute Sugerencia sugerencia) {
+        sugerencia.setFecha_sugerencia(new Date());
         sugerenciaService.saveSugerencia(sugerencia);
         emailService.sendSugerencia(sugerencia);
         return "redirect:/";

@@ -8,6 +8,8 @@ import com.example.astroterrassa.services.EmailService;
 import com.example.astroterrassa.services.UserService;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

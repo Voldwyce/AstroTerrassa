@@ -1,4 +1,4 @@
-package com.example.astroterrassa;
+package com.example.astroterrassa.controladors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,6 +15,7 @@ import com.example.astroterrassa.services.EmailService;
 import com.example.astroterrassa.services.EmailService;
 
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -64,7 +65,7 @@ public class AppController {
         u.setPermisos(1);
         u.setNotify(notify);
         u.setIntents(3);
-        u.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
+        u.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
 
         if (notify == 1) {
@@ -92,7 +93,7 @@ public class AppController {
                         @RequestParam("password") String password) {
 
         User user = userRepository.findByUsername(username);
-        user.setLastDt(Date.from(ZonedDateTime.now().toInstant()));
+        user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return "index";
         } else {

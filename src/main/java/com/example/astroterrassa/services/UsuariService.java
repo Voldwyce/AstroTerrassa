@@ -1,10 +1,11 @@
-package com.example.astroterrassa.controladors;
+package com.example.astroterrassa.services;
 
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.DAO.UsersRolesRepository;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.UsersRoles;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,6 @@ public class UsuariService implements UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User usuari = userRepository.findByUsername(username);
 
@@ -53,6 +53,10 @@ public class UsuariService implements UserDetailsService {
 
         log.info(usuari.getUsername());
         log.info(usuari.getPassword());
+
+        LocalDateTime lastLogin = LocalDateTime.now();
+        usuari.setLastDt(lastLogin);
+        userRepository.save(usuari);
 
         return new org.springframework.security.core.userdetails.User(usuari.getUsername(), usuari.getPassword(), roles);
     }
