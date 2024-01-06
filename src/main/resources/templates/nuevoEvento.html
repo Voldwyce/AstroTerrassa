@@ -117,7 +117,7 @@
 
     <div class="container">
         <div class="form-container">
-            <form action="#" th:action="@{/nuevoEvento}" th:object="${evento}" method="post">
+            <form action="" th:action="@{/nuevoEvento}" th:object="${evento}" method="post">
                 <label for="titulo">Titulo:</label><br>
                 <input type="text" id="titulo" name="titulo" th:field="*{titulo}"><br><br>
                 <label for="descripcion">Descripcion:</label><br>
@@ -125,7 +125,7 @@
                 <label for="fecha_taller_evento">Fecha del evento:</label>
                 <input type="date" id="fecha_taller_evento" name="fecha_taller_evento" th:field="*{fecha_taller_evento}"><br>
                 <label for="status">Status:</label>
-                <input type="checkbox" id="status" name="status" th:field="*{status}"><br>
+                <input type="checkbox" id="status" name="status" th:checked="${status == 1}"><br>
                 <div class="aligned-elements">
                     <input type="submit" value="Submit" onclick="">
                 </div>

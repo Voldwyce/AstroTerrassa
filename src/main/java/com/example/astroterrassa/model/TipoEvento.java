@@ -21,6 +21,9 @@ public class TipoEvento {
     @Column(name = "titulo")
     private String titulo;
 
+    @Column(name = "descripcion")
+    private String descripcion;
+
     @OneToMany(mappedBy = "tipo")
     private List<Evento> eventos;
 

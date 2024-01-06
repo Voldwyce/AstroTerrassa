@@ -5,12 +5,14 @@ import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.services.EventoService;
 import com.example.astroterrassa.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -61,14 +63,18 @@ public class EventoController {
     }
 
     @GetMapping("/nuevoEvento")
-    public String showNewEventoForm(Model model) {
+    public String showForm(Model model) {
         Evento evento = new Evento();
         model.addAttribute("evento", evento);
         return "nuevoEvento";
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@ModelAttribute("evento") Evento evento) {
+    public String saveEvento(@RequestParam("fecha_taller_evento") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_taller_evento,
+                             @RequestParam("status") String status,
+                             @ModelAttribute("evento") Evento evento) {
+        evento.setFecha_taller_evento(fecha_taller_evento);
+        evento.setStatus("on".equals(status) ? 1 : 0);
         eventService.saveEvento(evento);
         return "redirect:/eventos";
     }
