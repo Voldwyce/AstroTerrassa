@@ -43,6 +43,7 @@ public class EventoController {
     }
 
     @RequestMapping("/eventos")
+
     public String eventos(Model model, @PathVariable int tipoEvento) {
         List<Evento> eventos = eventService.getEventosPorTipo(tipoEvento);
         model.addAttribute("eventos", eventos);
@@ -70,13 +71,9 @@ public class EventoController {
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@ModelAttribute Evento evento, String fecha_taller_evento, String status) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = formatter.parse(fecha_taller_evento);
-        evento.setFecha_taller_evento(date);
-
-        int statusInt = "on".equals(status) ? 1 : 0;
-        evento.setStatus(statusInt);
+    public String saveEvento(@ModelAttribute Evento evento,String fecha_taller_evento ,@RequestParam(value = "statusInt", required = false) Boolean statusInt) throws Exception {
+        int status = (statusInt != null && statusInt) ? 1 : 0;
+        evento.setStatus(status);
 
         eventService.saveEvento(evento);
         return "redirect:/";

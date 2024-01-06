@@ -2,6 +2,7 @@ package com.example.astroterrassa.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,6 +22,7 @@ public class Evento {
     @Column(name = "descripcion")
     private String descripcion;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fecha_taller_evento")
     private Date fecha_taller_evento;
 
