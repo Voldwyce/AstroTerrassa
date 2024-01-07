@@ -125,11 +125,14 @@ th, td {
 
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="/">Inicio</a>
+    <a href="#">Inicio</a>
     <a href="/eventos">Eventos</a>
     <a href="/listado">Clientes</a>
-    <a href="/stats">Estadisticas</a>
+    <a href="/pago">Pago</a>
+    <a href="/stats">Reportes</a>
     <a href="/perfil">Configuración</a>
+    <a href="/sugerencias">Sugerencias</a>
+    <a href="/logout">Cerrar sesión</a>
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
@@ -190,7 +193,7 @@ th, td {
 
     <div class="btn-group" role="group" aria-label="Botones de acción">
         <button onclick="window.location.href='/persons/pdf'" class="btn btn-primary">Descargar como PDF</button>
-        <button onclick="sendUserList()" class="btn btn-primary">Enviar por correo</button>
+        <button id="sendEmailButton" class="btn btn-primary">Enviar por correo</button>
     </div>
 
 </div>
@@ -209,9 +212,19 @@ th, td {
         document.getElementById("mySidenav").style.width = "0";
     }
 
-    function sendUserList() {
-        fetch('/sendUserList', { method: 'GET' });
-    }
+document.getElementById('sendEmailButton').addEventListener('click', function() {
+    // Solicita una dirección de correo electrónico
+    var email = prompt("Direccion de correo:");
+
+    fetch('/sendUserList?email=' + encodeURIComponent(email))
+    .then(response => {
+        if (response.ok) {
+            alert('Email enviado!!');
+        } else {
+            alert('Ups, ha habido un error!!');
+        }
+    });
+});
 </script>
 
 </body>

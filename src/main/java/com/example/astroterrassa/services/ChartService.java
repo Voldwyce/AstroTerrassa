@@ -64,6 +64,16 @@ public class ChartService {
                 return getTiposSugerencias();
             case "EventosActivos":
                 return getEventosActivos();
+            case "Cuotas":
+                return getCuotas();
+            case "Roles":
+                return getUsersRolesData();
+            case "EventosUser":
+               return getEventosUsuarios();
+            case "TipoEvento":
+                return getTiposEventos();
+            case "notify":
+                return getNotify();
             case "Balance":
                 dataObjects = pagoRepository.findAll();
                 dateExtractor = obj -> ((Pago) obj).getFechaPago().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -73,15 +83,59 @@ public class ChartService {
                 dataObjects = userRepository.findAll();
                 dateExtractor = obj -> LocalDate.from(((User) obj).getLastDt());
                 break;
-            case "Cuotas":
-                return getCuotas();
-            case "Roles":
-                return getUsersRolesData();
             default:
                 throw new IllegalArgumentException("Tipo de datos no soportado: " + dataType);
         }
 
         return getDataByDate(dataObjects, dateExtractor, dataType, year, month, valueExtractor);
+    }
+
+    private Map<String, Long> getNotify() {
+        List<User> users = userRepository.findAll();
+        Map<String, Long> usersNotify = new HashMap<>();
+
+        for (User user : users) {
+            if (Objects.isNull(user.getNotify())) {
+                continue;
+            }
+            if (user.getNotify() == 1) {
+                usersNotify.put("Si: ", usersNotify.getOrDefault("Si: ", 0L) + 1);
+            } else if (user.getNotify() == 0) {
+                usersNotify.put("No: ", usersNotify.getOrDefault("No: ", 0L) + 1);
+            }
+        }
+
+        return usersNotify;
+    }
+
+    private Map<String, Long> getTiposEventos() {
+        List<Evento> eventos = eventoRepository.findAll();
+        Map<String, Long> eventosCountsByType = new HashMap<>();
+
+        for (Evento evento : eventos) {
+            if (Objects.isNull(evento.getTipoEvento())) {
+                continue;
+            }
+            eventosCountsByType.put(evento.getTipoEvento().getTitulo(), eventosCountsByType.getOrDefault(evento.getTipoEvento().getTitulo(), 0L) + 1);
+        }
+        return eventosCountsByType;
+    }
+
+    public Map<String, Long> getEventosUsuarios() {
+        List<EventoPersona> eventosUsuarios = eventoUsuarioRepository.findAll();
+        Map<String, Long> eventosUsuariosCountsByType = new HashMap<>();
+
+        for (EventoPersona eventoUsuario : eventosUsuarios) {
+            if (Objects.isNull(eventoUsuario.getId_te())) {
+                continue;
+            }
+            Optional<Evento> evento = eventoRepository.findById(Long.valueOf(eventoUsuario.getId_te()));
+            if (evento.isPresent()) {
+                String nombreEvento = evento.get().getTitulo();
+                eventosUsuariosCountsByType.put(nombreEvento, eventosUsuariosCountsByType.getOrDefault(nombreEvento, 0L) + 1);
+            }
+        }
+        return eventosUsuariosCountsByType;
     }
 
     private Map<String, Long> getDataByDate(List<?> dataObjects, Function<Object, LocalDate> dateExtractor, String dataType, String year, String month, Function<Object, Long> valueExtractor) {

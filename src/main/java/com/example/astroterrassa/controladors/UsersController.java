@@ -230,9 +230,9 @@ public class UsersController {
     }
 
     @GetMapping("/sendUserList")
-    public String sendUserList() {
+    public String sendUserList(@RequestParam String email) {
         List<User> users = UsuariServices.getAllUsers();
-        emailService.sendUserList(users);
+        emailService.sendUserList(users, email);
         return "redirect:/listado";
     }
 

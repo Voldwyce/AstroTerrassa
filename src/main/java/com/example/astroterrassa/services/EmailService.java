@@ -82,9 +82,9 @@ public class EmailService {
         emailSender.send(mail);
     }
 
-    public void sendUserList(List<User> users) {
+    public void sendUserList(List<User> users, String email) {
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo("sarahtree6@gmail.com");
+        mail.setTo(email);
         mail.setSubject("Listado de Usuarios");
 
         StringBuilder text = new StringBuilder("Listado de Usuarios:\n\n");
