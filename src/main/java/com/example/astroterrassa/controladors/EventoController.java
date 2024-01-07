@@ -1,5 +1,6 @@
 package com.example.astroterrassa.controladors;
 
+import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.model.Evento;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.services.EventoService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,9 @@ public class EventoController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/eventos")
     public String showEventos(Model model) {
@@ -66,19 +71,37 @@ public class EventoController {
     }
 
     @GetMapping("/nuevoEvento")
-    public String nuevoEvento(Model model) {
+    public String nuevoEvento(Model model, Principal principal) {
+
+        String username = principal.getName();
+
+        User currentUser = userRepository.findByUsername(username);
+
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("evento", new Evento());
         return "nuevoEvento";
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@ModelAttribute Evento evento,String fecha_taller_evento ,@RequestParam(value = "statusInt", required = false) Boolean statusInt) throws Exception {
+    public String saveEvento(@ModelAttribute Evento evento, @RequestParam String fecha_taller_evento, @RequestParam(value = "statusInt", required = false) Boolean statusInt) throws Exception {
+        // Convert the fecha_taller_evento string to a Date object
+        Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha_taller_evento);
+        evento.setFecha_taller_evento(fecha);
+
+        // Convert the statusInt Boolean to an int
         int status = (statusInt != null && statusInt) ? 1 : 0;
         evento.setStatus(status);
 
+        // Save the Evento object
         eventService.saveEvento(evento);
+
         return "redirect:/eventos";
     }
 
+    @GetMapping("/listadoTipoEvento")
+    public String showListadoTipoEvento(Model model) {
+
+        return "listadoTipoEvento";
+    }
 
 }

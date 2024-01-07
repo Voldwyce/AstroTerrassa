@@ -130,7 +130,7 @@
                     <input type="submit" value="Submit" onclick="">
                 </div>
                 <!--Boton que solo ve el admin que redirige a listadoTipoEvento.html-->
-                <div th:if="${currentUser.permisos == 2" class="aligned-elements">
+                <div th:if="${currentUser.permisos == 2}" class="aligned-elements">
                     <a href="/listadoTipoEvento" class="btn btn-primary">Tipos de Evento</a>
                 </div>
             </form>
