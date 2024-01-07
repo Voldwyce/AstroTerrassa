@@ -31,7 +31,9 @@ document.getElementById('dataType').addEventListener('change', function() {
         'EventosActivos': 'bar',
         'SugerenciasDate': 'bar',
         'Balance': 'line',
-        'Usuarios conectados': 'bar'
+        'Usuarios conectados': 'bar',
+        'Cuotas': 'doughnut',
+        'Roles': 'doughnut'
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -153,6 +155,7 @@ document.getElementById('acceptButton').addEventListener('click', function() {
     var year = document.getElementById('year').value;
     var month = document.getElementById('month').value || "";
 
+
     fetch('/chartData?dataType=' + dataType + '&year=' + year + '&month=' + month)
         .then(response => response.json())
         .then(data => {
@@ -197,6 +200,12 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 aspectRatio = 2;
             } else if (dataType === 'Usuarios conectados') {
                 chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'Cuotas') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'Roles') {
+                chartType = 'doughnut';
                 aspectRatio = 2;
             }
 
@@ -269,4 +278,48 @@ document.getElementById('sendEmailButton').addEventListener('click', function() 
             alert('Ups, ha habido un error!!');
         }
     });
+});
+
+
+// Logica de los eventos
+
+var dataTypeSelect = document.getElementById('dataType');
+var eventOption = document.createElement('option');
+eventOption.value = 'Eventos';
+eventOption.text = 'Eventos';
+dataTypeSelect.add(eventOption);
+
+dataTypeSelect.addEventListener('change', function() {
+    var selectedType = dataTypeSelect.value;
+    var eventSelect = document.getElementById('evento');
+
+    if (selectedType === 'Eventos') {
+        eventSelect.style.display = 'inline-block';
+
+        fetch('/getEvents')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(event => {
+                    var option = document.createElement('option');
+                    option.value = event.id;
+                    option.text = event.name;
+                    eventSelect.add(option);
+                });
+            });
+    } else {
+        eventSelect.style.display = 'none';
+    }
+});
+
+document.getElementById('acceptButton').addEventListener('click', function() {
+    var dataType = dataTypeSelect.value;
+    var eventId = document.getElementById('evento').value;
+
+    if (dataType === 'Eventos') {
+        fetch('/chartData?dataType=' + dataType + '&eventId=' + eventId)
+            .then(response => response.json())
+            .then(data => {
+                updateChart(data);
+            });
+    }
 });

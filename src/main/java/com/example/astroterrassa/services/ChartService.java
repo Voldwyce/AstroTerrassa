@@ -1,13 +1,7 @@
 package com.example.astroterrassa.services;
 
-import com.example.astroterrassa.DAO.EventoRepository;
-import com.example.astroterrassa.DAO.PagoRepository;
-import com.example.astroterrassa.DAO.SugerenciaRepository;
-import com.example.astroterrassa.DAO.UserRepository;
-import com.example.astroterrassa.model.Evento;
-import com.example.astroterrassa.model.Pago;
-import com.example.astroterrassa.model.Sugerencia;
-import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.DAO.*;
+import com.example.astroterrassa.model.*;
 import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +31,12 @@ public class ChartService {
 
     @Autowired
     private SugerenciaRepository sugerenciaRepository;
+
+    @Autowired
+    private UsersRolesRepository usersRolesRepository;
+
+    @Autowired
+    private EventoPersonaRepository eventoUsuarioRepository;
 
     public Map<String, Long> getChartData(String dataType, String year, String month) {
         List<?> dataObjects = null;
@@ -73,6 +73,10 @@ public class ChartService {
                 dataObjects = userRepository.findAll();
                 dateExtractor = obj -> LocalDate.from(((User) obj).getLastDt());
                 break;
+            case "Cuotas":
+                return getCuotas();
+            case "Roles":
+                return getUsersRolesData();
             default:
                 throw new IllegalArgumentException("Tipo de datos no soportado: " + dataType);
         }
@@ -225,6 +229,17 @@ public class ChartService {
         }, Collectors.counting()));
     }
 
+    private Map<String, Long> getCuotas() {
+        List<Pago> pagos = pagoRepository.findAll();
+
+        return pagos.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Pago::getProducto, Collectors.counting()));
+    }
+
+    private Map<String, Long> getUsersRolesData() {
+        List<UsersRoles> users = usersRolesRepository.findAll();
+
+        return users.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(UsersRoles::getRolNombre, Collectors.counting()));
+    }
 
     public byte[] generarCsv(String data) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -240,4 +255,5 @@ public class ChartService {
 
         return baos.toByteArray();
     }
+
 }
