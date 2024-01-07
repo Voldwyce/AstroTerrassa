@@ -27,6 +27,8 @@ public class EventoController {
 
     @GetMapping("/eventos")
     public String showEventos(Model model) {
+        List<Evento> eventos = eventService.getAllEventos();
+        model.addAttribute("eventos", eventos);
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
@@ -43,7 +45,6 @@ public class EventoController {
     }
 
     @RequestMapping("/eventos")
-
     public String eventos(Model model, @PathVariable int tipoEvento) {
         List<Evento> eventos = eventService.getEventosPorTipo(tipoEvento);
         model.addAttribute("eventos", eventos);
@@ -76,6 +77,8 @@ public class EventoController {
         evento.setStatus(status);
 
         eventService.saveEvento(evento);
-        return "redirect:/";
+        return "redirect:/eventos";
     }
+
+
 }
