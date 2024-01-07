@@ -33,7 +33,10 @@ document.getElementById('dataType').addEventListener('change', function() {
         'Balance': 'line',
         'Usuarios conectados': 'bar',
         'Cuotas': 'doughnut',
-        'Roles': 'doughnut'
+        'Roles': 'doughnut',
+        'EventosUser': 'bar',
+        'TipoEvento': 'doughnut',
+        'notify': 'bar'
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -205,6 +208,12 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 chartType = 'doughnut';
                 aspectRatio = 2;
             } else if (dataType === 'Roles') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'EventosUser') {
+                chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'TipoEvento') {
                 chartType = 'doughnut';
                 aspectRatio = 2;
             }
