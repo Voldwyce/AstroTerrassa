@@ -35,6 +35,9 @@ public class ChartService {
     @Autowired
     private UsersRolesRepository usersRolesRepository;
 
+    @Autowired
+    private EventoPersonaRepository eventoUsuarioRepository;
+
     public Map<String, Long> getChartData(String dataType, String year, String month) {
         List<?> dataObjects = null;
         Function<Object, LocalDate> dateExtractor = null;
@@ -236,6 +239,14 @@ public class ChartService {
         List<UsersRoles> users = usersRolesRepository.findAll();
 
         return users.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(UsersRoles::getRolNombre, Collectors.counting()));
+    }
+
+    public List<Evento> getEventosList() {
+        return eventoRepository.findAll();
+    }
+
+    public long countUsersByEventId(String eventId) {
+        return eventoUsuarioRepository.countByEventoId(Long.parseLong(eventId));
     }
 
     public byte[] generarCsv(String data) throws IOException {
