@@ -90,6 +90,8 @@ public class ChartService {
                 return getMaterialUbi();
             case "MembresiaCaducada":
                 return getMembresiaCaducada();
+            case "UsuariosDNI":
+                return getUsuariosDNI();
             case "Balance":
                 dataObjects = pagoRepository.findAll();
                 dateExtractor = obj -> ((Pago) obj).getFechaPago().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -106,15 +108,27 @@ public class ChartService {
         return getDataByDate(dataObjects, dateExtractor, dataType, year, month, valueExtractor);
     }
 
+    private Map<String, Long> getUsuariosDNI() {
+        List<User> users = userRepository.findAll();
+        Map<String, Long> usersRole = new HashMap<>();
+
+        for (User user : users) {
+            if (user.getDni() != null) {
+                usersRole.put("Con DNI: ", usersRole.getOrDefault("Con DNI: ", 0L) + 1);
+            } else {
+                usersRole.put("Sin DNI: ", usersRole.getOrDefault("Sin DNI: ", 0L) + 1);
+            }
+        }
+
+        return usersRole;
+    }
+
     private Map<String, Long> getAuthMethod() {
         List<User> users = userRepository.findAll();
         Map<String, Long> usersRole = new HashMap<>();
 
         for (User user : users) {
-            if (Objects.isNull(user.getAuthType())) {
-                continue;
-            }
-            if (user.getAuthType() != null && user.getAuthType().equals("GOOGLE")) {
+            if (user.getAuthType() != null) {
                 usersRole.put("Google: ", usersRole.getOrDefault("Google: ", 0L) + 1);
             }
              else {

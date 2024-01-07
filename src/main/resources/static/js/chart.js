@@ -42,6 +42,7 @@ document.getElementById('dataType').addEventListener('change', function() {
         'MaterialUbi': 'bar',
         'MembresiaCaducada': 'doughnut',
         'AuthMethod': 'doughnut',
+        'UsuariosDNI': 'doughnut',
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -237,6 +238,9 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 chartType = 'doughnut';
                 aspectRatio = 2;
             } else if (dataType === 'AuthMethod') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'UsuariosDNI') {
                 chartType = 'doughnut';
                 aspectRatio = 2;
             }
