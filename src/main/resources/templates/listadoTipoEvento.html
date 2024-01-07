@@ -116,7 +116,9 @@
                 <form th:action="@{/eliminarTipoEvento/{id}(id=${tipoEvento.id})}" method="post">
                     <input type="submit" value="Eliminar" class="btn btn-danger">
                 </form>
-                <form th:action="@{/crearTipoEvento}" method="get">
+                <form th:action="@{/crearTipoEvento}" method="post">
+                    <input type="text" th:field="*{titulo}" placeholder="Titulo">
+                    <input type="text" th:field="*{descripcion}" placeholder="Descripcion">
                     <input type="submit" value="Crear nuevo tipo de evento" class="btn btn-primary">
                 </form>
             </div>

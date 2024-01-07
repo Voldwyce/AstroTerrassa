@@ -2,8 +2,10 @@ package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.model.Evento;
+import com.example.astroterrassa.model.TipoEvento;
 import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.services.EventoService;
+import com.example.astroterrassa.services.TipoEventoService;
 import com.example.astroterrassa.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +22,6 @@ import java.util.List;
 
 @Controller
 public class EventoController {
-
     @Autowired
     private EventoService eventService;
 
@@ -29,6 +30,9 @@ public class EventoController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TipoEventoService tipoEventoService;
 
     @GetMapping("/eventos")
     public String showEventos(Model model) {
@@ -79,6 +83,7 @@ public class EventoController {
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("evento", new Evento());
+
         return "nuevoEvento";
     }
 
@@ -100,8 +105,21 @@ public class EventoController {
 
     @GetMapping("/listadoTipoEvento")
     public String showListadoTipoEvento(Model model) {
-
+        List<TipoEvento> tiposEvento = tipoEventoService.getAllTiposEvento();
+        model.addAttribute("tiposEvento", tiposEvento);
         return "listadoTipoEvento";
+    }
+
+    @PostMapping("/crearTipoEvento")
+    public String crearTipoEvento(@ModelAttribute TipoEvento tipoEvento) {
+        tipoEventoService.saveTipoEvento(tipoEvento);
+        return "redirect:/listadoTipoEvento";
+    }
+
+    @PostMapping("/eliminarTipoEventoTipo/{id}")
+    public String eliminarTipoEvento(@PathVariable int id) {
+        tipoEventoService.deleteTipoEvento(id);
+        return "redirect:/listadoTipoEvento";
     }
 
 }

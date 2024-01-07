@@ -17,7 +17,12 @@ public class TipoEventoService {
         return tipoEventoRepository.findAll();
     }
 
+    public void saveTipoEvento(TipoEvento tipoEvento) {
+        tipoEventoRepository.save(tipoEvento);
+    }
+
     public void deleteTipoEvento(int id) {
         tipoEventoRepository.deleteById(id);
     }
+
 }
