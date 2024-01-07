@@ -119,7 +119,9 @@
         <div class="form-container">
             <form action="" th:action="@{/nuevoEvento}" th:object="${evento}" method="post">
                 <label for="titulo">Titulo:</label><br>
-                <input type="text" id="titulo" name="titulo" th:field="*{titulo}"><br><br>
+                <select id="titulo" name="titulo" th:field="*{titulo}">
+                    <option th:each="tipo : ${tiposEvento}" th:value="${tipo.titulo}" th:text="${tipo.titulo}"></option>
+                </select><br><br>
                 <label for="descripcion">Descripcion:</label><br>
                 <textarea id="descripcion" name="descripcion" rows="4" cols="50" th:field="*{descripcion}"></textarea><br><br>
                 <label for="fecha_taller_evento">Fecha del evento:</label>

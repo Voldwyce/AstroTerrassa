@@ -77,10 +77,13 @@ public class EventoController {
     @GetMapping("/nuevoEvento")
     public String nuevoEvento(Model model, Principal principal) {
 
+        List<TipoEvento> tiposEvento = tipoEventoService.getAllTiposEvento();
+
         String username = principal.getName();
 
         User currentUser = userRepository.findByUsername(username);
 
+        model.addAttribute("tiposEvento", tiposEvento);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("evento", new Evento());
 
@@ -104,10 +107,18 @@ public class EventoController {
     }
 
     @GetMapping("/listadoTipoEvento")
-    public String showListadoTipoEvento(Model model) {
-        List<TipoEvento> tiposEvento = tipoEventoService.getAllTiposEvento();
-        model.addAttribute("tiposEvento", tiposEvento);
+    public String showListado(Model model, Principal principal) {
+        User currentUser = userService.getCurrentUser(principal.getName());
+        List<TipoEvento> tipoEvento = tipoEventoService.getAllTiposEvento();
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("tiposEvento", tipoEvento);
         return "listadoTipoEvento";
+    }
+
+    @GetMapping("/crearTipoEvento")
+    public String showForm(Model model) {
+        model.addAttribute("tipoEvento", new TipoEvento());
+        return "crearTipoEvento";
     }
 
     @PostMapping("/crearTipoEvento")
@@ -116,10 +127,10 @@ public class EventoController {
         return "redirect:/listadoTipoEvento";
     }
 
-    @PostMapping("/eliminarTipoEventoTipo/{id}")
-    public String eliminarTipoEvento(@PathVariable int id) {
+    @PostMapping("/eliminarTipoEvento/{id}")
+    public String deleteTipoEvento(@PathVariable("id") int id) {
         tipoEventoService.deleteTipoEvento(id);
-        return "redirect:/listadoTipoEvento";
+        return "redirect:/eventos";
     }
 
 }
