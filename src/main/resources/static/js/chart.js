@@ -31,7 +31,9 @@ document.getElementById('dataType').addEventListener('change', function() {
         'EventosActivos': 'bar',
         'SugerenciasDate': 'bar',
         'Balance': 'line',
-        'Usuarios conectados': 'bar'
+        'Usuarios conectados': 'bar',
+        'Cuotas': 'doughnut',
+        'Roles': 'doughnut
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -197,6 +199,12 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 aspectRatio = 2;
             } else if (dataType === 'Usuarios conectados') {
                 chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'Cuotas') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'Roles') {
+                chartType = 'doughnut';
                 aspectRatio = 2;
             }
 

@@ -20,6 +20,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class AppController {
@@ -34,6 +35,9 @@ public class AppController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private EventoRepository eventoService;
 
     @RequestMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -123,4 +127,5 @@ public class AppController {
     public String showStats() {
         return "stats";
     }
+
 }
