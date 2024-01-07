@@ -1,9 +1,13 @@
 package com.example.astroterrassa.services;
 
+import com.example.astroterrassa.DAO.EventoRepository;
+import com.example.astroterrassa.model.Evento;
 import com.example.astroterrassa.model.Sugerencia;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.MailParseException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,6 +16,9 @@ import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.Pago;
 import com.example.astroterrassa.DAO.UserRepository;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +27,8 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
     private final UserRepository userRepository;
+    @Autowired
+    private EventoRepository eventoRepository;
 
     public EmailService(JavaMailSender emailSender , UserRepository userRepository) {
         this.emailSender = emailSender;
@@ -59,12 +68,12 @@ public class EmailService {
         MimeMessage message = emailSender.createMimeMessage();
 
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper mail = new MimeMessageHelper(message, true);
 
-            helper.setTo(email);
-            helper.setSubject("Grafico de datos");
-            helper.setText("Aqui tienes el csv con los datos del grafico seleccionado!!:");
-            helper.addAttachment("chart.csv", new ByteArrayResource(csvBytes));
+            mail.setTo(email);
+            mail.setSubject("Grafico de datos");
+            mail.setText("Aqui tienes el csv con los datos del grafico seleccionado!!:");
+            mail.addAttachment("chart.csv", new ByteArrayResource(csvBytes));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -104,4 +113,61 @@ public class EmailService {
     }
 
 
+    public byte[] generarCsvEventos() throws IOException {
+        List<Evento> eventos = eventoRepository.findAll();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintWriter pw = new PrintWriter(baos);
+
+        pw.println("id,titulo,descripcion,fecha_taller_evento,status");
+
+        for (Evento evento : eventos) {
+            pw.printf("%d,%s,%s,%s,%s\n", evento.getId(), evento.getTitulo(), evento.getDescripcion(), evento.getFecha_taller_evento(), evento.getStatus());
+        }
+
+        pw.close();
+        return baos.toByteArray();
+    }
+
+    public void sendEventosList(String email, byte[] csvBytes) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper mail = new MimeMessageHelper(message, true);
+            mail.setTo(email);
+            mail.setSubject("Lista de Eventos");
+            mail.setText("Adjunto encontrarás la lista de eventos en formato CSV.");
+
+            mail.addAttachment("eventos.csv", new ByteArrayResource(csvBytes));
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
+
+        emailSender.send(message);
+    }
+
+    public void sendMaterialesList(String email, byte[] csvBytes) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper mail = new MimeMessageHelper(message, true);
+            mail.setTo(email);
+            mail.setSubject("Lista de Materiales");
+            mail.setText("Adjunto encontrarás la lista de materiales en formato CSV.");
+
+            mail.addAttachment("materiales.csv", new ByteArrayResource(csvBytes));
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
+
+        emailSender.send(message);
+    }
+
+    public void sendMembersiaCaducada(User user) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(user.getMail());
+        mail.setSubject("Tu membresia ha caducado");
+        mail.setText("Hola " + user.getNombre() + ",\n\nTu membresia ha caducado. Si quieres seguir disfrutando de los beneficios de ser socio, puedes renovarla en la web.\n\nSaludos,\nEl equipo de AstroTerrassa");
+        emailSender.send(mail);
+    }
 }

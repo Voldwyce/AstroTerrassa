@@ -2,16 +2,20 @@ package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.model.Evento;
 import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.services.EmailService;
 import com.example.astroterrassa.services.EventoService;
 import com.example.astroterrassa.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +28,9 @@ public class EventoController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/eventos")
     public String showEventos(Model model) {
@@ -80,5 +87,11 @@ public class EventoController {
         return "redirect:/eventos";
     }
 
+    @GetMapping("/sendEventosList")
+    public ResponseEntity<String> sendEventosList(@RequestParam String email) throws IOException {
+        byte[] csvBytes = emailService.generarCsvEventos();
+        emailService.sendEventosList(email, csvBytes);
 
+        return new ResponseEntity<>("Lista de eventos enviada", HttpStatus.OK);
+    }
 }

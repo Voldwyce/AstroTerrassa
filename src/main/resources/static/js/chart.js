@@ -36,7 +36,12 @@ document.getElementById('dataType').addEventListener('change', function() {
         'Roles': 'doughnut',
         'EventosUser': 'bar',
         'TipoEvento': 'doughnut',
-        'notify': 'bar'
+        'notify': 'bar',
+        'MaterialCount': 'bar',
+        'Material': 'doughnut',
+        'MaterialUbi': 'bar',
+        'MembresiaCaducada': 'doughnut',
+        'AuthMethod': 'doughnut',
     };
 
     // Verifica si el tipo de gráfico seleccionado está definido
@@ -214,6 +219,24 @@ document.getElementById('acceptButton').addEventListener('click', function() {
                 chartType = 'bar';
                 aspectRatio = 2;
             } else if (dataType === 'TipoEvento') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'notify') {
+                chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'MaterialCount') {
+                chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'Material') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'MaterialUbi') {
+                chartType = 'bar';
+                aspectRatio = 2;
+            } else if (dataType === 'MembresiaCaducada') {
+                chartType = 'doughnut';
+                aspectRatio = 2;
+            } else if (dataType === 'AuthMethod') {
                 chartType = 'doughnut';
                 aspectRatio = 2;
             }

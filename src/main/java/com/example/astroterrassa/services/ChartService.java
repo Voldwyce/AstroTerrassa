@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,6 +27,9 @@ public class ChartService {
     private EventoRepository eventoRepository;
 
     @Autowired
+    private TipoEventoRepository tipoEventoRepository;
+
+    @Autowired
     private SugerenciaRepository sugerenciaRepository;
 
     @Autowired
@@ -38,6 +38,9 @@ public class ChartService {
     @Autowired
     private EventoPersonaRepository eventoUsuarioRepository;
 
+    @Autowired
+    private MaterialRepository materialRepository;
+
     public Map<String, Long> getChartData(String dataType, String year, String month) {
         List<?> dataObjects = null;
         Function<Object, LocalDate> dateExtractor = null;
@@ -45,6 +48,9 @@ public class ChartService {
 
         switch (dataType) {
             case "Usuarios registrados":
+                dataObjects = userRepository.findAll();
+                dateExtractor = obj -> LocalDate.from(((User) obj).getRegisterDt());
+                break;
             case "Simpatizantes":
                 dataObjects = userRepository.findAll();
                 dateExtractor = obj -> LocalDate.from(((User) obj).getRegisterDt());
@@ -74,6 +80,16 @@ public class ChartService {
                 return getTiposEventos();
             case "notify":
                 return getNotify();
+            case "AuthMethod":
+                return getAuthMethod();
+            case "MaterialCount":
+                return getMaterialCount();
+            case "Material":
+                return getMaterialName();
+            case "MaterialUbi":
+                return getMaterialUbi();
+            case "MembresiaCaducada":
+                return getMembresiaCaducada();
             case "Balance":
                 dataObjects = pagoRepository.findAll();
                 dateExtractor = obj -> ((Pago) obj).getFechaPago().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -88,6 +104,85 @@ public class ChartService {
         }
 
         return getDataByDate(dataObjects, dateExtractor, dataType, year, month, valueExtractor);
+    }
+
+    private Map<String, Long> getAuthMethod() {
+        List<User> users = userRepository.findAll();
+        Map<String, Long> usersRole = new HashMap<>();
+
+        for (User user : users) {
+            if (Objects.isNull(user.getAuthType())) {
+                continue;
+            }
+            if (user.getAuthType() != null && user.getAuthType().equals("GOOGLE")) {
+                usersRole.put("Google: ", usersRole.getOrDefault("Google: ", 0L) + 1);
+            }
+             else {
+                usersRole.put("Cuenta: ", usersRole.getOrDefault("Cuenta: ", 0L) + 1);
+            }
+        }
+
+        return usersRole;
+    }
+
+    private Map<String, Long> getMembresiaCaducada() {
+        List<User> users = userRepository.findAll();
+        Map<String, Long> usersRole = new HashMap<>();
+
+        for (User user : users) {
+            if (Objects.isNull(user.getPermisos())) {
+                continue;
+            }
+            if (user.getPermisos() == 0) {
+                usersRole.put("Activa: ", usersRole.getOrDefault("Activa: ", 0L) + 1);
+            } else if (user.getPermisos() == 2) {
+                usersRole.put("Caducada: ", usersRole.getOrDefault("Caducada: ", 0L) + 1);
+            }
+        }
+
+        return usersRole;
+    }
+
+    private Map<String, Long> getMaterialUbi() {
+        List<Material> materiales = materialRepository.findAll();
+        Map<String, Long> materialUbi = new HashMap<>();
+
+        for (Material material : materiales) {
+            if (Objects.isNull(material.getUbicacion())) {
+                continue;
+            }
+            materialUbi.put(material.getUbicacion(), materialUbi.getOrDefault(material.getUbicacion(), 0L) + 1);
+        }
+
+        return materialUbi;
+    }
+
+    private Map<String, Long> getMaterialName() {
+        List<Material> materiales = materialRepository.findAll();
+        Map<String, Long> materialName = new HashMap<>();
+
+        for (Material material : materiales) {
+            if (Objects.isNull(material.getMaterial_nombre())) {
+                continue;
+            }
+            materialName.put(material.getMaterial_nombre(), materialName.getOrDefault(material.getMaterial_nombre(), 0L) + 1);
+        }
+
+        return materialName;
+    }
+
+    private Map<String, Long> getMaterialCount() {
+        List<Material> materiales = materialRepository.findAll();
+        Map<String, Long> materialCount = new HashMap<>();
+
+        for (Material material : materiales) {
+            if (Objects.isNull(material.getCantidad())) {
+                continue;
+            }
+            materialCount.put(material.getMaterial_nombre(), materialCount.getOrDefault(material.getMaterial_nombre(), 0L) + material.getCantidad());
+        }
+
+        return materialCount;
     }
 
     private Map<String, Long> getNotify() {
@@ -109,15 +204,16 @@ public class ChartService {
     }
 
     private Map<String, Long> getTiposEventos() {
-        List<Evento> eventos = eventoRepository.findAll();
+        List<TipoEvento> eventos = tipoEventoRepository.findAll();
         Map<String, Long> eventosCountsByType = new HashMap<>();
 
-        for (Evento evento : eventos) {
-            if (Objects.isNull(evento.getTipoEvento())) {
+        for (TipoEvento evento : eventos) {
+            if (Objects.isNull(evento.getTitulo())) {
                 continue;
             }
-            eventosCountsByType.put(evento.getTipoEvento().getTitulo(), eventosCountsByType.getOrDefault(evento.getTipoEvento().getTitulo(), 0L) + 1);
+            eventosCountsByType.put(evento.getTitulo(), eventosCountsByType.getOrDefault(evento.getTitulo(), 0L) + 1);
         }
+
         return eventosCountsByType;
     }
 

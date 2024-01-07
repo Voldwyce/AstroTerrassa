@@ -134,6 +134,7 @@
             <div class="text-center">
                 <div th:if="${currentUser.permisos == 1 or currentUser.permisos == 2}" class="text-center">
                     <a href="/nuevoEvento" class="btn btn-primary">Nuevo Evento</a>
+                    <button id="sendEmailButton" class="btn btn-primary">Enviar por correo csv</button>
                 </div>
             </div>
             <button onclick="window.location.href=''">Descargar como PDF</button>
@@ -153,6 +154,20 @@
             function closeNav() {
                 document.getElementById("mySidenav").style.width = "0";
             }
+
+            document.getElementById('sendEmailButton').addEventListener('click', function() {
+    // Solicita una dirección de correo electrónico
+    var email = prompt("Direccion de correo:");
+
+    fetch('/sendEventosList?email=' + encodeURIComponent(email))
+    .then(response => {
+        if (response.ok) {
+            alert('Email enviado!!');
+        } else {
+            alert('Ups, ha habido un error!!');
+        }
+    });
+});
 
         </script>
     </body>

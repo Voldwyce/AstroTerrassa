@@ -16,6 +16,7 @@ import com.example.astroterrassa.services.EmailService;
 
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -65,11 +66,12 @@ public class AppController {
         u.setMail(mail);
         u.setUsername(username);
         u.setFecha_nt(fecha_nt);
+        u.setRegisterDt(LocalDateTime.now());
+        u.setLastDt(LocalDateTime.now());
         u.setGenero(genero);
         u.setPermisos(1);
         u.setNotify(notify);
         u.setIntents(3);
-        u.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
         userRepository.save(u); // Guarda el usuario primero
 
         if (notify == 1) {
@@ -97,9 +99,31 @@ public class AppController {
                         @RequestParam("password") String password) {
 
         User user = userRepository.findByUsername(username);
-        user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return "index";
+        if (user != null) {
+            user.setLastDt(LocalDateTime.from(ZonedDateTime.now().toInstant()));
+            // Revisar si ha caducado la membresia y mandar email avisando al usuario si tiene el notify en 1
+            if (user.getPermisos() == 3) {
+                Date membresia = user.getMembresia();
+
+                if (membresia != null) {
+                    LocalDate fechaMembresia = membresia.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    LocalDate fechaActual = LocalDate.now();
+
+                    if (!fechaMembresia.plusYears(1).isAfter(fechaActual)) {
+                        user.setPermisos(0);
+                        userRepository.save(user);
+                        if (user.getNotify() == 1) {
+                            emailService.sendMembersiaCaducada(user);
+                        }
+                    }
+                }
+            }
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return "index";
+            } else {
+                return "redirect:/login";
+            }
         } else {
             return "redirect:/login";
         }

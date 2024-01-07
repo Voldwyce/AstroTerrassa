@@ -8,9 +8,10 @@ import com.example.astroterrassa.services.EmailService;
 import com.example.astroterrassa.services.UserService;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-
 
 
 @Controller
@@ -57,7 +58,7 @@ public class UsersController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
+            username = ((UserDetails) principal).getUsername();
         } else {
             username = principal.toString();
         }
@@ -75,18 +76,18 @@ public class UsersController {
     }
 
     @PostMapping("/register")
-    public String registre(User user, UsersRoles usersRoles){
+    public String registre(User user, UsersRoles usersRoles) {
         UsuariServices.registrarPersona(user, usersRoles);
         return "redirect:/index";
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
     @GetMapping("/logout")
-    public String logout(){
+    public String logout() {
         return "logout";
     }
 
@@ -104,20 +105,20 @@ public class UsersController {
     }
 
     @GetMapping("/bloquejar/{id}")
-    public String bloquejarUsuari(@PathVariable Long id,User user){
+    public String bloquejarUsuari(@PathVariable Long id, User user) {
         UsuariServices.bloquejarUsuari(id, user);
         return "redirect:/listado";
     }
 
     @GetMapping("/bloquejats")
-    public String llistaUsuarisBloquejats(User user,Model model){
+    public String llistaUsuarisBloquejats(User user, Model model) {
         List<User> listaUsers = UsuariServices.getBlockedUsers();
-        model.addAttribute("usuaris",listaUsers);
+        model.addAttribute("usuaris", listaUsers);
         return "listado";
     }
 
     @GetMapping("/desbloqueja/{id}")
-    public String desbloquejarUsuari(@PathVariable Long id,User user){
+    public String desbloquejarUsuari(@PathVariable Long id, User user) {
         UsuariServices.desbloquejarUsuari(id, user);
         return "redirect:/listado";
 
@@ -137,7 +138,7 @@ public class UsersController {
     }
 
     @GetMapping("/perfil")
-    public String mostrarPerfil(Model model, Principal principal){
+    public String mostrarPerfil(Model model, Principal principal) {
         String username = principal.getName();
         User user = UsuariServices.getUserByUsername(username);
         model.addAttribute("user", user);
@@ -207,7 +208,10 @@ public class UsersController {
 
     @PostMapping("/cambiarPermiso/{username}")
     public String cambiarPermiso(@PathVariable String username, @RequestParam int permisos, Model model) {
-        UsuariServices.cambiarPermiso(username, permisos);
+        User user = userRepository.findByUsername(username);
+
+        user.setPermisos(permisos);
+        userRepository.save(user);
         return "redirect:/listado";
     }
 
@@ -217,7 +221,7 @@ public class UsersController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
+            username = ((UserDetails) principal).getUsername();
         } else {
             username = principal.toString();
         }
