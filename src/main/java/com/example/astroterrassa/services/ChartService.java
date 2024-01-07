@@ -241,14 +241,6 @@ public class ChartService {
         return users.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(UsersRoles::getRolNombre, Collectors.counting()));
     }
 
-    public List<Evento> getEventosList() {
-        return eventoRepository.findAll();
-    }
-
-    public long countUsersByEventId(String eventId) {
-        return eventoUsuarioRepository.countByEventoId(Long.parseLong(eventId));
-    }
-
     public byte[] generarCsv(String data) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintWriter pw = new PrintWriter(baos);

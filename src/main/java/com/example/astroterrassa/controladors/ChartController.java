@@ -38,15 +38,6 @@ public class ChartController {
 
         return new ResponseEntity<>("Email sent", HttpStatus.OK);
     }
-    @GetMapping("/getEvents")
-    public ResponseEntity<List<Evento>> getEvents() {
-        return ResponseEntity.ok(chartService.getEventosList());
-    }
 
-    @GetMapping("/eventUsersCount")
-    public ResponseEntity<Long> getEventUsersCount(@RequestParam String eventId) {
-        long usersCount = chartService.countUsersByEventId(eventId);
-        return ResponseEntity.ok(usersCount);
-    }
 
 }

@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface EventoPersonaRepository extends JpaRepository<Evento, Long> {
 
-    long countByEventoId(Long eventoId);
 
 }
