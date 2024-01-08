@@ -75,7 +75,6 @@ public class EventoController {
         } else {
             username = principal.toString();
         }
-        User currentUser = userService.getCurrentUser(username);
 
         model.addAttribute("currentUser", currentUser);
 
