@@ -13,7 +13,7 @@
     <body>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Inicio</a>
+        <a href="/">Inicio</a>
         <a href="/eventos">Eventos</a>
         <a href="/material">Material</a>
         <a href="/listado">Clientes</a>
@@ -41,7 +41,6 @@
 
         <!-- Contenido principal -->
         <div class="container">
-<!--            <h1 th:text="'Evento de ' + ${tipoEvento}"></h1>-->
             <h1>Eventos</h1>
             <hr>
             <table>
@@ -96,19 +95,18 @@
             }
 
             document.getElementById('sendEmailButton').addEventListener('click', function() {
-    // Solicita una dirección de correo electrónico
-    var email = prompt("Direccion de correo:");
+                // Solicita una dirección de correo electrónico
+                var email = prompt("Direccion de correo:");
 
-    fetch('/sendEventosList?email=' + encodeURIComponent(email))
-    .then(response => {
-        if (response.ok) {
-            alert('Email enviado!!');
-        } else {
-            alert('Ups, ha habido un error!!');
-        }
-    });
-});
-
+                fetch('/sendEventosList?email=' + encodeURIComponent(email))
+                .then(response => {
+                    if (response.ok) {
+                        alert('Email enviado!!');
+                    } else {
+                        alert('Ups, ha habido un error!!');
+                    }
+                });
+            });
 
         </script>
     </body>
