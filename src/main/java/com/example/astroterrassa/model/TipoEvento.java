@@ -15,9 +15,6 @@ public class TipoEvento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "id_te")
-    private int id_te;
-
     @Column(name = "titulo")
     private String titulo;
 

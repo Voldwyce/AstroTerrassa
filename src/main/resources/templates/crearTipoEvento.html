@@ -106,9 +106,8 @@
 <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 <div class="container">
     <form th:object="${tipoEvento}" th:action="@{/crearTipoEvento}" method="post">
-        <input type="text" th:field="*{id_te}" placeholder="id">
-        <input type="text" th:field="*{descripcion}" placeholder="Descripción">
         <input type="text" th:field="*{titulo}" placeholder="Título">
+        <input type="text" th:field="*{descripcion}" placeholder="Descripción">
         <input type="submit" value="Crear">
     </form>
 </div>
