@@ -9,7 +9,9 @@ import com.example.astroterrassa.services.UserService;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +39,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Controller
 @Slf4j
 public class UsersController {
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private UserService UsuariServices;
 
@@ -143,6 +148,27 @@ public class UsersController {
         User user = UsuariServices.getUserByUsername(username);
         model.addAttribute("user", user);
         return "perfil";
+    }
+
+    @RequestMapping("/forgot_password")
+    public String showForgotPassword() {
+        return "forgot_password";
+    }
+
+    @PostMapping("/forgot_password")
+    public String forgotPassword(@RequestParam("username") String username) {
+
+        User user = userRepository.findByUsername(username);
+        // generador de contraseña aleatoria
+        String password = UsuariServices.generateRandomPassword(10);
+        // Codificar contraseña
+        user.setPassword(passwordEncoder.encode(password));
+
+        userRepository.save(user);
+        String email = user.getMail();
+        emailService.sendForgotPasswordEmail(user, password, email);
+        return "redirect:/login";
+
     }
 
     @GetMapping("/deleteUser/{id}")

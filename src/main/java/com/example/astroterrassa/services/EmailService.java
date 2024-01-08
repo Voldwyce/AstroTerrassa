@@ -201,4 +201,19 @@ public class EmailService {
             throw new MailParseException(e);
         }
     }
+
+    public void sendForgotPasswordEmail(User user, String password, String email) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Hola " + user.getNombre() + ",<br><br>Has solicitado un cambio de contraseña. Tu nueva contraseña es: " + password + "<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
+            message.setContent(htmlMsg, "text/html");
+            helper.setTo(email);
+            helper.setSubject("Cambio de contraseña");
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
+    }
 }

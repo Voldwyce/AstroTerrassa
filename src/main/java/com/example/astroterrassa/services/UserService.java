@@ -234,4 +234,13 @@ public class UserService implements UsuariServiceInterface {
         return userRepository.save(user);
     }
 
+    public String generateRandomPassword(int i) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder pass = new StringBuilder();
+        for (int x = 0; x < i; x++) {
+            int j = (int) (Math.random() * chars.length());
+            pass.append(chars.charAt(j));
+        }
+        return pass.toString();
+    }
 }
