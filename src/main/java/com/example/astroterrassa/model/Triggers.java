@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class Triggers {
     private String dbUrl = "jdbc:mysql://localhost:3306/erpastro";
     private String username = "root";
-    private String password = "";
+    private String password = "admin";
 
     public void createTriggers() {
         try (Connection conn = DriverManager.getConnection(dbUrl, username, password);

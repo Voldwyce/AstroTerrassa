@@ -75,7 +75,7 @@
                     <button id="sendEmailButton" class="btn btn-primary">Enviar por correo csv</button>
                 </div>
             </div>
-            <button onclick="window.location.href=''">Descargar como PDF</button>
+            <button onclick="window.location.href='/eventos/pdf'">Descargar como PDF</button>
         </div>
         <div th:if="${#lists.isEmpty(eventos)}">
             <p>No hay eventos disponibles en este momento.</p>

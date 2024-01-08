@@ -13,7 +13,9 @@ import com.example.astroterrassa.services.TipoEventoService;
 import com.example.astroterrassa.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -175,6 +177,20 @@ public class EventoController {
         eventoPersonaService.saveEventoPersona(eventoPersona);
 
         return "redirect:/eventos";
+    }
+
+    @GetMapping("/eventos/pdf")
+    public ResponseEntity<byte[]> getEventosPdf() {
+        // Generate the PDF bytes (this method should be implemented in your service)
+        byte[] pdfBytes = eventService.generatePdf();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        String filename = "eventos.pdf";
+        headers.setContentDispositionFormData(filename, filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
     @GetMapping("/sendEventosList")
