@@ -9,60 +9,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png'); /* Imagen de fondo de muestra */
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: 50% 70%; /* Mueve la imagen de fondo hacia arriba */
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
-        .sidenav {
-                    height: 100%;
-                    width: 0;
-                    position: fixed;
-                    z-index: 1;
-                    top: 0;
-                    left: 0;
-                    background-color: #111;
-                    overflow-x: hidden;
-                    transition: 0.5s;
-                    padding-top: 60px;
-                }
-
-                .sidenav a {
-                    padding: 8px 8px 8px 32px;
-                    text-decoration: none;
-                    font-size: 25px;
-                    color: #818181;
-                    display: block;
-                    transition: 0.3s;
-                }
-
-                .sidenav a:hover {
-                    color: #f1f1f1;
-                }
-
-                .sidenav .closebtn {
-                    position: absolute;
-                    top: 0;
-                    right: 25px;
-                    font-size: 36px;
-                    margin-left: 50px;
-                }
-
-                .container {
-                    background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
-                    border-radius: 15px; /* Esquinas redondeadas */
-                    padding: 20px;
-                    margin-top: 50px;
-                }
-
-    </style>
 </head>
 
 <body>
@@ -82,17 +30,18 @@
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1); color: #fff;">
-    <a class="navbar-brand" href="/index">ERP</a>
+    <a class="navbar-brand" href="/index" style="color: #fff;">ERP</a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/perfil"><i class="fas fa-user"></i></a>
+                <a class="nav-link" href="/perfil"><i class="fas fa-user" style="color: #fff;"></i></a>
+            </li>
             </li>
         </ul>
     </div>
 </nav>
 
-<span style="font-size:30px;cursor:pointer;margin-left:5px;" onclick="openNav()">&#9776;</span>
+<span style="font-size:30px;cursor:pointer;margin-left:5px;color:#fff;" onclick="openNav()">&#9776;</span>
 
 <!-- Contenido principal -->
 <div class="container">
