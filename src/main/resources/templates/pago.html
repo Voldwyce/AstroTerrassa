@@ -88,7 +88,7 @@
 
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#">Inicio</a>
+    <a href="/index">Inicio</a>
     <a href="/eventos">Eventos</a>
     <a href="/material">Material</a>
     <a href="/listado">Clientes</a>
@@ -139,16 +139,24 @@
         </select><br>
         <label for="cuenta">Numero de Cuenta:</label><br>
         <input type="text" id="cuenta" th:field="*{cuenta}"><br>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Enviar" onclick="alert('El formulario será enviado al Administrador. Una vez realizado el pago, será miembro Simpatizante.')">
     </form>
     </body>
 </div>
-
+<script>
+    function confirmSubmit() {
+        var r = confirm("El formulario será enviado al Administrador. Una vez realizado el pago, será miembro Simpatizante.");
+        if (r == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
 <!-- Bootstrap JS y jQuery (opcional) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 <script>
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
