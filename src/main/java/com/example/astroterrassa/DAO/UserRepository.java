@@ -41,5 +41,3 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.permisos = ?2  WHERE u.username = ?1")
     void cambiarPermiso(String username, int permisos);
-
-}
