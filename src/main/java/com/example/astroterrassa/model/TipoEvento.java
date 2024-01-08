@@ -11,7 +11,7 @@ import java.util.List;
 public class TipoEvento {
 
     @Id
-    @Column(name = "id_tipo_te")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 

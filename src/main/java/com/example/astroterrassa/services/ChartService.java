@@ -53,7 +53,10 @@ public class ChartService {
                 break;
             case "Simpatizantes":
                 dataObjects = userRepository.findAll();
-                dateExtractor = obj -> LocalDate.from(((User) obj).getRegisterDt());
+                dateExtractor = obj -> {
+                    Date membresia = ((User) obj).getMembresia();
+                    return membresia != null ? membresia.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+                };
                 break;
             case "Eventos":
             case "SugerenciasDate":
@@ -144,13 +147,14 @@ public class ChartService {
         Map<String, Long> usersRole = new HashMap<>();
 
         for (User user : users) {
-            if (Objects.isNull(user.getPermisos())) {
-                continue;
-            }
-            if (user.getPermisos() == 0) {
-                usersRole.put("Activa: ", usersRole.getOrDefault("Activa: ", 0L) + 1);
-            } else if (user.getPermisos() == 2) {
-                usersRole.put("Caducada: ", usersRole.getOrDefault("Caducada: ", 0L) + 1);
+            if (user.getMembresia() != null) {
+                LocalDate fechaMembresia = user.getMembresia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate fechaActual = LocalDate.now();
+                if (fechaMembresia.plusYears(1).isBefore(fechaActual)) {
+                    usersRole.put("Caducada: ", usersRole.getOrDefault("Caducada: ", 0L) + 1);
+                } else {
+                    usersRole.put("No caducada: ", usersRole.getOrDefault("No caducada: ", 0L) + 1);
+                }
             }
         }
 
@@ -267,6 +271,10 @@ public class ChartService {
         }
 
         for (Object dataObject : dataObjects) {
+            if (dataObject == null) {
+                continue;
+            }
+
             LocalDate date = dateExtractor.apply(dataObject);
             if (date == null) {
                 continue;
@@ -306,9 +314,6 @@ public class ChartService {
         Map<String, Long> eventoActivo = new HashMap<>();
 
         for (Evento evento : eventos) {
-            if (Objects.isNull(evento.getStatus())) {
-                continue;
-            }
             if (evento.getStatus() == 1) {
                 eventoActivo.put("Activos: ", eventoActivo.getOrDefault("Activos: ", 0L) + 1);
             } else if (evento.getStatus() == 0) {
