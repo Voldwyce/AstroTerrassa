@@ -162,15 +162,17 @@ public class EventoController {
     }
 
     @PostMapping("/inscribirse")
-    public String inscribirse(@ModelAttribute("eventoPersona") EventoPersona eventoPersona, Principal principal) {
+    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+        // Get the current User
         User currentUser = userService.getCurrentUser(principal.getName());
 
-        Evento evento = eventService.getEventosPorTipo(eventoPersona.getId_te());
-        eventoPersona.setId_te(evento.getTipo()); // Set id_te to the tipo of the Evento
+        // Create a new EventoPersona object
+        EventoPersona eventoPersona = new EventoPersona();
+        eventoPersona.setId_te(idEvento);
         eventoPersona.setId_user((int) currentUser.getId());
 
+        // Save the EventoPersona object
         eventoPersonaService.saveEventoPersona(eventoPersona);
-        eventoPersonaRepository.save(eventoPersona);
 
         return "redirect:/eventos";
     }

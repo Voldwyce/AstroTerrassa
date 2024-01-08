@@ -54,20 +54,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <!-- Each row represents an Event -->
-                    <tr th:each="evento, stat : ${eventos}">
-                        <td th:text="${evento.titulo}"></td>
-                        <td th:text="${evento.descripcion}"></td>
-                        <td th:text="${evento.fecha_taller_evento}"></td>
-                        <td th:text="${evento.status}"></td>
-                        <td>
-                            <form th:action="@{/inscribirse}" th:object="${eventoPersona}" method="post">
-                                <input type="hidden" th:field="*{id_te}">
-                                <input type="hidden" th:field="*{id_user}">
-                                <button type="submit" class="btn btn-primary">Inscribirse</button>
-                            </form> <!-- Botón de suscripción -->
-                        </td>
-                    </tr>
+                <!-- Each row represents an Event -->
+                <tr th:each="evento, stat : ${eventos}" th:data-id="${evento.id}">
+                    <td th:text="${evento.titulo}"></td>
+                    <td th:text="${evento.descripcion}"></td>
+                    <td th:text="${evento.fecha_taller_evento}"></td>
+                    <td th:text="${evento.status}"></td>
+                    <td>
+                        <form th:action="@{/inscribirse}" method="post">
+                            <input type="hidden" name="idEvento" th:value="${evento.id}" />
+                            <button type="submit" class="btn btn-primary">Inscribirse</button>
+                        </form>
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <div class="text-center">
@@ -109,6 +108,7 @@
         }
     });
 });
+
 
         </script>
     </body>
