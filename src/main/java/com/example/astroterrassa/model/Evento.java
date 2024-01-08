@@ -17,6 +17,9 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "tipo_te")
+    private int tipo;
+
     @Column(name = "titulo")
     private String titulo;
 
@@ -29,9 +32,6 @@ public class Evento {
 
     @Column(name = "status")
     private int status;
-
-    @Column(name = "tipo_te")
-    private int tipo;
 
     @OneToMany(mappedBy = "evento")
     private List<EventoPersona> eventoPersonas;

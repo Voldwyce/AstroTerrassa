@@ -166,11 +166,10 @@ public class EventoController {
         User currentUser = userService.getCurrentUser(principal.getName());
 
         Evento evento = eventService.getEventosPorTipo(eventoPersona.getId_te());
+
         eventoPersona.setId_te(evento.getTipo()); // Set id_te to the tipo of the Evento
         eventoPersona.setId_user((int) currentUser.getId());
-
         eventoPersonaService.saveEventoPersona(eventoPersona);
-        eventoPersonaRepository.save(eventoPersona);
 
         return "redirect:/eventos";
     }
