@@ -24,7 +24,7 @@ public class EventoPersona {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "id_te", referencedColumnName = "tipo_te", insertable = false, updatable = false)  // Referencia a la columna "tipo_te" en la tabla "taller_evento"
-    private Evento evento;
+    @JoinColumn(name = "id_te", referencedColumnName = "id", insertable = false, updatable = false)  // Referencia a la columna "tipo_te" en la tabla "taller_evento"
+    private TipoEvento tipoEvento;
 
 }

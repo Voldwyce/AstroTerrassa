@@ -33,7 +33,8 @@ public class Evento {
     @Column(name = "status")
     private int status;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany
+    @JoinColumn(name = "id_te", referencedColumnName = "id", insertable = false, updatable = false)
     private List<EventoPersona> eventoPersonas;
 
 }
