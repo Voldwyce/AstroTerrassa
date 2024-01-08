@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http:/www.thymeleaf.org">
-<head>
+<html xmlns:th="http:/www.thymeleaf.org" lang="">
+<head th:replace="~{fragments :: html_head(pageTitle='Login')}">
     <title>Login</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
 </head>
+<style>
+    body {
+background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png'); /* Imagen de fondo de muestra */
+background-size: cover;
+background-repeat: no-repeat;
+background-attachment: fixed;
+background-position: 50% 70%;
+margin: 0;
+padding: 0;
+font-family: Arial, sans-serif;
+}
+    .container {
+                    background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
+                    border-radius: 15px; /* Esquinas redondeadas */
+                    padding: 20px;
+                    margin-top: 50px;
+                }
+</style>
 <body>
 <div class="container text-center">
     <div>
-        <h2>Please Login</h2>
+        <h2>Please Log in</h2>
         <br/>
     </div>
     <div>
@@ -36,7 +54,13 @@
             </div>
         </div>
     </form>
-    <a th:href="@{/register}">Register</a>
+    <br/>
+    <div>
+        <h4><a th:href="@{/register}">Register</a></h4>
+    </div>
+    <div>
+        <h4><a th:href="@{/forgot-password}">Forgot Password</a></h4>
+    </div>
 </div>
 </body>
 </html>

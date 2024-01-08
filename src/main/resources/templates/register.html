@@ -4,6 +4,24 @@
     <title>Register</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+    <style>
+        body {
+    background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png'); /* Imagen de fondo de muestra */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 50% 70%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+  .container {
+                    background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
+                    border-radius: 15px; /* Esquinas redondeadas */
+                    padding: 20px;
+                    margin-top: 50px;
+                }
+    </style>
 </head>
 <body>
 <div class="container text-center">
@@ -43,7 +61,22 @@
                 <p><input type="password" name="password" required class="form-control" placeholder="password" /></p>
             </div>
             <div>
-                <p><input type="text" name="notify" value="1" class="form-control" placeholder="notify" /> </p>
+                <p><input type="date" name="fecha_nt" required class="form-control" placeholder="fecha_nt" /> </p>
+            </div>
+            <div>
+                <p>
+                    <select required name="genero" class="form-control" placeholder="genero">
+                        <option value="0">Hombre</option>
+                        <option value="1">Mujer</option>
+                        <option value="2">Otro</option>
+                    </select>
+                </p>
+            </div>
+            <div>
+                <div>
+                <label>Notify</label>
+                    <p><input type="checkbox" id="notify_check" name="notify_check" th:checked="${user != null && user.notify_check == 1}"> </p>
+                </div>
             </div>
             <div>
                 <p><input type="submit" value="Register" class="btn btn-primary" /></p>
@@ -52,5 +85,6 @@
     </form>
     <a th:href="@{/login}">Already registered? Log in</a>
 </div>
+
 </body>
 </html>

@@ -3,33 +3,93 @@ package com.example.astroterrassa.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
-@Data
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name = "users")
-public class User  {
+@Data
+public class User implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_user;
+    private int user_id;
 
+    @Column(name = "nombre")
     private String nombre;
+
+    @Column(name = "apellidos")
     private String apellidos;
-    private String tlf;
+
+    @Column(name = "mail")
     private String mail;
+
+    @Column(name = "tlf")
+    private String tlf;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "notify")
     private int notify;
+
+    @Column(name = "intentos")
+    private int intents;
+
+    @Column(name = "permisos")
+    private Integer permisos;
+
+    //Recuperamos de la tabla users_roles el rol que tiene el usuario
+    @OneToOne(mappedBy = "user")
+    private UsersRoles usersRoles;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_type")
+    private AuthenticationType authType;
+
+    @Column(name = "enabled")
     private boolean enabled;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @Column(name = "genero")
+    private int genero;
+
+    @Column(name = "register_dt")
+    private LocalDateTime registerDt;
+
+    @Column(name = "last_dt")
+    private LocalDateTime lastDt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_nt")
+    private Date fecha_nt;
+
+    @Column(name = "membresia")
+    private Date membresia;
+
+    @Column(name = "dni")
+    private String dni;
+
+    public long getId() {
+        return user_id;
+    }
+
+
 }

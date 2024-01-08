@@ -10,55 +10,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            background-image: url('https://img.pikbest.com/backgrounds/20200120/mid-night-galaxy-horizontal-modern-creative-abstract-minimal-drop-sky-background-v_1640413jpg!sw800'); /* Imagen de fondo de muestra */
+            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png'); /* Imagen de fondo de muestra */
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            background-position: 50% 70%; /* Mueve la imagen de fondo hacia arriba */
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
         }
 
         .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
+                    height: 100%;
+                    width: 0;
+                    position: fixed;
+                    z-index: 1;
+                    top: 0;
+                    left: 0;
+                    background-color: #111;
+                    overflow-x: hidden;
+                    transition: 0.5s;
+                    padding-top: 60px;
+                }
 
-        .sidenav a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
+                .sidenav a {
+                    padding: 8px 8px 8px 32px;
+                    text-decoration: none;
+                    font-size: 25px;
+                    color: #818181;
+                    display: block;
+                    transition: 0.3s;
+                }
 
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
+                .sidenav a:hover {
+                    color: #f1f1f1;
+                }
 
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
+                .sidenav .closebtn {
+                    position: absolute;
+                    top: 0;
+                    right: 25px;
+                    font-size: 36px;
+                    margin-left: 50px;
+                }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
-            border-radius: 15px; /* Esquinas redondeadas */
-            padding: 20px;
-            margin-top: 50px;
-        }
+                .container {
+                    background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
+                    border-radius: 15px; /* Esquinas redondeadas */
+                    padding: 20px;
+                    margin-top: 50px;
+                }
 
     </style>
 </head>
@@ -67,51 +68,65 @@
 
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#">Inicio</a>
-    <a href="#">Productos</a>
-    <a href="#">Clientes</a>
-    <a href="#">Pedidos</a>
-    <a href="#">Reportes</a>
-    <a href="#">Configuración</a>
+    <a href="/index">Inicio</a>
+    <a href="/eventos">Eventos</a>
+    <a href="/material">Material</a>
+    <a href="/listado">Clientes</a>
+    <a href="/pago">Pago</a>
+    <a href="/stats">Reportes</a>
+    <a href="/perfil">Configuración</a>
+    <a href="/sugerencias">Sugerencias</a>
+    <a href="/material">Material</a>
+    <a href="/logout">Cerrar sesión</a>
 </div>
 
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
-    <a class="navbar-brand" href="#">ERP</a>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1); color: #fff;">
+    <a class="navbar-brand" href="/index">ERP</a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-user"></i></a>
+                <a class="nav-link" href="/perfil"><i class="fas fa-user"></i></a>
             </li>
         </ul>
     </div>
 </nav>
 
-<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+<span style="font-size:30px;cursor:pointer;margin-left:5px;" onclick="openNav()">&#9776;</span>
 
 <!-- Contenido principal -->
 <div class="container">
-    <h1>Bienvenido al ERP</h1>
+    <h1>Bienvenido al ERP @AstroTerrassa</h1>
     <p>Un sistema completo para la gestión eficiente de recursos en tu empresa.</p>
     <div class="row">
         <div class="col-md-6">
-            <h3>Productos</h3>
-            <p>Administra tu inventario y controla tus productos de manera sencilla.</p>
+            <a href="/eventos"><h3>Eventos</h3></a>
+            <p>Administra tus eventos de manera sencilla.</p>
         </div>
         <div class="col-md-6">
-            <h3>Clientes</h3>
+            <a href="/listado"><h3>Clientes</h3></a>
             <p>Registra y gestiona la información de tus clientes de forma organizada.</p>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h3>Pedidos</h3>
-            <p>Realiza seguimiento de pedidos y controla el flujo de ventas.</p>
+            <a href="/pago"><h3>Pagos</h3></a>
+            <p>Realiza la suscripcion anual para ser simpatizante.</p>
         </div>
         <div class="col-md-6">
-            <h3>Reportes</h3>
+            <a href="/stats"><h3>Reportes</h3></a>
             <p>Genera informes detallados para tomar decisiones estratégicas.</p>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <a href="/sugerencias"><h3>Sugerencias</h3></a>
+            <p>Envianos tus sugerencias para mejorar el sistema.</p>
+        </div>
+        <div class="col-md-6">
+            <a href="/material"><h3>Material</h3></a>
+            <p>Gestiona el material.</p>
+        </div>
+</div>
 </div>
 
 <!-- Bootstrap JS y jQuery (opcional) -->
