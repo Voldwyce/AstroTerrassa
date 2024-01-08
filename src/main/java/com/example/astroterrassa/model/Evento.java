@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "taller_evento")
@@ -12,7 +13,7 @@ import java.util.Date;
 public class Evento {
 
     @Id
-    @Column(name = "id_te")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -33,7 +34,10 @@ public class Evento {
     private int tipo;
 
     @ManyToOne
-    @JoinColumn(name = "id_te_fk")
+    @JoinColumn(name = "id_te")
     private TipoEvento tipoEvento;
+
+    @OneToMany(mappedBy = "evento")
+    private List<EventoPersona> eventoPersonas;
 
 }

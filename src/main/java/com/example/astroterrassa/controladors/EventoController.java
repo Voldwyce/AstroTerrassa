@@ -1,9 +1,12 @@
 package com.example.astroterrassa.controladors;
 
+import com.example.astroterrassa.DAO.EventoPersonaRepository;
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.model.Evento;
+import com.example.astroterrassa.model.EventoPersona;
 import com.example.astroterrassa.model.TipoEvento;
 import com.example.astroterrassa.model.User;
+import com.example.astroterrassa.services.EventoPersonaService;
 import com.example.astroterrassa.services.EventoService;
 import com.example.astroterrassa.services.TipoEventoService;
 import com.example.astroterrassa.services.UserService;
@@ -34,28 +37,44 @@ public class EventoController {
     @Autowired
     private TipoEventoService tipoEventoService;
 
+    @Autowired
+    private EventoPersonaRepository eventoPersonaRepository;
+
+    @Autowired
+    private EventoPersonaService eventoPersonaService;
+
     @GetMapping("/eventos")
-    public String showEventos(Model model) {
+    public String showEventos(Model model, Principal principal) {
+        User currentUser = userService.getCurrentUser(principal.getName());
+
+        if (currentUser == null) {
+            // Handle the case where the User does not exist
+            return "redirect:/error";
+        }
+
         List<Evento> eventos = eventService.getAllEventos();
         model.addAttribute("eventos", eventos);
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<EventoPersona> eventoPersonas = eventoPersonaService.getAllEventoPersonas();
+        model.addAttribute("eventos", eventos);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("eventoPersonas", eventoPersonas);
+        model.addAttribute("eventoPersona", new EventoPersona()); // Add this line
+
         String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails)principal).getUsername();
         } else {
             username = principal.toString();
         }
-        User currentUser = userService.getCurrentUser(username);
 
-        model.addAttribute("currentUser", currentUser);
 
         return "eventos";
     }
 
     @RequestMapping("/eventos")
     public String eventos(Model model, @PathVariable int tipoEvento) {
-        List<Evento> eventos = eventService.getEventosPorTipo(tipoEvento);
+        Evento eventos = eventService.getEventosPorTipo(tipoEvento);
         model.addAttribute("eventos", eventos);
         model.addAttribute("tipoEvento", tipoEvento);
 
@@ -130,6 +149,20 @@ public class EventoController {
     @PostMapping("/eliminarTipoEvento/{id}")
     public String deleteTipoEvento(@PathVariable("id") int id) {
         tipoEventoService.deleteTipoEvento(id);
+        return "redirect:/eventos";
+    }
+
+    @PostMapping("/inscribirse")
+    public String inscribirse(@ModelAttribute("eventoPersona") EventoPersona eventoPersona, Principal principal) {
+        User currentUser = userService.getCurrentUser(principal.getName());
+
+        Evento evento = eventService.getEventosPorTipo(eventoPersona.getId_te());
+        eventoPersona.setId_te(evento.getTipo()); // Set id_te to the tipo of the Evento
+        eventoPersona.setId_user((int) currentUser.getId());
+
+        eventoPersonaService.saveEventoPersona(eventoPersona);
+        eventoPersonaRepository.save(eventoPersona);
+
         return "redirect:/eventos";
     }
 

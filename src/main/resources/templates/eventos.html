@@ -123,11 +123,18 @@
                 </thead>
                 <tbody>
                     <!-- Each row represents an Event -->
-                    <tr th:each="evento : ${eventos}">
+                    <tr th:each="evento, stat : ${eventos}">
                         <td th:text="${evento.titulo}"></td>
                         <td th:text="${evento.descripcion}"></td>
                         <td th:text="${evento.fecha_taller_evento}"></td>
                         <td th:text="${evento.status}"></td>
+                        <td>
+                            <form th:action="@{/inscribirse}" th:object="${eventoPersona}" method="post">
+                                <input type="hidden" th:field="*{id_te}">
+                                <input type="hidden" th:field="*{id_user}">
+                                <button type="submit" class="btn btn-primary">Inscribirse</button>
+                            </form> <!-- Botón de suscripción -->
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -138,7 +145,9 @@
             </div>
             <button onclick="window.location.href=''">Descargar como PDF</button>
         </div>
-
+        <div th:if="${#lists.isEmpty(eventos)}">
+            <p>No hay eventos disponibles en este momento.</p>
+        </div>
         <!-- Bootstrap JS y jQuery (opcional) -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

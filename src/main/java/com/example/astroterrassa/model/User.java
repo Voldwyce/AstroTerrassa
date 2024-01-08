@@ -13,6 +13,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -88,5 +89,7 @@ public class User implements Serializable {
         return user_id;
     }
 
+    @OneToMany(mappedBy = "id_user")
+    private List<EventoPersona> eventoPersonas;
 
 }
