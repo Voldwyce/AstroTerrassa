@@ -44,8 +44,8 @@ public class ConfiguracioAutenticacio {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (
                 (requests) -> requests
-                        .requestMatchers("/sugerencias","/material","/eventos", "fragments", "/pago", "/editar", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permitir acceso a todos
-                        .requestMatchers( "/stats","material", "/nuevoEvento", "/userDetails/", "/cambiarPermiso", "/listado", "/stats", "/bloquejats", "/desbloqueja/{id}", "/deleteUser", "/editUser", "/assignRole").hasRole("admin") //Permitir acceso solo a ADMIN
+                        .requestMatchers("/subEvento", "/inscribirse", "/sugerencias", "/material", "/eventos", "fragments", "/pago", "/editar", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permitir acceso a todos
+                        .requestMatchers( "/eliminarTipoEvento", "/crearTipoEvento", "/listadoTipoEvento", "/stats","material", "/nuevoEvento", "/userDetails/", "/cambiarPermiso", "/listado", "/bloquejats", "/desbloqueja/{id}", "/deleteUser", "/editUser", "/assignRole").hasRole("admin") //Permitir acceso solo a ADMIN
                         .requestMatchers("/listado", "/nuevoEvento").hasRole("junta") //Permitir acceso solo a JUNTA
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )

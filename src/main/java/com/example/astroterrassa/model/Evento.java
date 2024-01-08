@@ -32,4 +32,11 @@ public class Evento {
     @Column(name = "tipo_te")
     private int tipo;
 
+    @ManyToOne
+    @JoinColumn(name = "id_te")
+    private TipoEvento tipoEvento;
+
+    @OneToMany(mappedBy = "evento")
+    private List<EventoPersona> eventoPersonas;
+
 }

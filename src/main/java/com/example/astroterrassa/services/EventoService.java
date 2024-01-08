@@ -13,7 +13,7 @@ public class EventoService {
     @Autowired
     private EventoRepository eventoRepository;
 
-    public List<Evento> getEventosPorTipo(int tipo) {
+    public Evento getEventosPorTipo(int tipo) {
         return eventoRepository.findByTipo(tipo);
     }
 
@@ -23,5 +23,9 @@ public class EventoService {
 
     public List<Evento> getAllEventos() {
         return eventoRepository.findAll();
+    }
+
+    public Evento getEventoById(int id) {
+        return eventoRepository.findByTipo(id);
     }
 }
