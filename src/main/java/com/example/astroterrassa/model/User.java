@@ -6,6 +6,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import java.io.Serial;
@@ -71,14 +72,17 @@ public class User implements Serializable {
     private int genero;
 
     @Column(name = "register_dt")
-    private LocalDate registerDt;
+    private LocalDateTime registerDt;
 
     @Column(name = "last_dt")
-    private Date lastDt;
+    private LocalDateTime lastDt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fecha_nt")
     private Date fecha_nt;
+
+    @Column(name = "membresia")
+    private Date membresia;
 
     @Column(name = "dni")
     private String dni;

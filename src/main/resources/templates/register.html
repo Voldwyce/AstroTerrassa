@@ -4,6 +4,24 @@
     <title>Register</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+    <style>
+        body {
+    background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png'); /* Imagen de fondo de muestra */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 50% 70%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+  .container {
+                    background-color: rgba(255, 255, 255, 0.5); /* Contenedor semi-transparente */
+                    border-radius: 15px; /* Esquinas redondeadas */
+                    padding: 20px;
+                    margin-top: 50px;
+                }
+    </style>
 </head>
 <body>
 <div class="container text-center">
@@ -67,5 +85,6 @@
     </form>
     <a th:href="@{/login}">Already registered? Log in</a>
 </div>
+
 </body>
 </html>
