@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Usuarios</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-image: url('https://raw.githubusercontent.com/Voldwyce/AstroTerrassa/master/src/main/resources/templates/ComfyUI_00149_.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: 50% 70%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+    .container {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 50px;
+        display: flex; /* Add this line */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+        th {
+            background-color: #4287f5;
+            color: white;
+        }
+
+        th,
+        td {
+            width: 20%;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+            border-width: thin;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* Agregar estilos específicos para editPerfil.html si es necesario */
+    </style>
+</head>
+
+<body>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="/">Inicio</a>
+    <a href="#">Productos</a>
+    <a href="/listado">Clientes</a>
+    <a href="#">Pedidos</a>
+    <a href="#">Reportes</a>
+    <a href="/perfil">Configuración</a>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(255, 255, 255, 0.1);">
+    <a class="navbar-brand" href="/index">ERP</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+        </ul>
+    </div>
+</nav>
+
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+
+<!-- Contenido principal -->
+<div class="container">
+    <h1>Editat Perfil de Usuario</h1>
+    <hr>
+    <table>
+
+        <form th:action="@{/userDetails/{username}(username=${user.username})}" th:method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" th:value="${user.nombre}">
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos" th:value="${user.apellidos}">
+            <label for="mail">Mail:</label>
+            <input type="text" id="mail" name="mail" th:value="${user.mail}">
+            <label for="tlf">Telefono:</label>
+            <input type="text" id="tlf" name="tlf" th:value="${user.tlf}">
+            <label for="notify">Notificaciones:</label>
+            <input type="checkbox" id="notify" name="notify" th:checked="${user.notify == 1}">
+            <label for="genero">Genero:</label>
+            <select id="genero" name="genero">
+                <option value="0" th:selected="${user.genero == 0}">Hombre</option>
+                <option value="1" th:selected="${user.genero == 1}">Mujer</option>
+                <option value="2" th:selected="${user.genero == 2}">Otro</option>
+            </select>
+            <label for="fecha_nt">Fecha de Nacimiento:</label>
+            <input type="date" id="fecha_nt" name="fecha_nt" th:value="${#dates.format(user.fecha_nt, 'yyyy-MM-dd')}">
+            <input class="btn btn-primary" type="submit" value="Editar">
+        </form>
+
+    </table>
+</div>
+
+<!-- Bootstrap JS y jQuery (opcional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+
+</body>
+
+</html>
