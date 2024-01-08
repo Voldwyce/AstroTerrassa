@@ -22,6 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.io.IOException;
 import java.security.Principal;
@@ -121,7 +123,7 @@ public class EventoController {
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@ModelAttribute Evento evento, @RequestParam String fecha_taller_evento, @RequestParam(value = "statusInt", required = false) Boolean statusInt) throws Exception {
+    public String saveEvento(@ModelAttribute Evento evento, @RequestParam String fecha_taller_evento, @RequestParam(value = "statusInt", required = false) Boolean statusInt, @RequestParam("id") int tipoId) throws Exception {
         // Convert the fecha_taller_evento string to a Date object
         Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha_taller_evento);
         evento.setFecha_taller_evento(fecha);
@@ -129,6 +131,14 @@ public class EventoController {
         // Convert the statusInt Boolean to an int
         int status = (statusInt != null && statusInt) ? 1 : 0;
         evento.setStatus(status);
+
+        // Set the tipo_id value
+        evento.setTipo(tipoId);
+
+        // Find title with id
+        TipoEvento tipoEvento = tipoEventoService.getTipoEventoById(tipoId);
+        String titulo = tipoEvento.getTitulo();
+        evento.setTitulo(titulo);
 
         // Save the Evento object
         eventService.saveEvento(evento);
@@ -164,7 +174,17 @@ public class EventoController {
     }
 
     @PostMapping("/inscribirse")
-    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal, Model model, RedirectAttributes redirectAttributes) {
+        // Get the Evento
+        Evento evento = eventService.getEventoById(idEvento);
+
+        // Check the status of the Evento
+        if (evento.getStatus() == 0) {
+            // If the status is 0, redirect to an error page and show an error message
+            redirectAttributes.addFlashAttribute("error", "No se puede inscribir en este evento porque ya ha pasado.");
+            return "redirect:/error403";
+        }
+
         // Get the current User
         User currentUser = userService.getCurrentUser(principal.getName());
 
@@ -175,6 +195,10 @@ public class EventoController {
 
         // Save the EventoPersona object
         eventoPersonaService.saveEventoPersona(eventoPersona);
+
+        if (currentUser.getNotify() == 1) {
+            emailService.sendInscripcionEvento(currentUser.getMail(), evento.getTitulo());
+        }
 
         return "redirect:/eventos";
     }

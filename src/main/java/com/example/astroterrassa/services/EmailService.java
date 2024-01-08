@@ -30,6 +30,8 @@ public class EmailService {
     @Autowired
     private EventoRepository eventoRepository;
 
+    final String imageUrl = "https://astroterrassa.org/blog/wp-content/uploads/2020/11/logo_aaT_fons_800_378-720x340.png";
+
     public EmailService(JavaMailSender emailSender , UserRepository userRepository) {
         this.emailSender = emailSender;
         this.userRepository = userRepository;
@@ -37,11 +39,18 @@ public class EmailService {
     }
 
     public void sendWelcomeEmail(User user) {
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(user.getMail());
-        mail.setSubject("Bienvenido a AstroTerrassa");
-        mail.setText("Hola " + user.getNombre() + ",\n\nBienvenido a AstroTerrassa. Estamos encantados de tenerte con nosotros.\n\nSaludos,\nEl equipo de AstroTerrassa");
-        emailSender.send(mail);
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Hola " + user.getNombre() + ",<br><br>Bienvenido a AstroTerrassa. Estamos encantados de tenerte con nosotros.<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
+            message.setContent(htmlMsg, "text/html");
+            helper.setTo(user.getMail());
+            helper.setSubject("Bienvenido a AstroTerrassa");
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
     }
 
     public void sendPaymentDetailsEmail(Pago pago, Long userId) {
@@ -164,10 +173,32 @@ public class EmailService {
     }
 
     public void sendMembersiaCaducada(User user) {
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(user.getMail());
-        mail.setSubject("Tu membresia ha caducado");
-        mail.setText("Hola " + user.getNombre() + ",\n\nTu membresia ha caducado. Si quieres seguir disfrutando de los beneficios de ser socio, puedes renovarla en la web.\n\nSaludos,\nEl equipo de AstroTerrassa");
-        emailSender.send(mail);
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Hola " + user.getNombre() + ",<br><br>Tu membresia ha caducado. Si quieres seguir disfrutando de los beneficios de ser socio, puedes renovarla en la web.<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
+            message.setContent(htmlMsg, "text/html");
+            helper.setTo(user.getMail());
+            helper.setSubject("Tu membresia ha caducado");
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
+    }
+
+    public void sendInscripcionEvento(String mail, String titulo) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Te has inscrito en el evento " + titulo + ".<br>Esperemos que lo disfrutes!!<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
+            message.setContent(htmlMsg, "text/html");
+            helper.setTo(mail);
+            helper.setSubject("Inscripción en evento");
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
     }
 }
