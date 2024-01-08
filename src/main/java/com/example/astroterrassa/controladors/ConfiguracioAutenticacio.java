@@ -46,7 +46,7 @@ public class ConfiguracioAutenticacio {
                 (requests) -> requests
                         .requestMatchers("/subEvento", "/inscribirse", "/sugerencias", "/eventos", "fragments", "/pago", "/editar", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permitir acceso a todos
                         .requestMatchers( "/eliminarTipoEvento", "/crearTipoEvento", "/material", "/listadoTipoEvento", "/stats", "/nuevoEvento", "/userDetails/", "/cambiarPermiso", "/listado", "/bloquejats", "/desbloqueja/{id}", "/deleteUser", "/editUser", "/assignRole").hasRole("admin") //Permitir acceso solo a ADMIN
-                        .requestMatchers("/listado", "/nuevoEvento").hasRole("junta") //Permitir acceso solo a JUNTA
+                        .requestMatchers("/listado", "/stats", "/nuevoEvento").hasRole("junta") //Permitir acceso solo a JUNTA
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
