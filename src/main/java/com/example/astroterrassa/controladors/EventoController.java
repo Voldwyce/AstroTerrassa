@@ -92,6 +92,7 @@ public class EventoController {
 
     @RequestMapping("/eventos")
     public String eventos(Model model, @PathVariable int tipoEvento) {
+
         Evento eventos = eventService.getEventosPorTipo(tipoEvento);
         model.addAttribute("eventos", eventos);
         model.addAttribute("tipoEvento", tipoEvento);
@@ -128,22 +129,28 @@ public class EventoController {
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@ModelAttribute Evento evento, @RequestParam String fecha_taller_evento, @RequestParam(value = "statusInt", required = false) Boolean statusInt, @RequestParam("id") int tipoId) throws Exception {
+    public String saveEvento(@ModelAttribute Evento evento,
+                             @RequestParam String fecha_taller_evento,
+                             @RequestParam(value = "statusInt", required = false) Boolean statusInt,
+                             @RequestParam String tituloTipoEvento) throws Exception {
         // Convert the fecha_taller_evento string to a Date object
-        Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha_taller_evento);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = formatter.parse(fecha_taller_evento);
         evento.setFecha_taller_evento(fecha);
 
         // Convert the statusInt Boolean to an int
         int status = (statusInt != null && statusInt) ? 1 : 0;
         evento.setStatus(status);
 
-        // Set the tipo_id value
-        evento.setTipo(tipoId);
-
-        // Find title with id
-        TipoEvento tipoEvento = tipoEventoService.getTipoEventoById(tipoId);
-        String titulo = tipoEvento.getTitulo();
-        evento.setTitulo(titulo);
+        // Get the TipoEvento by its title
+        TipoEvento tipoEvento = tipoEventoService.getTipoEventoByTitulo(tituloTipoEvento);
+        if (tipoEvento != null) {
+            // Set the tipo_te and titulo in the Evento
+            evento.setTipo(tipoEvento.getId());
+            evento.setTitulo(tituloTipoEvento);
+        } else {
+            throw new Exception("Tipo de evento no encontrado");
+        }
 
         // Save the Evento object
         eventService.saveEvento(evento);
@@ -177,8 +184,6 @@ public class EventoController {
         tipoEventoService.deleteTipoEvento(id);
         return "redirect:/eventos";
     }
-
-
 
     @GetMapping("/eventos/pdf")
     public ResponseEntity<byte[]> getEventosPdf() {
