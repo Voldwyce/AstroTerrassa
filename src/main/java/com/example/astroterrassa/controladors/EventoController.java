@@ -178,42 +178,7 @@ public class EventoController {
         return "redirect:/eventos";
     }
 
-    @PostMapping("/inscribirse")
-    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal, Model model, RedirectAttributes redirectAttributes) {
-        // Get the Evento
-        Evento evento = eventService.getEventoById(idEvento);
 
-        // Check the status of the Evento
-        if (evento.getStatus() == 0) {
-            // If the status is 0, redirect to an error page and show an error message
-            redirectAttributes.addFlashAttribute("error", "No se puede inscribir en este evento porque ya ha pasado.");
-            return "redirect:/error403";
-        }
-
-        // Get the current User
-        User currentUser = userService.getCurrentUser(principal.getName());
-
-        // Create a new EventoPersona object
-        EventoPersona eventoPersona = new EventoPersona();
-        eventoPersona.setId_te(idEvento);
-        eventoPersona.setId_user((int) currentUser.getId());
-
-        // Save the EventoPersona object
-        eventoPersonaService.saveEventoPersona(eventoPersona);
-
-        if (currentUser.getNotify() == 1) {
-            emailService.sendInscripcionEvento(currentUser.getMail(), evento.getTitulo());
-        }
-
-        return "redirect:/eventos";
-    }
-
-    @PostMapping("/desinscribirse")
-    public String desinscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
-        User currentUser = userService.getCurrentUser(principal.getName());
-        userEventService.deleteUserEvent(currentUser.getUsername(), idEvento);
-        return "redirect:/eventos";
-    }
 
     @GetMapping("/eventos/pdf")
     public ResponseEntity<byte[]> getEventosPdf() {
