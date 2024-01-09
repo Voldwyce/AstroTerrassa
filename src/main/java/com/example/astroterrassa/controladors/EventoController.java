@@ -1,22 +1,17 @@
 package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.EventoPersonaRepository;
+import com.example.astroterrassa.DAO.UserEventRepository;
 import com.example.astroterrassa.DAO.UserRepository;
-import com.example.astroterrassa.model.Evento;
-import com.example.astroterrassa.model.EventoPersona;
-import com.example.astroterrassa.model.TipoEvento;
-import com.example.astroterrassa.model.User;
-import com.example.astroterrassa.services.EventoPersonaService;
-import com.example.astroterrassa.services.EmailService;
-import com.example.astroterrassa.services.EventoService;
-import com.example.astroterrassa.services.TipoEventoService;
-import com.example.astroterrassa.services.UserService;
+import com.example.astroterrassa.model.*;
+import com.example.astroterrassa.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -55,6 +50,12 @@ public class EventoController {
     @Autowired
     private EventoPersonaService eventoPersonaService;
 
+    @Autowired
+    private UserEventService userEventService;
+
+    @Autowired
+    private UserEventRepository userEventRepository;
+
     @GetMapping("/eventos")
     public String showEventos(Model model, Principal principal) {
         User currentUser = userService.getCurrentUser(principal.getName());
@@ -65,13 +66,17 @@ public class EventoController {
         }
 
         List<Evento> eventos = eventService.getAllEventos();
+        for (Evento evento : eventos) {
+            UserEvent userEvent = userEventRepository.findByUserAndEvento(currentUser, evento);
+            evento.setUserInscribed(userEvent != null);
+        }
         model.addAttribute("eventos", eventos);
 
         List<EventoPersona> eventoPersonas = eventoPersonaService.getAllEventoPersonas();
         model.addAttribute("eventos", eventos);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("eventoPersonas", eventoPersonas);
-        model.addAttribute("eventoPersona", new EventoPersona()); // Add this line
+        model.addAttribute("eventoPersona", new EventoPersona());
 
         String username;
         if (principal instanceof UserDetails) {
@@ -200,6 +205,13 @@ public class EventoController {
             emailService.sendInscripcionEvento(currentUser.getMail(), evento.getTitulo());
         }
 
+        return "redirect:/eventos";
+    }
+
+    @PostMapping("/desinscribirse")
+    public String desinscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+        User currentUser = userService.getCurrentUser(principal.getName());
+        userEventService.deleteUserEvent(currentUser.getUsername(), idEvento);
         return "redirect:/eventos";
     }
 

@@ -36,4 +36,15 @@ public class Evento {
     @OneToMany(mappedBy = "evento")
     private List<EventoPersona> eventoPersonas;
 
+    @Transient
+    private boolean isUserInscribed;
+
+    public boolean isUserInscribed() {
+        return isUserInscribed;
+    }
+
+    public void setUserInscribed(boolean userInscribed) {
+        isUserInscribed = userInscribed;
+    }
+
 }
