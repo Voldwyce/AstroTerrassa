@@ -53,15 +53,15 @@ public class EventoController {
     public String showEventos(Model model, Principal principal) {
 
             List<Evento> eventos = eventService.getAllEventos();
-            model.addAttribute("eventos", eventos);
-
-            List<TipoEvento> tiposEvento = tipoEventoService.getAllTiposEvento();
-            model.addAttribute("tiposEvento", tiposEvento);
-
             String username = principal.getName();
-
             User currentUser = userRepository.findByUsername(username);
 
+            for (Evento evento : eventos) {
+                boolean isSubscribed = eventoPersonaRepository.existsByUserAndEvento(currentUser, evento);
+                evento.setUserInscribed(isSubscribed);
+            }
+
+            model.addAttribute("eventos", eventos);
             model.addAttribute("currentUser", currentUser);
 
             return "eventos";
@@ -210,22 +210,22 @@ public class EventoController {
     @PostMapping("/desinscribirse")
     public String desinscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
 
+        // pillamos la id del evento desde idEvento y el usuario desde principal
         User currentUser = userService.getCurrentUser(principal.getName());
-        // pillamos la id de usuario y la id de evento
-        int id_user = currentUser.getUser_id();
+
+        //Pillamos el idEvento
+        Evento evento = eventService.getEventoById(idEvento);
 
         // creamos un objeto de tipo EventoPersona
-        EventoPersona eventoPersona = new EventoPersona();
-        // le asignamos el id de usuario y el id de evento
-        eventoPersona.setId_user(id_user);
-        eventoPersona.setId_te(idEvento);
+        EventoPersona eventoPersona = eventoPersonaRepository.findByUserAndEvento(currentUser, evento);
+
         // borramos el objeto de la base de datos
         eventoPersonaRepository.delete(eventoPersona);
 
+        // enviamos correo de desinscripción
         if (currentUser.getNotify() == 1) {
             emailService.sendDesinscripcionEvento(currentUser.getMail(), currentUser.getNombre(), currentUser.getApellidos(), idEvento);
         }
-
         return "redirect:/eventos";
     }
 }

@@ -10,6 +10,9 @@ import java.util.List;
 public interface EventoPersonaRepository extends JpaRepository<EventoPersona, Long> {
     List<EventoPersona> findAllByEvento(Evento evento);
 
-    EventoPersona findByUserAndEvento(User user, Evento evento);
+    // existsByUserAndEvento
+    boolean existsByUserAndEvento(User user, Evento evento);
 
+    // findByIdUserAndIdEvento
+    EventoPersona findByUserAndEvento(User user, Evento evento);
 }

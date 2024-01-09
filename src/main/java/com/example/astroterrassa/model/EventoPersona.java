@@ -26,5 +26,4 @@ public class EventoPersona {
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "user_id", insertable = false, updatable = false)
     private User user;
-
 }
