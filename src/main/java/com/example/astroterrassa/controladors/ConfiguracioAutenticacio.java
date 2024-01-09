@@ -58,6 +58,8 @@ public class ConfiguracioAutenticacio {
                 .logout((logout) -> logout //Objecte que representa el formulari de logout personalitzat que utilitzarem
                     .logoutUrl("/logout") //URL on es troba el formulari per fer logout
                     .logoutSuccessUrl("/logout.html") //Pàgina on es redirigeix després de fer logout
+                    .invalidateHttpSession(true) //Invalida la sessió
+                    .deleteCookies("JSESSIONID") //Elimina la cookie de la sessió
                     .permitAll() //Permet accedir a tothom
                 )
                 .oauth2Login( //Objecte que representa el formulari de login amb Google que utilitzarem
