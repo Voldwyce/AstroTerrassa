@@ -20,11 +20,11 @@ public class EventoPersona {
     private int id_user;
 
     @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "user_id", insertable = false, updatable = false)  // Referencia a la columna "user_id" en la tabla "users"
-    private User user;
+    @JoinColumn(name = "id_te", referencedColumnName = "tipo_te", insertable = false, updatable = false)
+    private Evento evento;
 
     @ManyToOne
-    @JoinColumn(name = "id_te", referencedColumnName = "tipo_te", insertable = false, updatable = false)  // Referencia a la columna "tipo_te" en la tabla "taller_evento"
-    private Evento evento;
+    @JoinColumn(name = "id_user", referencedColumnName = "user_id", insertable = false, updatable = false)
+    private User user;
 
 }

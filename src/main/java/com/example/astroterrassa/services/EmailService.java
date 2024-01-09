@@ -187,12 +187,14 @@ public class EmailService {
         }
     }
 
-    public void sendInscripcionEvento(String mail, String titulo) {
+    public void sendInscripcionEvento(String mail, String titulo, String apellidos, int idEvento) {
+        Evento evento = eventoRepository.findById((long) idEvento).orElse(null);
+        String nombre = evento.getTitulo();
         MimeMessage message = emailSender.createMimeMessage();
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
-            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Te has inscrito en el evento " + titulo + ".<br>Esperemos que lo disfrutes!!<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
+            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Hola " + titulo + " " + apellidos + ",<br><br>Te has inscrito al evento " + nombre + ".<br>Esperemos que lo disfrutes!!<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
             message.setContent(htmlMsg, "text/html");
             helper.setTo(mail);
             helper.setSubject("Inscripción en evento");
@@ -211,6 +213,23 @@ public class EmailService {
             message.setContent(htmlMsg, "text/html");
             helper.setTo(email);
             helper.setSubject("Cambio de contraseña");
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MailParseException(e);
+        }
+    }
+
+    public void sendDesinscripcionEvento(String mail, String nombre, String apellidos, int idEvento) {
+        Evento evento = eventoRepository.findById((long) idEvento).orElse(null);
+        String titulo = evento.getTitulo();
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+            String htmlMsg = "<html><body><p style='font-size: 1.2em;'>Hola " + nombre + " " + apellidos + ",<br><br>Te has desinscrito del evento " + titulo + ".<br>Esperemos que lo disfrutes!!<br><br>Saludos,<br>El equipo de AstroTerrassa</p><img src='" + imageUrl + "' width='200px'></body></html>";
+            message.setContent(htmlMsg, "text/html");
+            helper.setTo(mail);
+            helper.setSubject("Desinscripción en evento");
             emailSender.send(message);
         } catch (MessagingException e) {
             throw new MailParseException(e);

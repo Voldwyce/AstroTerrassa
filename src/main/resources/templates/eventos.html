@@ -58,11 +58,11 @@
                     <td th:text="${evento.titulo}"></td>
                     <td th:text="${evento.descripcion}"></td>
                     <td th:text="${evento.fecha_taller_evento}"></td>
-                    <td th:text="${evento.status == 1 ? 'Sí' : 'No'}"></td>
+                    <td th:text="${evento.status}"></td>
                     <td>
-                        <form th:action="@{${evento.isUserInscribed ? '/desinscribirse' : '/inscribirse'}}" method="post">
+                        <form th:action="${evento.isUserInscribed} ? @{/desinscribirse} : @{/inscribirse}" method="post">
                             <input type="hidden" name="idEvento" th:value="${evento.id}" />
-                            <button type="submit" class="btn btn-primary" th:text="${evento.isUserInscribed ? 'Desinscribirse' : 'Inscribirse'}"></button>
+                            <button type="submit" class="btn btn-primary" th:text="${evento.isUserInscribed} ? 'Desinscribirse' : 'Inscribirse'"></button>
                         </form>
                     </td>
                 </tr>

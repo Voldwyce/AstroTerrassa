@@ -25,20 +25,6 @@ public class EventoService {
         return eventoRepository.findByTipo(tipo);
     }
 
-    public Map<String, Long> getEventosUsuarios() {
-        Map<String, Long> eventosUsuarios = new HashMap<>();
-        List<EventoPersona> eventos = eventoUsuarioRepository.findAll();
-        for (EventoPersona evento : eventos) {
-            String key = evento.getEvento().getTitulo() + " - " + evento.getUser().getUsername();
-            if (eventosUsuarios.containsKey(key)) {
-                eventosUsuarios.put(key, eventosUsuarios.get(key) + 1);
-            } else {
-                eventosUsuarios.put(key, 1L);
-            }
-        }
-        return eventosUsuarios;
-    }
-
     public String generateHtmlTableEventos() {
         List<Evento> eventos = eventoRepository.findAll();
         StringBuilder htmlTable = new StringBuilder();
@@ -56,7 +42,7 @@ public class EventoService {
             htmlTable.append("<td>" + evento.getTitulo() + "</td>");
             htmlTable.append("<td>" + evento.getFecha_taller_evento() + "</td>");
             htmlTable.append("<td>" + evento.getDescripcion() + "</td>");
-            htmlTable.append("<td>" + evento.getEventoPersonas().size() + "</td>"); // Add the count of registered users
+            htmlTable.append("<td>" + evento.getUser_inscribed() + "</td>"); // Add the count of registered users
             htmlTable.append("</tr>");
         }
         htmlTable.append("</table>");

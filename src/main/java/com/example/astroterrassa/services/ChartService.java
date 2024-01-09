@@ -236,20 +236,17 @@ public class ChartService {
     }
 
     public Map<String, Long> getEventosUsuarios() {
-        List<EventoPersona> eventosUsuarios = eventoUsuarioRepository.findAll();
-        Map<String, Long> eventosUsuariosCountsByType = new HashMap<>();
+        List<Evento> eventos = eventoRepository.findAll();
+        Map<String, Long> eventosCountsByType = new HashMap<>();
 
-        for (EventoPersona eventoUsuario : eventosUsuarios) {
-            if (Objects.isNull(eventoUsuario.getId_te())) {
+        for (Evento evento : eventos) {
+            if (Objects.isNull(evento.getTitulo())) {
                 continue;
             }
-            Optional<Evento> evento = eventoRepository.findById(Long.valueOf(eventoUsuario.getId_te()));
-            if (evento.isPresent()) {
-                String nombreEvento = evento.get().getTitulo();
-                eventosUsuariosCountsByType.put(nombreEvento, eventosUsuariosCountsByType.getOrDefault(nombreEvento, 0L) + 1);
-            }
+            eventosCountsByType.put(evento.getTitulo(), eventosCountsByType.getOrDefault(evento.getTitulo(), 0L) + 1);
         }
-        return eventosUsuariosCountsByType;
+
+        return eventosCountsByType;
     }
 
     private Map<String, Long> getDataByDate(List<?> dataObjects, Function<Object, LocalDate> dateExtractor, String dataType, String year, String month, Function<Object, Long> valueExtractor) {

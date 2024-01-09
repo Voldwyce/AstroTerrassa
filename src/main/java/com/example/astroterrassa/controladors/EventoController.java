@@ -1,23 +1,19 @@
 package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.EventoPersonaRepository;
-import com.example.astroterrassa.DAO.UserEventRepository;
 import com.example.astroterrassa.DAO.UserRepository;
 import com.example.astroterrassa.model.*;
 import com.example.astroterrassa.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.io.IOException;
@@ -53,41 +49,22 @@ public class EventoController {
     @Autowired
     private UserEventService userEventService;
 
-    @Autowired
-    private UserEventRepository userEventRepository;
-
     @GetMapping("/eventos")
     public String showEventos(Model model, Principal principal) {
-        User currentUser = userService.getCurrentUser(principal.getName());
 
-        if (currentUser == null) {
-            // Handle the case where the User does not exist
-            return "redirect:/error";
-        }
+            List<Evento> eventos = eventService.getAllEventos();
+            model.addAttribute("eventos", eventos);
 
-        List<Evento> eventos = eventService.getAllEventos();
-        for (Evento evento : eventos) {
-            UserEvent userEvent = userEventRepository.findByUserAndEvento(currentUser, evento);
-            evento.setUserInscribed(userEvent != null);
-        }
-        model.addAttribute("eventos", eventos);
+            List<TipoEvento> tiposEvento = tipoEventoService.getAllTiposEvento();
+            model.addAttribute("tiposEvento", tiposEvento);
 
-        List<EventoPersona> eventoPersonas = eventoPersonaService.getAllEventoPersonas();
-        model.addAttribute("eventos", eventos);
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("eventoPersonas", eventoPersonas);
-        model.addAttribute("eventoPersona", new EventoPersona());
+            String username = principal.getName();
 
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+            User currentUser = userRepository.findByUsername(username);
 
-        model.addAttribute("currentUser", currentUser);
+            model.addAttribute("currentUser", currentUser);
 
-        return "eventos";
+            return "eventos";
     }
 
     @RequestMapping("/eventos")
@@ -205,5 +182,50 @@ public class EventoController {
         emailService.sendEventosList(email, csvBytes);
 
         return new ResponseEntity<>("Lista de eventos enviada", HttpStatus.OK);
+    }
+
+    // inscribirse a un evento
+    @PostMapping("/inscribirse")
+    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+
+        User currentUser = userService.getCurrentUser(principal.getName());
+        // pillamos la id de usuario y la id de evento
+        int id_user = currentUser.getUser_id();
+
+        // creamos un objeto de tipo EventoPersona
+        EventoPersona eventoPersona = new EventoPersona();
+        // le asignamos el id de usuario y el id de evento
+        eventoPersona.setId_user(id_user);
+        eventoPersona.setId_te(idEvento);
+        // guardamos el objeto en la base de datos
+        eventoPersonaRepository.save(eventoPersona);
+
+        if (currentUser.getNotify() == 1) {
+            emailService.sendInscripcionEvento(currentUser.getMail(), currentUser.getNombre(), currentUser.getApellidos(), idEvento);
+        }
+
+        return "redirect:/eventos";
+    }
+
+    @PostMapping("/desinscribirse")
+    public String desinscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+
+        User currentUser = userService.getCurrentUser(principal.getName());
+        // pillamos la id de usuario y la id de evento
+        int id_user = currentUser.getUser_id();
+
+        // creamos un objeto de tipo EventoPersona
+        EventoPersona eventoPersona = new EventoPersona();
+        // le asignamos el id de usuario y el id de evento
+        eventoPersona.setId_user(id_user);
+        eventoPersona.setId_te(idEvento);
+        // borramos el objeto de la base de datos
+        eventoPersonaRepository.delete(eventoPersona);
+
+        if (currentUser.getNotify() == 1) {
+            emailService.sendDesinscripcionEvento(currentUser.getMail(), currentUser.getNombre(), currentUser.getApellidos(), idEvento);
+        }
+
+        return "redirect:/eventos";
     }
 }

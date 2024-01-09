@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +34,8 @@ public class Evento {
     @Column(name = "tipo_te")
     private int tipo;
 
-    @OneToMany(mappedBy = "evento")
-    private List<EventoPersona> eventoPersonas;
+    @Column(name = "user_inscribed")
+    private int user_inscribed;
 
     @Transient
     private boolean isUserInscribed;
