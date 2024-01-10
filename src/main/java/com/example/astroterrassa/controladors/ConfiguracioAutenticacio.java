@@ -45,8 +45,8 @@ public class ConfiguracioAutenticacio {
         return http.authorizeHttpRequests (
                 (requests) -> requests
                         .requestMatchers("/desinscribirse/{idEvento}", "/desinscribirse", "/forgot_password", "/subEvento", "/inscribirse/{idEvento}", "/inscribirse", "/sugerencias", "/eventos", "fragments", "/pago", "/editar", "/perfil", "/register", "/makeRegistration", "/login", "/error403", "/").permitAll() //Permitir acceso a todos
-                        .requestMatchers( "/material", "/stats", "/nuevoEvento", "/listado").hasAnyRole("admin", "junta") //Permitir acceso a admin i moderador
-                        .requestMatchers("/eliminarTipoEvento", "/crearTipoEvento", "/listadoTipoEvento", "/cambiarPermiso", "/bloquejats", "/desbloqueja/{id}", "/assignRole", "/deleteUser", "/userDetails/", "/editUser").hasRole("admin") //Permitir acceso a admin
+                        .requestMatchers( "/material", "/stats", "/nuevoEvento", "/listado").hasAnyRole("admin", "junta") //Permitir acceso admin y junta
+                        .requestMatchers("/eliminarTipoEvento", "/crearTipoEvento", "/listadoTipoEvento", "/cambiarPermiso", "/bloquejats", "/desbloqueja/{id}", "/assignRole", "/deleteUser", "/userDetails/", "/editUser").hasRole("admin") //Permitir acceso solo admin
                         .anyRequest().authenticated() //Permet accedir a tothom que estigui autenticat
                 )
                 .formLogin((form) -> form //Objecte que representa el formulari de login personalitzat que utilitzarem
