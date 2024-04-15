@@ -7,6 +7,7 @@ import com.example.astroterrassa.model.User;
 import com.example.astroterrassa.model.UsersRoles;
 import com.example.astroterrassa.security.oauth.CustomOAuth2User;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -190,23 +191,28 @@ public class UserService implements UsuariServiceInterface {
 
     public String generateHtmlTable() {
         List<User> users = getAllUsers();
-        StringBuilder htmlTable = new StringBuilder("<table><tr><th>Nombre</th><th>Apellidos</th><th>Telefono</th><th>Email</th><th>Notificaciones</th><th>Username</th></tr>");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        StringBuilder htmlTable = new StringBuilder("<div style='width: 397px; height: 561.5px;'><table style='border: 1px solid black; border-collapse: collapse; width: 100%;'><tr><th style='border: 1px solid black; padding: 10px;'>Username</th><th style='border: 1px solid black; padding: 10px;'>Nombre</th><th style='border: 1px solid black; padding: 10px;'>Apellidos</th><th style='border: 1px solid black; padding: 10px;'>Telefono</th><th style='border: 1px solid black; padding: 10px;'>Email</th><th style='border: 1px solid black; padding: 10px;'>Notify</th><th style='border: 1px solid black; padding: 10px;'>Fecha Nacimiento</th></tr>");
         for (User user : users) {
-            htmlTable.append("<tr><td>")
-                    .append(user.getNombre())
-                    .append("</td><td>")
-                    .append(user.getApellidos())
-                    .append("</td><td>")
-                    .append(user.getTlf())
-                    .append("</td><td>")
-                    .append(user.getMail())
-                    .append("</td><td>")
-                    .append(user.getNotify())
-                    .append("</td><td>")
+            String notify = user.getNotify() == 1 ? "SI" : "NO";
+            String fecha_nt = sdf.format(user.getFecha_nt());
+            htmlTable.append("<tr><td style='border: 1px solid black; padding: 10px;'>")
                     .append(user.getUsername())
+                    .append("</td><td style='border: 1px solid black; padding: 10px;'>")
+                    .append(user.getNombre())
+                    .append("</td><td style='border: 1px solid black; padding: 10px;'>")
+                    .append(user.getApellidos())
+                    .append("</td><td style='border: 1px solid black; padding: 10px;'>")
+                    .append(user.getTlf())
+                    .append("</td><td style='border: 1px solid black; padding: 10px;'>")
+                    .append(user.getMail())
+                    .append("</td><td style='border: 1px solid black; padding: 10px;'>")
+                    .append(notify)
+                    .append("</td><td style='border: 1px solid black; padding: 10px;'>")
+                    .append(fecha_nt)
                     .append("</td></tr>");
         }
-        htmlTable.append("</table>");
+        htmlTable.append("</table></div>");
         return htmlTable.toString();
     }
 

@@ -54,15 +54,15 @@
                 </thead>
                 <tbody>
                 <!-- Each row represents an Event -->
-                <tr th:each="evento, stat : ${eventos}" th:data-id="${evento.id}">
+                <tr th:each="evento : ${eventos}" th:data-id="${evento.id}">
                     <td th:text="${evento.titulo}"></td>
                     <td th:text="${evento.descripcion}"></td>
-                    <td th:text="${evento.fecha_taller_evento}"></td>
-                    <td th:text="${evento.status}"></td>
+                    <td th:text="${#dates.format(evento.fecha_taller_evento, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${evento.status == 1 ? 'Sí' : 'No'}"></td>
                     <td>
-                        <form th:action="@{/inscribirse}" method="post">
+                        <form th:action="${evento.isUserInscribed} ? @{/desinscribirse} : @{/inscribirse}" method="post" th:if="${currentUser.permisos == 1 or currentUser.permisos == 2 or currentUser.permisos == 3}">
                             <input type="hidden" name="idEvento" th:value="${evento.id}" />
-                            <button type="submit" class="btn btn-primary">Inscribirse</button>
+                            <button type="submit" class="btn btn-primary" th:text="${evento.isUserInscribed} ? 'Desinscribirse' : 'Inscribirse'"></button>
                         </form>
                     </td>
                 </tr>

@@ -51,7 +51,7 @@
     <form action="#" th:action="@{/guardarDni}" method="post">
         <label for="dni">DNI:</label><br>
         <input type="text" id="dni" name="dni"><br>
-        <input type="submit" value="Guardar">
+        <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
     </form>
     <h1>
     </h1>
@@ -67,7 +67,7 @@
         </select><br>
         <label for="cuenta">Numero de Cuenta:</label><br>
         <input type="text" id="cuenta" th:field="*{cuenta}"><br>
-        <input type="submit" value="Enviar" onclick="alert('El formulario será enviado al Administrador. Una vez realizado el pago, será miembro Simpatizante.')">
+        <input type="submit" value="Enviar" class="btn btn-primary btn-sm" onclick="alert('El formulario será enviado al Administrador. Una vez realizado el pago, será miembro Simpatizante.')">
     </form>
     </body>
 </div>

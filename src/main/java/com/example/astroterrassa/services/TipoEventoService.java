@@ -25,7 +25,8 @@ public class TipoEventoService {
         tipoEventoRepository.deleteById(id);
     }
 
-    public TipoEvento getTipoEventoById(int tipoId) {
-        return tipoEventoRepository.findById(tipoId).get();
+    public TipoEvento getTipoEventoByTitulo(String titulo) {
+        return tipoEventoRepository.findByTitulo(titulo);
     }
+
 }

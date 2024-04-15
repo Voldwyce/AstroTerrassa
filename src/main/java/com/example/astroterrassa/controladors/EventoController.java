@@ -2,17 +2,9 @@ package com.example.astroterrassa.controladors;
 
 import com.example.astroterrassa.DAO.EventoPersonaRepository;
 import com.example.astroterrassa.DAO.UserRepository;
-import com.example.astroterrassa.model.Evento;
-import com.example.astroterrassa.model.EventoPersona;
-import com.example.astroterrassa.model.TipoEvento;
-import com.example.astroterrassa.model.User;
-import com.example.astroterrassa.services.EventoPersonaService;
-import com.example.astroterrassa.services.EmailService;
-import com.example.astroterrassa.services.EventoService;
-import com.example.astroterrassa.services.TipoEventoService;
-import com.example.astroterrassa.services.UserService;
+import com.example.astroterrassa.model.*;
+import com.example.astroterrassa.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.io.IOException;
@@ -55,38 +46,30 @@ public class EventoController {
     @Autowired
     private EventoPersonaService eventoPersonaService;
 
+    @Autowired
+    private UserEventService userEventService;
+
     @GetMapping("/eventos")
     public String showEventos(Model model, Principal principal) {
-        User currentUser = userService.getCurrentUser(principal.getName());
 
-        if (currentUser == null) {
-            // Handle the case where the User does not exist
-            return "redirect:/error";
-        }
+            List<Evento> eventos = eventService.getAllEventos();
+            String username = principal.getName();
+            User currentUser = userRepository.findByUsername(username);
 
-        List<Evento> eventos = eventService.getAllEventos();
-        model.addAttribute("eventos", eventos);
+            for (Evento evento : eventos) {
+                boolean isSubscribed = eventoPersonaRepository.existsByUserAndEvento(currentUser, evento);
+                evento.setUserInscribed(isSubscribed);
+            }
 
-        List<EventoPersona> eventoPersonas = eventoPersonaService.getAllEventoPersonas();
-        model.addAttribute("eventos", eventos);
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("eventoPersonas", eventoPersonas);
-        model.addAttribute("eventoPersona", new EventoPersona()); // Add this line
+            model.addAttribute("eventos", eventos);
+            model.addAttribute("currentUser", currentUser);
 
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        model.addAttribute("currentUser", currentUser);
-
-        return "eventos";
+            return "eventos";
     }
 
     @RequestMapping("/eventos")
     public String eventos(Model model, @PathVariable int tipoEvento) {
+
         Evento eventos = eventService.getEventosPorTipo(tipoEvento);
         model.addAttribute("eventos", eventos);
         model.addAttribute("tipoEvento", tipoEvento);
@@ -123,22 +106,28 @@ public class EventoController {
     }
 
     @PostMapping("/nuevoEvento")
-    public String saveEvento(@ModelAttribute Evento evento, @RequestParam String fecha_taller_evento, @RequestParam(value = "statusInt", required = false) Boolean statusInt, @RequestParam("id") int tipoId) throws Exception {
+    public String saveEvento(@ModelAttribute Evento evento,
+                             @RequestParam String fecha_taller_evento,
+                             @RequestParam(value = "statusInt", required = false) Boolean statusInt,
+                             @RequestParam String tituloTipoEvento) throws Exception {
         // Convert the fecha_taller_evento string to a Date object
-        Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha_taller_evento);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = formatter.parse(fecha_taller_evento);
         evento.setFecha_taller_evento(fecha);
 
         // Convert the statusInt Boolean to an int
         int status = (statusInt != null && statusInt) ? 1 : 0;
         evento.setStatus(status);
 
-        // Set the tipo_id value
-        evento.setTipo(tipoId);
-
-        // Find title with id
-        TipoEvento tipoEvento = tipoEventoService.getTipoEventoById(tipoId);
-        String titulo = tipoEvento.getTitulo();
-        evento.setTitulo(titulo);
+        // Get the TipoEvento by its title
+        TipoEvento tipoEvento = tipoEventoService.getTipoEventoByTitulo(tituloTipoEvento);
+        if (tipoEvento != null) {
+            // Set the tipo_te and titulo in the Evento
+            evento.setTipo(tipoEvento.getId());
+            evento.setTitulo(tituloTipoEvento);
+        } else {
+            throw new Exception("Tipo de evento no encontrado");
+        }
 
         // Save the Evento object
         eventService.saveEvento(evento);
@@ -173,36 +162,6 @@ public class EventoController {
         return "redirect:/eventos";
     }
 
-    @PostMapping("/inscribirse")
-    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal, Model model, RedirectAttributes redirectAttributes) {
-        // Get the Evento
-        Evento evento = eventService.getEventoById(idEvento);
-
-        // Check the status of the Evento
-        if (evento.getStatus() == 0) {
-            // If the status is 0, redirect to an error page and show an error message
-            redirectAttributes.addFlashAttribute("error", "No se puede inscribir en este evento porque ya ha pasado.");
-            return "redirect:/error403";
-        }
-
-        // Get the current User
-        User currentUser = userService.getCurrentUser(principal.getName());
-
-        // Create a new EventoPersona object
-        EventoPersona eventoPersona = new EventoPersona();
-        eventoPersona.setId_te(idEvento);
-        eventoPersona.setId_user((int) currentUser.getId());
-
-        // Save the EventoPersona object
-        eventoPersonaService.saveEventoPersona(eventoPersona);
-
-        if (currentUser.getNotify() == 1) {
-            emailService.sendInscripcionEvento(currentUser.getMail(), evento.getTitulo());
-        }
-
-        return "redirect:/eventos";
-    }
-
     @GetMapping("/eventos/pdf")
     public ResponseEntity<byte[]> getEventosPdf() {
         // Generate the PDF bytes (this method should be implemented in your service)
@@ -223,5 +182,50 @@ public class EventoController {
         emailService.sendEventosList(email, csvBytes);
 
         return new ResponseEntity<>("Lista de eventos enviada", HttpStatus.OK);
+    }
+
+    // inscribirse a un evento
+    @PostMapping("/inscribirse")
+    public String inscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+
+        User currentUser = userService.getCurrentUser(principal.getName());
+        // pillamos la id de usuario y la id de evento
+        int id_user = currentUser.getUser_id();
+
+        // creamos un objeto de tipo EventoPersona
+        EventoPersona eventoPersona = new EventoPersona();
+        // le asignamos el id de usuario y el id de evento
+        eventoPersona.setId_user(id_user);
+        eventoPersona.setId_te(idEvento);
+        // guardamos el objeto en la base de datos
+        eventoPersonaRepository.save(eventoPersona);
+
+        if (currentUser.getNotify() == 1) {
+            emailService.sendInscripcionEvento(currentUser.getMail(), currentUser.getNombre(), currentUser.getApellidos(), idEvento);
+        }
+
+        return "redirect:/eventos";
+    }
+
+    @PostMapping("/desinscribirse")
+    public String desinscribirse(@RequestParam("idEvento") int idEvento, Principal principal) {
+
+        // pillamos la id del evento desde idEvento y el usuario desde principal
+        User currentUser = userService.getCurrentUser(principal.getName());
+
+        //Pillamos el idEvento
+        Evento evento = eventService.getEventoById(idEvento);
+
+        // creamos un objeto de tipo EventoPersona
+        EventoPersona eventoPersona = eventoPersonaRepository.findByUserAndEvento(currentUser, evento);
+
+        // borramos el objeto de la base de datos
+        eventoPersonaRepository.delete(eventoPersona);
+
+        // enviamos correo de desinscripción
+        if (currentUser.getNotify() == 1) {
+            emailService.sendDesinscripcionEvento(currentUser.getMail(), currentUser.getNombre(), currentUser.getApellidos(), idEvento);
+        }
+        return "redirect:/eventos";
     }
 }

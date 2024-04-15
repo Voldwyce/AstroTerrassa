@@ -57,7 +57,6 @@ public class AppController {
                                    @RequestParam("genero") int genero) {
         int notify = (notify_check != null && notify_check) ? 1 : 0;
 
-
         User u = new User();
         u.setNombre(nombre);
         u.setPassword(passwordEncoder.encode(password));
@@ -69,15 +68,14 @@ public class AppController {
         u.setRegisterDt(LocalDateTime.now());
         u.setLastDt(LocalDateTime.now());
         u.setGenero(genero);
-        u.setPermisos(1);
+        u.setPermisos(0);
         u.setNotify(notify);
         u.setIntents(3);
         userRepository.save(u); // Guarda el usuario primero
 
         if (notify == 1) {
-        emailService.sendWelcomeEmail(u);
+            emailService.sendWelcomeEmail(u);
         }
-
 
         UsersRoles usersRoles = new UsersRoles();
         usersRoles.setUserId(u.getUser_id());
@@ -86,7 +84,7 @@ public class AppController {
         usersRolesRepository.save(usersRoles); // Guarda el rol del usuario
 
         System.out.println("Created user " + u.getUsername() + " with password " + u.getPassword());
-        return "redirect:/index";
+        return "redirect:/login";
     }
 
     @RequestMapping("/login")
